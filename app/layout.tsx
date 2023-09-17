@@ -48,8 +48,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
             {children}
           </main>
 
-          <footer className="py-4 border-t border-solid border-grey-100 dark:border-grey-700 mt-20">
-            <div className="mx-auto max-w-xl flex justify-between">
+          <footer className="py-4  border-t border-solid border-grey-100 dark:border-grey-700 mt-20">
+            <div className="mx-auto max-w-xl px-4 md:px-0 flex justify-between">
               <a href="https://twitter.com/EphraimDuncan_">
                 <svg
                   width="15"
