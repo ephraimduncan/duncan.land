@@ -4,7 +4,7 @@ import { Pen } from "@/components/ui/Pen";
 import Link from "next/link";
 import { formatDistance } from "date-fns";
 import { ModeToggle } from "@/components/mode-toggle";
-import { MotionDiv, MotionHeader, MotionSvg } from "./motion";
+import { MotionDiv, MotionHeader } from "./motion";
 
 function getMostRecent5(arrayOfObjects: Post[]) {
   arrayOfObjects.sort((a, b) => {
