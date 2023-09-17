@@ -2,7 +2,7 @@ import "./globals.css";
 import { Inter, Newsreader } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@/components/analytics";
 
 const inter = Inter({ subsets: ["latin"] });
 const newsreader = Newsreader({
