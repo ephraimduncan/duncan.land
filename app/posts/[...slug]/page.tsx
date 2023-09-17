@@ -4,12 +4,18 @@ import { allPosts } from "contentlayer/generated";
 import { Metadata } from "next";
 import { Mdx } from "@/components/mdx-components";
 import Link from "next/link";
+import { MotionDiv } from "@/app/motion";
 
 interface PostProps {
   params: {
     slug: string[];
   };
 }
+
+const variant = {
+  hidden: { opacity: 0, y: -50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1 } }, // Adjust duration as needed
+};
 
 async function getPostFromParams(params: PostProps["params"]) {
   const slug = params?.slug?.join("/");
@@ -60,29 +66,31 @@ export default async function PostPage({ params }: PostProps) {
           duncan.land
         </Link>
       </div>
-      <article className="py-6 prose dark:prose-invert">
-        <div className="mb-10">
-          <h1 className="mb-2 font-serif text-3xl">{post.title}</h1>
+      <MotionDiv initial="hidden" animate="visible" variants={variant}>
+        <article className="py-6 prose dark:prose-invert">
+          <div className="mb-10">
+            <h1 className="mb-2 font-serif text-3xl">{post.title}</h1>
 
-          <div className="flex gap-x-2">
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
-              {new Date(post.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
-              •
-            </p>
+            <div className="flex gap-x-2">
+              <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
+                •
+              </p>
 
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
-              {post.readTimeMinutes}
-            </p>
+              <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
+                {post.readTimeMinutes}
+              </p>
+            </div>
           </div>
-        </div>
-        <Mdx code={post.body.code} />
-      </article>
+          <Mdx code={post.body.code} />
+        </article>
+      </MotionDiv>
     </div>
   );
 }
