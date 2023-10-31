@@ -1,10 +1,10 @@
 import "./globals.css";
-import { Inter, Newsreader } from "next/font/google";
+import { GeistMono, GeistSans } from "geist/font";
+import { Newsreader } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import { Analytics } from "@/components/analytics";
 
-const inter = Inter({ subsets: ["latin"] });
 const newsreader = Newsreader({
   subsets: ["latin"],
   style: "italic",
@@ -38,10 +38,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
       lang="en"
-      className={`${kaisei.variable} ${newsreader.variable} ${newsreaderRegular.variable}`}
+      className={`${kaisei.variable} ${newsreader.variable} ${newsreaderRegular.variable} ${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body
-        className={`mt-16 sm:mt-24 antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100 ${inter.className}`}
+        className={`mt-16 sm:mt-24 antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100 `}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <main className="max-w-xl mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)]">
