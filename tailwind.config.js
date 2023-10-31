@@ -9,6 +9,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
         serif: ["var(--font-kaisei)"],
         emp: ["var(--font-newsreader)"],
         nwr: ["var(--font-newsreader-regular)"],

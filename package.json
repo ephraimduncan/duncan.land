@@ -22,6 +22,7 @@
     "eslint": "8.39.0",
     "eslint-config-next": "latest",
     "framer-motion": "^10.16.4",
+    "geist": "^1.0.0",
     "next": "latest",
     "next-contentlayer": "^0.3.2",
     "next-themes": "^0.2.1",
