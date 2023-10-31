@@ -5,6 +5,22 @@ import Link from "next/link";
 import { formatDistance } from "date-fns";
 import { ModeToggle } from "@/components/mode-toggle";
 import { MotionDiv, MotionHeader } from "./motion";
+import { Microphone } from "@/components/ui/Mic";
+
+const TALKS = [
+  {
+    talk: "How People with Disability Access the Web",
+    date: "2023-10-26",
+    event: "Google DevFest Student's Edition",
+    location: "Nairobi, Kenya",
+  },
+  {
+    talk: "Building End-to-End Typesafe APIs with tRPC",
+    date: "2023-11-11",
+    event: "CityJS Conference",
+    location: "Lagos, Nigeria",
+  },
+];
 
 function getMostRecent5(arrayOfObjects: Post[]) {
   arrayOfObjects.sort((a, b) => {
@@ -99,30 +115,64 @@ export default function Home() {
       </MotionDiv>
 
       <MotionDiv className="mt-16" variants={childVariants}>
-        <span className="text-xl flex gap-2 items-center my-6 cursor-pointer">
-          <Link href="/blog">
-            <Pen size={19} />
-          </Link>
-          Writing
-        </span>
-
-        {homePagePosts.map((post) => (
-          <article key={post._id} className="mb-8">
-            <Link href={post.slug} className="flex justify-between items-start">
-              <h2 className="text-lg hover:underline decoration-grey-100 hover:decoration-1 mb-1">
-                {post.title}
-              </h2>
-              <span className="text-sm">
-                {formatDistance(new Date(post.date), new Date(), {
-                  addSuffix: true,
-                })}
-              </span>
+        <div className="mb-16">
+          <span className="text-xl flex gap-2 items-center my-6 cursor-pointer">
+            <Link href="/blog">
+              <Pen size={19} />
             </Link>
-            {post.description && (
-              <p className="text-sm text-grey-400">{post.description}</p>
-            )}
-          </article>
-        ))}
+            Writing
+          </span>
+
+          {homePagePosts.map((post) => (
+            <article key={post._id} className="mb-8">
+              <Link
+                href={post.slug}
+                className="flex justify-between items-start"
+              >
+                <h2 className="text-lg hover:underline decoration-grey-100 hover:decoration-1 mb-1">
+                  {post.title}
+                </h2>
+                <span className="text-sm">
+                  {formatDistance(new Date(post.date), new Date(), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </Link>
+              {post.description && (
+                <p className="text-sm text-grey-400">{post.description}</p>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-16">
+          <span className="text-xl flex gap-2 items-center my-6 cursor-pointer">
+            <Microphone size={19} />
+            Talks
+          </span>
+
+          {TALKS.map((talk, index) => (
+            <div key={index} className="mb-8">
+              <div className="flex justify-between items-start">
+                <h2 className="text-lg  decoration-grey-100 hover:decoration-1 mb-1">
+                  {talk.talk}
+                </h2>
+                <span className="text-sm">
+                  {formatDistance(new Date(talk.date), new Date(), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </div>
+              {talk.location && (
+                <div className="flex gap-2">
+                  <p className="text-sm text-grey-400">
+                    {talk.event} ({talk.location})
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </MotionDiv>
     </MotionDiv>
   );
