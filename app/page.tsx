@@ -55,7 +55,7 @@ export default function Home() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="font-serif text-3xl">Ephraim Atta-Duncan</h1>
-            <h3 className="text-grey-400 text-lg mt-2">Frontend Engineer</h3>
+            <h3 className="text-grey-400 text-lg mt-2">Software Engineer</h3>
           </div>
 
           <ModeToggle />
