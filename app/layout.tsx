@@ -1,9 +1,11 @@
 import "./globals.css";
-import { GeistMono, GeistSans } from "geist/font";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { Newsreader } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import { Analytics } from "@/components/analytics";
+import Script from "next/script";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -27,7 +29,7 @@ const kaisei = localFont({
 export const metadata = {
   title: "Ephraim Atta-Duncan",
   description:
-    "✨ My personal website and portfolio. Built using Next.js and deployed on Vercel.",
+    "✨ My personal website and portfolio.",
 };
 
 interface RootLayoutProps {
@@ -73,6 +75,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Analytics />
         </ThemeProvider>
       </body>
+      <Script
+        async
+        src="https://analytics.duncan.land/script.js" data-website-id="3762becb-689f-4f77-9f44-71751e25413a"
+      />
     </html>
   );
 }
