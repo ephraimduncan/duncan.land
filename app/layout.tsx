@@ -75,7 +75,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Script
                 async
                 src="https://analytics.duncan.land/script.js"
-                data-website-id="5cc624bb-d3a9-4e16-827b-ae3a12b1c913"
+                data-website-id="48972d0a-03c2-4a49-b638-d3a0ad8da3e0"
             />
         </html>
     );
