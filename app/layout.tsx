@@ -65,7 +65,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                                     ></path>
                                 </svg>
                             </a>
-                            <div className="text-sm font-nwr">MMXXIII</div>
+                            <div className="text-sm font-nwr">MMXXIV</div>
                         </div>
                     </footer>
 
