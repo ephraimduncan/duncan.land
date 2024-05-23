@@ -1,36 +1,8 @@
 import { Post, allPosts } from "@/.contentlayer/generated";
 import { ExternalLink } from "@/components/ui/ExternalLink";
-import { Pen } from "@/components/ui/Pen";
 import Link from "next/link";
-import { formatDistance } from "date-fns";
 import { ModeToggle } from "@/components/mode-toggle";
 import { MotionDiv, MotionHeader } from "@/components/motion";
-import { Microphone } from "@/components/ui/Mic";
-
-const TALKS = [
-    {
-        talk: "How People with Disability Access the Web",
-        date: "2023-10-26",
-        event: "Google DevFest Student's Edition",
-        location: "Nairobi, Kenya",
-    },
-    {
-        talk: "Building End-to-End Typesafe APIs with tRPC",
-        date: "2023-11-11",
-        event: "CityJS Conference",
-        location: "Lagos, Nigeria",
-    },
-];
-
-function getMostRecent5(arrayOfObjects: Post[]) {
-    arrayOfObjects.sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        return dateB - dateA;
-    });
-
-    return arrayOfObjects.slice(0, 5);
-}
 
 const containerVariants = {
     hidden: {},
@@ -47,15 +19,13 @@ const childVariants = {
 };
 
 export default function Home() {
-    const homePagePosts = getMostRecent5(allPosts);
-
     return (
         <MotionDiv initial="hidden" animate="visible" variants={containerVariants}>
             <MotionHeader variants={childVariants}>
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h1 className="font-serif text-3xl">Ephraim Duncan</h1>
-                        <h3 className="text-grey-400 text-lg mt-2">
+                        <h1 className="text-2xl">Ephraim Duncan</h1>
+                        <h3 className="text-grey-400 text-lg mt-1">
                             Software Engineer at{" "}
                             <a
                                 href="http://documenso.com/?ref=ephraimduncan.com"
@@ -103,63 +73,9 @@ export default function Home() {
 
                 <ExternalLink text="follow me on twitter" href="https://twitter.com/EphraimDuncan_" />
 
-                <ExternalLink text="let's collaborate on github" href="https://twitter.com/EphraimDuncan_" />
+                <ExternalLink text="let's collaborate on github" href="https://github.com/ephraimduncan" />
 
                 <ExternalLink text="love to talk?" href="https://cal.com/astrosaurus/30min" />
-            </MotionDiv>
-
-            <MotionDiv className="mt-16" variants={childVariants}>
-                <div className="mb-16">
-                    <span className="text-xl flex gap-2 items-center my-6 cursor-pointer">
-                        <Link href="/blog">
-                            <Pen size={19} />
-                        </Link>
-                        Writing
-                    </span>
-
-                    {homePagePosts.map((post) => (
-                        <article key={post._id} className="mb-8">
-                            <Link href={post.slug} className="flex justify-between items-start">
-                                <h2 className="text-lg hover:underline decoration-grey-100 hover:decoration-1 mb-1">
-                                    {post.title}
-                                </h2>
-                                <span className="text-sm">
-                                    {formatDistance(new Date(post.date), new Date(), {
-                                        addSuffix: true,
-                                    })}
-                                </span>
-                            </Link>
-                            {post.description && <p className="text-sm text-grey-400">{post.description}</p>}
-                        </article>
-                    ))}
-                </div>
-
-                <div className="mt-16">
-                    <span className="text-xl flex gap-2 items-center my-6 cursor-pointer">
-                        <Microphone size={19} />
-                        Talks
-                    </span>
-
-                    {TALKS.map((talk, index) => (
-                        <div key={index} className="mb-8">
-                            <div className="flex justify-between items-start">
-                                <h2 className="text-lg  decoration-grey-100 hover:decoration-1 mb-1">{talk.talk}</h2>
-                                <span className="text-sm">
-                                    {formatDistance(new Date(talk.date), new Date(), {
-                                        addSuffix: true,
-                                    })}
-                                </span>
-                            </div>
-                            {talk.location && (
-                                <div className="flex gap-2">
-                                    <p className="text-sm text-grey-400">
-                                        {talk.event} ({talk.location})
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
             </MotionDiv>
         </MotionDiv>
     );

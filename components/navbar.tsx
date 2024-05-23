@@ -4,20 +4,20 @@ const navItems = {
     "/": {
         name: "home",
     },
-    "/work": {
-        name: "work",
-    },
     "/blog": {
         name: "blog",
     },
-    "/guestbook": {
-        name: "guestbook",
+    "/thoughts": {
+        name: "thoughts",
+    },
+    "/talks": {
+        name: "talks",
     },
 };
 
 export function Navbar() {
     return (
-        <aside className="-ml-[8px] mb-8 tracking-tight">
+        <aside className="-ml-[8px] mb-12 mt-10 tracking-tight">
             <div className="lg:sticky lg:top-20">
                 <nav
                     className="flex flex-row items-start relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
