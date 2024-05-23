@@ -55,16 +55,11 @@ export default async function PostPage({ params }: PostProps) {
     }
 
     return (
-        <div className="-mt-10">
-            <div className="mb-5">
-                <Link href="/" className="text-grey-300 dark:text-grey-700  hover:underline">
-                    duncan.land
-                </Link>
-            </div>
+        <div>
             <MotionDiv initial="hidden" animate="visible" variants={variant}>
                 <article className="py-6 prose dark:prose-invert">
                     <div className="mb-10">
-                        <h1 className="mb-2 font-serif text-3xl">{post.title}</h1>
+                        <h1 className="mb-2 text-2xl">{post.title}</h1>
 
                         <div className="flex gap-x-2">
                             <p className="text-base mt-0 text-slate-700 dark:text-slate-200">

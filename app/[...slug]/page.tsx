@@ -1,60 +1,58 @@
-import { notFound } from "next/navigation"
-import { Metadata } from "next"
-import { allPages } from "contentlayer/generated"
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { allPages } from "contentlayer/generated";
 
-import { Mdx } from "@/components/mdx-components"
+import { Mdx } from "@/components/mdx-components";
 
 interface PageProps {
-  params: {
-    slug: string[]
-  }
+    params: {
+        slug: string[];
+    };
 }
 
 async function getPageFromParams(params: PageProps["params"]) {
-  const slug = params?.slug?.join("/")
-  const page = allPages.find((page) => page.slugAsParams === slug)
+    const slug = params?.slug?.join("/");
+    const page = allPages.find((page) => page.slugAsParams === slug);
 
-  if (!page) {
-    return null
-  }
+    if (!page) {
+        return null;
+    }
 
-  return page
+    return page;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const page = await getPageFromParams(params)
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const page = await getPageFromParams(params);
 
-  if (!page) {
-    return {}
-  }
+    if (!page) {
+        return {};
+    }
 
-  return {
-    title: page.title,
-    description: page.description,
-  }
+    return {
+        title: page.title,
+        description: page.description,
+    };
 }
 
 export async function generateStaticParams(): Promise<PageProps["params"][]> {
-  return allPages.map((page) => ({
-    slug: page.slugAsParams.split("/"),
-  }))
+    return allPages.map((page) => ({
+        slug: page.slugAsParams.split("/"),
+    }));
 }
 
 export default async function PagePage({ params }: PageProps) {
-  const page = await getPageFromParams(params)
+    const page = await getPageFromParams(params);
 
-  if (!page) {
-    notFound()
-  }
+    if (!page) {
+        notFound();
+    }
 
-  return (
-    <article className="py-6 prose dark:prose-invert">
-      <h1>{page.title}</h1>
-      {page.description && <p className="text-xl">{page.description}</p>}
-      <hr />
-      <Mdx code={page.body.code} />
-    </article>
-  )
+    return (
+        <article className="py-6 prose dark:prose-invert">
+            <h1>{page.title}</h1>
+            {page.description && <p className="text-xl">{page.description}</p>}
+            <hr />
+            <Mdx code={page.body.code} />
+        </article>
+    );
 }
