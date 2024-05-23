@@ -29,7 +29,7 @@ export function ModeToggle() {
                 theme === "light" ? "grey-800" : "gray-100"
             }`}
         >
-            <span className="sr-only">{spanContent}</span>
+            <span className="sr-only">Toggle Theme</span>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

@@ -4,7 +4,7 @@ import { Pen } from "@/components/ui/Pen";
 import Link from "next/link";
 import { formatDistance } from "date-fns";
 import { ModeToggle } from "@/components/mode-toggle";
-import { MotionDiv, MotionHeader } from "./motion";
+import { MotionDiv, MotionHeader } from "@/components/motion";
 import { Microphone } from "@/components/ui/Mic";
 
 const TALKS = [
@@ -54,7 +54,7 @@ export default function Home() {
             <MotionHeader variants={childVariants}>
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h1 className="font-serif text-3xl">Ephraim Atta-Duncan</h1>
+                        <h1 className="font-serif text-3xl">Ephraim Duncan</h1>
                         <h3 className="text-grey-400 text-lg mt-2">
                             Software Engineer at{" "}
                             <a

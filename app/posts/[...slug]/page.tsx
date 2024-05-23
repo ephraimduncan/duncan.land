@@ -4,7 +4,7 @@ import { allPosts } from "contentlayer/generated";
 import { Metadata } from "next";
 import { Mdx } from "@/components/mdx-components";
 import Link from "next/link";
-import { MotionDiv } from "@/app/motion";
+import { MotionDiv } from "@/components/motion";
 
 interface PostProps {
     params: {

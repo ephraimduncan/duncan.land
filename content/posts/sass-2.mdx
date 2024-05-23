@@ -6,7 +6,7 @@ draft: false
 description: "Part 2 of guide to getting started with Sass"
 ---
 
-In the earlier part of this post, I talked about what Sass is and how to get started easily for a beginner programmer. You can find it [here](/dephraiim.github.io/2020/04/18/getting-started-with-sass.html). In this section, I assume you have set up your development environment and you are ready to get started coding with Sass.
+In the earlier part of this post, I talked about what Sass is and how to get started easily for a beginner programmer. You can find it [here](/ephraimduncan.github.io/2020/04/18/getting-started-with-sass.html). In this section, I assume you have set up your development environment and you are ready to get started coding with Sass.
 
 ## Sass Variables
 
@@ -50,18 +50,18 @@ When writing CSS, take a situation wherehy you are creating a navbar, with the n
 
 ```css
 nav {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
 
 nav li {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 nav li a {
-  text-decoration: none;
-  text-transform: uppercase;
+    text-decoration: none;
+    text-transform: uppercase;
 }
 ```
 
@@ -113,14 +113,14 @@ The Sass will compile to CSS like the one below,
 
 ```css
 section {
-  display: grid;
-  grid-template-colums: repeat(3, 1fr);
+    display: grid;
+    grid-template-colums: repeat(3, 1fr);
 }
 
 section section.container {
-  max-width: 1000px;
-  width: 90%;
-  margin: 0 auto;
+    max-width: 1000px;
+    width: 90%;
+    margin: 0 auto;
 }
 ```
 
@@ -143,13 +143,13 @@ The compiled CSS will be as below.
 
 ```css
 .container {
-  max-width: 1000px;
-  width: 80%;
-  margin: 0 auto;
+    max-width: 1000px;
+    width: 80%;
+    margin: 0 auto;
 }
 
 .container .container-fluid {
-  width: 100%;
+    width: 100%;
 }
 ```
 
@@ -213,11 +213,11 @@ To use the function, in a code, you just call the function name and apply the ar
 $base-size: 16;
 
 @function toRem($size) {
-  @return $size / $base-size;
+    @return $size / $base-size;
 }
 
 .card {
-  font-size: toRem(200) * 1rem;
+    font-size: toRem(200) * 1rem;
 }
 ```
 

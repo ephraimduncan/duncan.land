@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import { Analytics } from "@/components/analytics";
 import Script from "next/script";
+import { Navbar } from "@/components/navbar";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -27,7 +28,7 @@ const kaisei = localFont({
 });
 
 export const metadata = {
-    title: "Ephraim Atta-Duncan",
+    title: "Ephraim Duncan",
     description: "✨ My personal website and portfolio.",
 };
 
@@ -41,13 +42,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
             lang="en"
             className={`${kaisei.variable} ${newsreader.variable} ${newsreaderRegular.variable} ${GeistSans.variable} ${GeistMono.variable}`}
         >
-            <body
-                className={`mt-16 sm:mt-24 antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100 `}
-            >
+            <body className="mt-8 antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-                    <main className="max-w-xl mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)]">{children}</main>
+                    <main className="max-w-xl mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)]">
+                        <Navbar />
+                        {children}
+                    </main>
 
-                    <footer className="py-4  border-t border-solid border-grey-100 dark:border-grey-700 mt-20">
+                    <footer className="py-4 border-t border-solid border-grey-100 dark:border-grey-700 mt-20">
                         <div className="mx-auto max-w-xl px-4 md:px-0 flex justify-between">
                             <a href="https://twitter.com/EphraimDuncan_">
                                 <svg

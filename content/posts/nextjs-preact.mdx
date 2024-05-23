@@ -46,11 +46,11 @@ Next.js 13 introduces layouts with the `app` directory. To use the `app` directo
 
 ```js
 module.exports = {
-  reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    appDir: true,
-  },
+    reactStrictMode: true,
+    swcMinify: true,
+    experimental: {
+        appDir: true,
+    },
 };
 ```
 
@@ -72,7 +72,7 @@ Add the following to your `app/hello/page.tsx`
 
 ```tsx
 export default function HelloPage(): JSX.Element {
-  return <div>Hello from app directory</div>;
+    return <div>Hello from app directory</div>;
 }
 ```
 
@@ -80,7 +80,7 @@ Replace the contents of `pages/index.tsx` with a simple page component.
 
 ```tsx
 export default function Home() {
-  return <div>Index Page from pages directory</div>;
+    return <div>Index Page from pages directory</div>;
 }
 ```
 
@@ -96,23 +96,23 @@ Let's update our `next.config.js` with the following
 
 ```js
 module.exports = {
-  reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    appDir: true,
-  },
+    reactStrictMode: true,
+    swcMinify: true,
+    experimental: {
+        appDir: true,
+    },
 
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      Object.assign(config.resolve.alias, {
-        "react/jsx-runtime.js": "preact/compat/jsx-runtime",
-        react: "preact/compat",
-        "react-dom/test-utils": "preact/test-utils",
-        "react-dom": "preact/compat",
-      });
-    }
-    return config;
-  },
+    webpack: (config, { dev, isServer }) => {
+        if (!dev && !isServer) {
+            Object.assign(config.resolve.alias, {
+                "react/jsx-runtime.js": "preact/compat/jsx-runtime",
+                react: "preact/compat",
+                "react-dom/test-utils": "preact/test-utils",
+                "react-dom": "preact/compat",
+            });
+        }
+        return config;
+    },
 };
 ```
 
@@ -145,10 +145,10 @@ Use the plugin your `next.config.js` like this
 const withPreact = require("next-plugin-preact");
 
 module.exports = withPreact({
-  /* regular next.js config options here */
+    /* regular next.js config options here */
 });
 ```
 
 If you are not using any experimental React features in your Next.js app, I would recommend replacing React with Preact to reduce your bundle size by a considerable chunk.
 
-> Checkout [Repo](https://github.com/dephraiim/next-with-preact) on Github
+> Checkout [Repo](https://github.com/ephraimduncan/next-with-preact) on Github
