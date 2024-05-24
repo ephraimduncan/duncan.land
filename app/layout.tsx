@@ -74,11 +74,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     <Analytics />
                 </ThemeProvider>
             </body>
-            <Script
-                async
-                src="https://analytics.duncan.land/script.js"
-                data-website-id="48972d0a-03c2-4a49-b638-d3a0ad8da3e0"
-            />
+            {process.env.NODE_ENV === "production" && (
+                <Script
+                    async
+                    src="https://analytics.duncan.land/script.js"
+                    data-website-id="48972d0a-03c2-4a49-b638-d3a0ad8da3e0"
+                />
+            )}
         </html>
     );
 }
