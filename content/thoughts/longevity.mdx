@@ -1,0 +1,32 @@
+---
+title: longevity equation
+date: 2024-06-01
+---
+
+_**Disclaimer**: I am not an expert in the field. Everything is based on my personal understanding and research._
+
+I came across the [Longevity FAQ](https://www.ldeming.com/longevityfaq) by [Laura Deming](https://www.ldeming.com/biocontact-1) a while ago, and it was a very interesting read. It talks mainly about basic concepts in aging research and major areas of aging research with some data backing it. At the end of the post was this function that I had an interest in immediately, and I decided to look into it. The _Kaplan-Meier function_ or as I like to call it, the longevity equation.
+
+This is the equation in all its glory, simple yet intriguing.
+
+```math
+S(t) = \prod_{i: t_i \leq t} \left( 1 - \frac{d_i}{n_i} \right)
+```
+
+<p className="text-center -mt-2 text-sm">$Kaplan$-$Meier$ $Function$</p>
+
+The Kaplan-Meier function is used to determine the probability that a subject will survive past a certain time, given that they have survived up to that time. $d_i$ represents the number of deaths at a given time $t_i$, $n_i$ represents the remaining number of people who survived at the time $t_i$; hence, the probability of a subject dying at a given time $t_i$ is $\frac{d_i}{n_i}$. The probability of survival at a given time becomes $t_i$ is $1 - \frac{d_i}{n_i}$. To get the overall survival probability up to time $t$, you multiply the probabilities for each time point which is $S(t)$.
+
+One of the research areas for longevity in Laura's post is **Caloric Restriction**, eating less. Let's assume a group of 100 people fasting for 8 hours a day are being observed for 3 years. At the end of the first year, 10 people died, 5 at the end of the second year, and 3 at the end of the third year. Using the longevity equation for the assumed data, the survival probability can be determined as follows,
+
+```math
+S(t_3) = \left( 1 - \frac{10}{100} \right)\left( 1 - \frac{5}{90} \right)\left( 1 - \frac{3}{85} \right)
+```
+
+```math
+S(t_3) = 0.9×0.944×0.965≈0.818
+```
+
+This means the probability of surviving up to three years is approximately 81.8%, given the assumed data for a group of 100 people fasting for 8 hours a day. If I had the money, I'd fund research for 100,000 people for 10 years, fasting 12 hours a day.
+
+What's the point of all this? There are none. I found it interesting, and I wanted to talk about it. What was the key takeaway? Intermittent fasting is good. I'll be watching the longevity research space for anything ground-breaking; I'd like to live long.
