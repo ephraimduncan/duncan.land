@@ -42,6 +42,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             lang="en"
             className={`${kaisei.variable} ${newsreader.variable} ${newsreaderRegular.variable} ${GeistSans.variable} ${GeistMono.variable}`}
         >
+            <head>
+                <link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" />
+            </head>
             <body className="antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
                     <main className="max-w-[712px] mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)] mb-10">

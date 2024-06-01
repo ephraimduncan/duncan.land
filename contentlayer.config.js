@@ -1,4 +1,6 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields = {
@@ -79,4 +81,8 @@ export const Thoughts = defineDocumentType(() => ({
 export default makeSource({
     contentDirPath: "./content",
     documentTypes: [Post, Page, Thoughts],
+    mdx: {
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
+    },
 });
