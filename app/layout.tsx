@@ -7,6 +7,7 @@ import localFont from "next/font/local";
 import { Analytics } from "@/components/analytics";
 import Script from "next/script";
 import { Navbar } from "@/components/navbar";
+import Link from "next/link";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -71,6 +72,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
                                 </svg>
                             </a>
                             <div className="text-sm font-nwr">MMXXIV</div>
+                            <Link href="/archive">
+                                <a className="text-blue-500 hover:underline">Archive</a>
+                            </Link>
                         </div>
                     </footer>
 

@@ -8,7 +8,7 @@ export default function BlogPage() {
         <div>
             <h1 className="text-2xl flex gap-2 items-center my-6 cursor-pointer">Blog</h1>
 
-            {allPosts.map((post) => (
+            {allPosts.filter(post => !post.archived).map((post) => (
                 <article key={post._id} className="mb-8">
                     <Link href={post.slug} className="flex justify-between items-start">
                         <h2 className="text-lg hover:underline decoration-grey-100 hover:decoration-1 mb-1">

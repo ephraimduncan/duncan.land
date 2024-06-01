@@ -66,6 +66,10 @@ export const Post = defineDocumentType(() => ({
         draft: {
             type: "boolean",
         },
+        archived: { // Added archived field to mark posts as archived
+            type: "boolean",
+            default: false,
+        },
     },
     computedFields,
 }));
