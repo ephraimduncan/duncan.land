@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 export default function ArchivePage() {
-    const archivedPosts = allPosts.filter(post => post.archived);
+    const archivedPosts = allPosts.filter((post) => post.archived);
 
     return (
         <div>
@@ -22,9 +22,6 @@ export default function ArchivePage() {
             ) : (
                 <p>No archived posts found.</p>
             )}
-            <Link href="/blog">
-                <a className="text-blue-500 hover:underline">Back to Blog</a>
-            </Link>
         </div>
     );
 }

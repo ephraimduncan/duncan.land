@@ -72,9 +72,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                                 </svg>
                             </a>
                             <div className="text-sm font-nwr">MMXXIV</div>
-                            <Link href="/archive">
-                                <a className="text-blue-500 hover:underline">Archive</a>
-                            </Link>
+                            <Link href="/archive">Archive</Link>
                         </div>
                     </footer>
 
