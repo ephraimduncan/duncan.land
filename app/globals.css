@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 em {
-  @apply font-emp italic;
+    @apply font-emp italic;
 }
 
 .inline-link {
-  @apply underline decoration-1 cursor-pointer;
+    @apply underline decoration-1 cursor-pointer;
+}
+
+.katex-display {
+    font-size: 1.2em; /* Adjust as needed */
+    text-align: center;
 }

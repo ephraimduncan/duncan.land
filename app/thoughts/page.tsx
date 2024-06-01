@@ -12,15 +12,19 @@ const variant = {
 export default function BlogPage() {
     return (
         <MotionDiv initial="hidden" animate="visible" variants={variant} className="space-y-4">
-            {allThoughts.map((post) => (
-                <article key={post._id} className="">
-                    <Link href={post.slug} className="flex gap-8 items-center">
-                        <span className="text-base">{format(new Date(post.date), "yyyy-MM-dd")}</span>
+            {allThoughts
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .map((post) => (
+                    <article key={post._id} className="">
+                        <Link href={post.slug} className="flex gap-8 items-center">
+                            <span className="text-base">{format(new Date(post.date), "yyyy-MM-dd")}</span>
 
-                        <h2 className="t hover:underline decoration-grey-100 hover:decoration-1 mb-1">{post.title}</h2>
-                    </Link>
-                </article>
-            ))}
+                            <h2 className="t hover:underline decoration-grey-100 hover:decoration-1 mb-1">
+                                {post.title}
+                            </h2>
+                        </Link>
+                    </article>
+                ))}
         </MotionDiv>
     );
 }

@@ -54,7 +54,7 @@ export default async function ThoughtPage({ params }: ThoughtsProps) {
 
     return (
         <MotionDiv initial="hidden" animate="visible" variants={variant}>
-            <article className="prose dark:prose-invert">
+            <article className="prose dark:prose-invert leading-8">
                 <h1 className="mb-2 font-medium text-2xl">{thought.title}</h1>
 
                 <div className="flex gap-x-2">
