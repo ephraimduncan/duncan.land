@@ -42,15 +42,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
             lang="en"
             className={`${kaisei.variable} ${newsreader.variable} ${newsreaderRegular.variable} ${GeistSans.variable} ${GeistMono.variable}`}
         >
-            <body className="mt-8 antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
+            <body className="antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-                    <main className="max-w-xl mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)]">
+                    <main className="max-w-[712px] mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)] mb-10">
                         <Navbar />
                         {children}
                     </main>
 
-                    <footer className="py-4 border-t border-solid border-grey-100 dark:border-grey-700 mt-20">
-                        <div className="mx-auto max-w-xl px-4 md:px-0 flex justify-between">
+                    <footer className="fixed bottom-0 w-full dark:bg-grey-950 z-1000 py-2 border-t border-solid border-grey-100 dark:border-grey-700">
+                        <div className="mx-auto max-w-[712px] px-4 md:px-0 flex justify-between">
                             <a href="https://twitter.com/EphraimDuncan_">
                                 <svg
                                     width="15"
