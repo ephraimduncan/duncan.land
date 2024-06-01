@@ -3,6 +3,7 @@ title: "Recursion in JavaScript and React Components"
 date: 2022-12-12
 tags: ["nextjs", "javascript", "react"]
 description: "Recursion in JavaScript and React Components"
+archived: true
 ---
 
 **Recursion**, in its essence, is a method of problem-solving that employs the solution to be expressed in terms of itself. This means that a function that employs recursion will call upon itself repeatedly until it reaches a specific base case, at which point the recursion will cease and the function will return a result.
@@ -25,11 +26,11 @@ Let's write a simple recursive function that will calculate the factorial of a n
 
 ```js
 function factorial(n) {
-  // The base case: if n is 0, the factorial is 1
-  if (n === 0) return 1;
+    // The base case: if n is 0, the factorial is 1
+    if (n === 0) return 1;
 
-  // Otherwise, the factorial is n * the factorial of n - 1
-  return n * factorial(n - 1);
+    // Otherwise, the factorial is n * the factorial of n - 1
+    return n * factorial(n - 1);
 }
 
 // Calculate the factorial of 5
@@ -52,11 +53,11 @@ To calculate a Fibonacci number in Javascript, you could write a recursive funct
 
 ```js
 function fibonacci(n) {
-  // The base case: if n is 0 or 1, the Fibonacci number is n
-  if (n === 0 || n === 1) return n;
+    // The base case: if n is 0 or 1, the Fibonacci number is n
+    if (n === 0 || n === 1) return n;
 
-  // Otherwise, the Fibonacci number is the sum of the previous two numbers
-  return fibonacci(n - 1) + fibonacci(n - 2);
+    // Otherwise, the Fibonacci number is the sum of the previous two numbers
+    return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 // Calculate the Fibonacci number at index 10
@@ -74,13 +75,13 @@ Given an array of integers, you can use recursion to calculate the sum of all th
 
 ```js
 function sum(arr) {
-  // The base case: if the input array is empty, the sum is 0
-  if (arr.length === 0) return 0;
+    // The base case: if the input array is empty, the sum is 0
+    if (arr.length === 0) return 0;
 
-  // Otherwise, the sum is the first element plus the sum of the rest of the array
-  const firstElement = arr[0];
-  const restOfArray = arr.slice(1);
-  return firstElement + sum(restOfArray);
+    // Otherwise, the sum is the first element plus the sum of the rest of the array
+    const firstElement = arr[0];
+    const restOfArray = arr.slice(1);
+    return firstElement + sum(restOfArray);
 }
 
 // Calculate the sum of the array [1, 2, 3, 4, 5]
@@ -101,16 +102,16 @@ Let's consider the following React component that renders a the comments and the
 
 ```js
 function CommentThread({ comments }) {
-  return (
-    <ul>
-      {comments.map((comment) => (
-        <li key={comment.id}>
-          <div>{comment.text}</div>
-          {comment.replies && <CommentThread comments={comment.replies} />}
-        </li>
-      ))}
-    </ul>
-  );
+    return (
+        <ul>
+            {comments.map((comment) => (
+                <li key={comment.id}>
+                    <div>{comment.text}</div>
+                    {comment.replies && <CommentThread comments={comment.replies} />}
+                </li>
+            ))}
+        </ul>
+    );
 }
 ```
 
