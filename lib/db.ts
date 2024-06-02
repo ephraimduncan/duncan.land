@@ -1,30 +1,13 @@
-import sqlite from "better-sqlite3";
+import { createClient } from "@libsql/client";
 
-export const db = sqlite("main.db");
+export const db = createClient({
+    url: "file:local.db",
+});
 
-db.exec(`CREATE TABLE IF NOT EXISTS user (
-    id TEXT NOT NULL PRIMARY KEY,
-    github_id INTEGER NOT NULL UNIQUE,
-    username TEXT NOT NULL,
-    name TEXT,
-    email TEXT NOT NULL UNIQUE
-)`);
-
-db.exec(`CREATE TABLE IF NOT EXISTS session (
-    id TEXT NOT NULL PRIMARY KEY,
-    expires_at INTEGER NOT NULL,
-    user_id TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-)`);
-
-db.exec(`CREATE TABLE IF NOT EXISTS post (
-    id TEXT NOT NULL PRIMARY KEY,
-    created_at INTEGER NOT NULL,
-    message TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    signature TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-)`);
+export const turso = createClient({
+    url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+});
 
 export interface DatabaseUser {
     id: string;

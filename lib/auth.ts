@@ -1,14 +1,13 @@
 import { Lucia } from "lucia";
-import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
-import { db } from "./db";
+import { LibSQLAdapter } from "@lucia-auth/adapter-sqlite";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { GitHub } from "arctic";
 
 import type { Session, User } from "lucia";
-import type { DatabaseUser } from "./db";
+import { DatabaseUser, db } from "./db";
 
-const adapter = new BetterSqlite3Adapter(db, {
+const adapter = new LibSQLAdapter(db, {
     user: "user",
     session: "session",
 });

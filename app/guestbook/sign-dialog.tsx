@@ -39,14 +39,13 @@ export const SignDialog = ({ user }: SignDialogProps) => {
                     <DialogBody className="space-y-4">
                         <Field>
                             <Label>Message</Label>
-                            <Textarea name="message" />
+                            <Textarea rows={5} name="message" />
                         </Field>
                         <Field>
                             <Label>Signature</Label>
-
                             <SignaturePad
                                 className={cn(
-                                    "aspect-video h-48 mt-4 w-full rounded-lg border bg-transparent shadow dark:shadow-none",
+                                    "aspect-video h-48 mt-2 w-full rounded-lg border bg-transparent shadow dark:shadow-none",
                                     "border border-grey-950/10 dark:border-black/10 ",
                                     "bg-transparent dark:bg-black/5"
                                 )}

@@ -59,9 +59,12 @@ export async function GET(request: Request): Promise<Response> {
             );
         }
 
-        const existingUser = db.prepare("SELECT * FROM user WHERE github_id = ?").get(githubUser.id) as
-            | DatabaseUser
-            | undefined;
+        const existingUserResult = await db.execute({
+            sql: "SELECT * FROM user WHERE github_id = ?",
+            args: [githubUser.id],
+        });
+
+        const existingUser = existingUserResult.rows[0] as unknown as DatabaseUser | undefined;
 
         if (existingUser) {
             const session = await lucia.createSession(existingUser.id, {});
@@ -76,13 +79,11 @@ export async function GET(request: Request): Promise<Response> {
         }
 
         const userId = generateId(15);
-        db.prepare("INSERT INTO user (id, github_id, username, name, email) VALUES (?, ?, ?, ?, ?)").run(
-            userId,
-            githubUser.id,
-            githubUser.login,
-            githubUser.name,
-            primaryEmail.email
-        );
+        db.execute({
+            sql: "INSERT INTO user (id, github_id, username, name, email) VALUES (?, ?, ?, ?, ?)",
+            args: [userId, githubUser.id, githubUser.login, githubUser.name, primaryEmail.email],
+        });
+
         const session = await lucia.createSession(userId, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
         cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
