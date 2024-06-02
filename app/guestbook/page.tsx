@@ -29,73 +29,49 @@ export default async function GuestbookPage() {
 
             {user ? (
                 <>
-                    <div className="flex gap-4 mb-10">
+                    <div className="flex gap-4 ">
                         <SignDialog user={user} />
                         <form action={logout}>
                             <Button type="submit">Sign out</Button>
                         </form>
                     </div>
-
-                    <ul className="grid grid-cols-12 gap-5">
-                        {posts.map((post) => (
-                            <li key={post.id} className="flex col-span-6">
-                                {/* <Card className="rounded-lg space-y-3">
-                                    <p className="text-sm leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
-
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex flex-col text-sm">
-                                            {post.name ? (
-                                                <p className="font-bold">{post.name}</p>
-                                            ) : (
-                                                <p className="font-bold">@{post.username}</p>
-                                            )}
-
-                                            <p className="">
-                                                {new Date(post.created_at * 1000).toLocaleString("en-US", {
-                                                    year: "numeric",
-                                                    month: "short",
-                                                    day: "numeric",
-                                                })}
-                                            </p>
-                                        </div>
-                                        <div className="dark:invert">
-                                            <Image alt="signature" src={post.signature} width={150} height={150} />
-                                        </div>
-                                    </div>
-                                </Card> */}
-                                <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
-                                    <p className="text-sm leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
-
-                                    <div className="mt-auto flex items-center justify-between">
-                                        <div className="flex flex-col text-sm">
-                                            {post.name ? (
-                                                <p className="font-bold">{post.name}</p>
-                                            ) : (
-                                                <p className="font-bold">@{post.username}</p>
-                                            )}
-
-                                            <p>
-                                                {new Date(post.created_at * 1000).toLocaleString("en-US", {
-                                                    year: "numeric",
-                                                    month: "short",
-                                                    day: "numeric",
-                                                })}
-                                            </p>
-                                        </div>
-                                        <div className="dark:invert">
-                                            <Image alt="signature" src={post.signature} width={150} height={150} />
-                                        </div>
-                                    </div>
-                                </Card>
-                            </li>
-                        ))}
-                    </ul>
                 </>
             ) : (
                 <Button href="/login/github" color="light">
                     Sign in with GitHub
                 </Button>
             )}
+
+            <ul className="grid grid-cols-12 gap-5 mt-10">
+                {posts.map((post) => (
+                    <li key={post.id} className="flex col-span-12 sm:col-span-6">
+                        <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
+                            <p className="text-sm leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
+
+                            <div className="mt-auto flex items-center justify-between">
+                                <div className="flex flex-col justify-end h-full text-sm">
+                                    {post.name ? (
+                                        <p className="font-bold">{post.name}</p>
+                                    ) : (
+                                        <p className="font-bold">@{post.username}</p>
+                                    )}
+
+                                    <p>
+                                        {new Date(post.created_at * 1000).toLocaleString("en-US", {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "numeric",
+                                        })}
+                                    </p>
+                                </div>
+                                <div className="dark:invert -mb-4 -mr-4">
+                                    <Image alt="signature" src={post.signature} width={150} height={150} />
+                                </div>
+                            </div>
+                        </Card>
+                    </li>
+                ))}
+            </ul>
         </section>
     );
 }

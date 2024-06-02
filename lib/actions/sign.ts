@@ -14,12 +14,10 @@ export async function sign(formData: FormData) {
         return;
     }
 
-    const insert = db.execute({
+    await db.execute({
         sql: "INSERT INTO post (id, created_at, message, user_id, signature) VALUES (?, ?, ?, ?, ?)",
         args: [generateId(15), Math.floor(Date.now() / 1000), message, user.id, signature],
     });
-
-    console.log("insert", insert);
 
     revalidatePath("/guestbook");
 }

@@ -8,6 +8,9 @@ import { Textarea } from "@/components/textarea";
 import { sign } from "@/lib/actions/sign";
 import { User } from "lucia";
 import { FormEvent, useState } from "react";
+import { toast } from "sonner";
+import { useFormStatus } from "react-dom";
+import { set } from "date-fns";
 
 type SignDialogProps = {
     user: User;
@@ -16,15 +19,28 @@ type SignDialogProps = {
 export const SignDialog = ({ user }: SignDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [localSignature, setLocalSignature] = useState<string>("");
+    const [textInvalid, setTextInvalid] = useState(false);
+    const [formLoading, setFormLoading] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        setFormLoading(true);
         const formData = new FormData(event.target as HTMLFormElement);
+
+        if (!formData.get("message")) {
+            setTextInvalid(true);
+            setIsOpen(true);
+
+            toast.error("Please enter a message");
+            setFormLoading(false);
+            return;
+        }
+
         formData.append("signature", localSignature);
 
         await sign(formData);
         setIsOpen(false);
+        setFormLoading(false);
     };
 
     return (
@@ -39,13 +55,13 @@ export const SignDialog = ({ user }: SignDialogProps) => {
                     <DialogBody className="space-y-4">
                         <Field>
                             <Label>Message</Label>
-                            <Textarea rows={5} name="message" />
+                            <Textarea invalid={textInvalid} rows={3} name="message" />
                         </Field>
                         <Field>
                             <Label>Signature</Label>
                             <SignaturePad
                                 className={cn(
-                                    "aspect-video h-48 mt-2 w-full rounded-lg border bg-transparent shadow dark:shadow-none",
+                                    "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow dark:shadow-none",
                                     "border border-grey-950/10 dark:border-black/10 ",
                                     "bg-transparent dark:bg-black/5"
                                 )}
@@ -57,7 +73,7 @@ export const SignDialog = ({ user }: SignDialogProps) => {
                         <Button plain onClick={() => setIsOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" onClick={() => setIsOpen(false)}>
+                        <Button disabled={formLoading} type="submit">
                             Sign
                         </Button>
                     </DialogActions>
