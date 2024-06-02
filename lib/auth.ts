@@ -23,6 +23,7 @@ export const lucia = new Lucia(adapter, {
         return {
             githubId: attributes.github_id,
             username: attributes.username,
+            name: attributes.name,
         };
     },
 });
