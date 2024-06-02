@@ -38,9 +38,15 @@ export const SignDialog = ({ user }: SignDialogProps) => {
 
         formData.append("signature", localSignature);
 
-        await sign(formData);
-        setIsOpen(false);
-        setFormLoading(false);
+        try {
+            await sign(formData);
+            setIsOpen(false);
+            setFormLoading(false);
+        } catch (err: any) {
+            toast.error(err.message);
+            setIsOpen(false);
+            setFormLoading(false);
+        }
     };
 
     return (
@@ -54,11 +60,11 @@ export const SignDialog = ({ user }: SignDialogProps) => {
 
                     <DialogBody className="space-y-4">
                         <Field>
-                            <Label>Message</Label>
+                            <Label>Leave a message</Label>
                             <Textarea invalid={textInvalid} rows={3} name="message" />
                         </Field>
                         <Field>
-                            <Label>Signature</Label>
+                            <Label>Sign Here</Label>
                             <SignaturePad
                                 className={cn(
                                     "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow dark:shadow-none",

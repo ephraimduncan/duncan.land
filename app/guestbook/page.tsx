@@ -29,10 +29,12 @@ export default async function GuestbookPage() {
 
             {user ? (
                 <>
-                    <div className="flex gap-4 ">
+                    <div className="flex w-full justify-between">
                         <SignDialog user={user} />
                         <form action={logout}>
-                            <Button type="submit">Sign out</Button>
+                            <Button plain type="submit">
+                                Sign out
+                            </Button>
                         </form>
                     </div>
                 </>
@@ -46,7 +48,7 @@ export default async function GuestbookPage() {
                 {posts.map((post) => (
                     <li key={post.id} className="flex col-span-12 sm:col-span-6">
                         <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
-                            <p className="text-sm leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
+                            <p className="leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
 
                             <div className="mt-auto flex items-center justify-between">
                                 <div className="flex flex-col justify-end h-full text-sm">
