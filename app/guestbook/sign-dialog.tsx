@@ -6,11 +6,26 @@ import { Field, Label } from "@/components/fieldset";
 import { SignaturePad, cn } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
 import { sign } from "@/lib/actions/sign";
-import { useState } from "react";
+import { User } from "lucia";
+import { FormEvent, useState } from "react";
 
-export const SignDialog = () => {
+type SignDialogProps = {
+    user: User;
+};
+
+export const SignDialog = ({ user }: SignDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [localSignature, setLocalSignature] = useState<string | null>(null);
+    const [localSignature, setLocalSignature] = useState<string>("");
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target as HTMLFormElement);
+        formData.append("signature", localSignature);
+
+        await sign(formData);
+        setIsOpen(false);
+    };
 
     return (
         <>
@@ -18,7 +33,7 @@ export const SignDialog = () => {
                 Sign guestbook
             </Button>
             <Dialog open={isOpen} onClose={setIsOpen}>
-                <form action={sign}>
+                <form onSubmit={handleSubmit}>
                     <DialogTitle>Sign my guestbook 🖋️</DialogTitle>
 
                     <DialogBody className="space-y-4">
@@ -35,7 +50,7 @@ export const SignDialog = () => {
                                     "border border-grey-950/10 dark:border-black/10 ",
                                     "bg-transparent dark:bg-black/5"
                                 )}
-                                onChange={(value) => setLocalSignature(value)}
+                                onChange={(value) => setLocalSignature(value ?? "")}
                             />
                         </Field>
                     </DialogBody>

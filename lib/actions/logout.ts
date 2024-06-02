@@ -12,8 +12,6 @@ export async function logout(): Promise<ActionResult> {
     "use server";
     const { session } = await auth();
 
-    console.log(session);
-
     if (!session) {
         return {
             error: "Unauthorized",
