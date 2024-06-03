@@ -71,7 +71,7 @@ export default function Home() {
                     ></path>
                 </svg>
 
-                <ExternalLink text="follow me on twitter" href="https://twitter.com/EphraimDuncan_" />
+                <ExternalLink text="follow me on x" href="https://twitter.com/EphraimDuncan_" />
 
                 <ExternalLink text="let's collaborate on github" href="https://github.com/ephraimduncan" />
 
