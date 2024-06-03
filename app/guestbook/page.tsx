@@ -7,6 +7,8 @@ import { db } from "@/lib/db";
 import { Card } from "@/components/card";
 import Image from "next/image";
 import { MotionDiv } from "@/components/motion";
+import { GithubIcon } from "@/components/ui/GithubIcon";
+import { SignOutIcon } from "@/components/ui/SignoutIcon";
 
 type PostsQuery = {
     id: string;
@@ -37,14 +39,15 @@ export default async function GuestbookPage() {
     return (
         <section>
             <MotionDiv initial="hidden" animate="visible" variants={variant} className="space-y-4">
-                <h1 className="font-medium text-2xl mb-4 tracking-tighter">Sign my guestbook</h1>
+                <h1 className="font-medium text-2xl tracking-tighter">Sign my guestbook</h1>
 
                 {user ? (
                     <>
-                        <div className="flex w-full justify-between">
+                        <div className="flex w-full justify-between items-center">
                             <SignDialog user={user} />
                             <form action={logout}>
                                 <Button plain type="submit">
+                                    <SignOutIcon />
                                     Sign out
                                 </Button>
                             </form>
@@ -52,6 +55,7 @@ export default async function GuestbookPage() {
                     </>
                 ) : (
                     <Button href="/login/github" color="light">
+                        <GithubIcon />
                         Sign in with GitHub
                     </Button>
                 )}

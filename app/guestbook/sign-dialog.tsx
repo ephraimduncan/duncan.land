@@ -56,7 +56,7 @@ export const SignDialog = ({ user }: SignDialogProps) => {
             </Button>
             <Dialog open={isOpen} onClose={setIsOpen}>
                 <form onSubmit={handleSubmit}>
-                    <DialogTitle>Sign my guestbook 🖋️</DialogTitle>
+                    <DialogTitle>Sign my guestbook</DialogTitle>
 
                     <DialogBody className="space-y-4">
                         <Field>
