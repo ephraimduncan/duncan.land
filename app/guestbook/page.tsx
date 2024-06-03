@@ -9,6 +9,7 @@ import Image from "next/image";
 import { MotionDiv } from "@/components/motion";
 import { GithubIcon } from "@/components/ui/GithubIcon";
 import { SignOutIcon } from "@/components/ui/SignoutIcon";
+import { Skeleton } from "@/components/skeleton";
 
 type PostsQuery = {
     id: string;
@@ -17,6 +18,14 @@ type PostsQuery = {
     signature: string;
     username: string;
     name: string;
+};
+
+const CardSkeleton = () => {
+    return (
+        <Card className="rounded-lg flex flex-col justify-between space-y-3 h-32 col-span-12 sm:col-span-6">
+            <Skeleton className="w-full h-12" />
+        </Card>
+    );
 };
 
 export default async function GuestbookPage() {
@@ -62,6 +71,19 @@ export default async function GuestbookPage() {
             </MotionDiv>
 
             <MotionDiv initial="hidden" animate="visible" variants={cardVariants} className="space-y-4">
+                {!posts.length && (
+                    <div className="grid grid-cols-12 gap-5 mt-10">
+                        <CardSkeleton />
+                        <CardSkeleton />
+                        <CardSkeleton />
+                        <CardSkeleton />
+                        <CardSkeleton />
+                        <CardSkeleton />
+                        <CardSkeleton />
+                        <CardSkeleton />
+                    </div>
+                )}
+
                 <ul className="grid grid-cols-12 gap-5 mt-10">
                     {posts.map((post) => (
                         <li key={post.id} className="flex col-span-12 sm:col-span-6">
