@@ -15,7 +15,7 @@ type PostsQuery = {
 
 export default async function GuestbookPage() {
     const postsQuery = await db.execute(
-        "SELECT post.*, user.username, user.name FROM post JOIN user ON post.user_id = user.id ORDER BY post.created_at DESC LIMIT 20"
+        "SELECT post.*, user.username, user.name FROM post JOIN user ON post.user_id = user.id ORDER BY post.created_at DESC LIMIT 50"
     );
     const posts = postsQuery.rows as unknown as PostsQuery[];
 
