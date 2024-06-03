@@ -77,23 +77,17 @@ export default async function GuestbookPage() {
                                         )}
 
                                         <p>
-                                            {/* {new Date(post.created_at * 1000).toLocaleString("en-US", {
+                                            {new Date(post.created_at * 1000).toLocaleString("en-US", {
                                                 year: "numeric",
                                                 month: "short",
                                                 day: "numeric",
-                                            })} */}
-                                            {new Intl.DateTimeFormat("en-US", {
-                                                month: "short",
-                                                day: "2-digit",
-                                                year: "numeric",
                                                 hour: "numeric",
                                                 minute: "numeric",
-                                                hour12: true,
-                                            }).format(new Date(post.created_at))}
+                                            })}
                                         </p>
                                     </div>
                                     <div className="dark:invert -mb-4 -mr-4">
-                                        {/* <Image alt="signature" src={post.signature} width={150} height={150} /> */}
+                                        <Image alt="signature" src={post.signature} width={150} height={150} />
                                     </div>
                                 </div>
                             </Card>
