@@ -81,6 +81,8 @@ export default async function GuestbookPage() {
                                                 year: "numeric",
                                                 month: "short",
                                                 day: "numeric",
+                                                hour: "numeric",
+                                                minute: "numeric",
                                             })}
                                         </p>
                                     </div>
