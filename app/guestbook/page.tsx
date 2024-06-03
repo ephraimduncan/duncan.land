@@ -86,9 +86,11 @@ export default async function GuestbookPage() {
                                             })}
                                         </p>
                                     </div>
-                                    <div className="dark:invert -mb-4 -mr-4">
-                                        <Image alt="signature" src={post.signature} width={150} height={150} />
-                                    </div>
+                                    {post.signature && (
+                                        <div className="dark:invert -mb-4 -mr-4">
+                                            <Image alt="signature" src={post.signature} width={150} height={150} />
+                                        </div>
+                                    )}
                                 </div>
                             </Card>
                         </li>
