@@ -8,6 +8,30 @@ type loadMoreAction<T extends string | number = any> = T extends number
       ? (offset: T) => Promise<readonly [React.JSX.Element, string | null]>
       : any;
 
+const Loader = ({ className }: { className?: string }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <path d="M12 2v4" />
+        <path d="m16.2 7.8 2.9-2.9" />
+        <path d="M18 12h4" />
+        <path d="m16.2 16.2 2.9 2.9" />
+        <path d="M12 18v4" />
+        <path d="m4.9 19.1 2.9-2.9" />
+        <path d="M2 12h4" />
+        <path d="m4.9 4.9 2.9 2.9" />
+    </svg>
+);
+
 const LoadMore = <T extends string | number = any>({
     children,
     initialOffset,
@@ -75,7 +99,14 @@ const LoadMore = <T extends string | number = any>({
             {hasMore && (
                 <span className="flex items-center justify-center">
                     <Button className="" disabled={loading} onClick={() => loadMore()} ref={ref}>
-                        {loading ? "Loading..." : "Load More"}
+                        {loading ? (
+                            <span className="flex items-center justify-center">
+                                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                Loading...
+                            </span>
+                        ) : (
+                            "Load More"
+                        )}
                     </Button>
                 </span>
             )}
