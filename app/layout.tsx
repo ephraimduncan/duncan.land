@@ -82,11 +82,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 </ThemeProvider>
             </body>
             {process.env.NODE_ENV === "production" && (
-                <Script
-                    async
-                    src="https://analytics.duncan.land/script.js"
-                    data-website-id="48972d0a-03c2-4a49-b638-d3a0ad8da3e0"
-                />
+                <>
+                    <Script
+                        async
+                        src="https://analytics.duncan.land/script.js"
+                        data-website-id="48972d0a-03c2-4a49-b638-d3a0ad8da3e0"
+                    />
+
+                    <Script async src="https://0.observe.so/script.js" data-app="clx3apzln02eqarwk2byw7gy0" />
+                </>
             )}
         </html>
     );
