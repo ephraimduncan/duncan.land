@@ -7,7 +7,6 @@ import localFont from "next/font/local";
 import { Analytics } from "@/components/analytics";
 import Script from "next/script";
 import { Navbar } from "@/components/navbar";
-import Link from "next/link";
 import { Toaster } from "sonner";
 
 const newsreader = Newsreader({
