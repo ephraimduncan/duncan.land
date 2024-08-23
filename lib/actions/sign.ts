@@ -20,6 +20,10 @@ export async function sign(formData: FormData) {
         args: [user.id],
     });
 
+    if (message.length > 150) {
+        throw new Error("Message cannot exceed 150 characters long");
+    }
+
     // if post, prevent them from making another post
     if (hasMadePostQuery.rows.length) {
         throw new Error("You have already signed the guestbook");

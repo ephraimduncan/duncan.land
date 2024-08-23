@@ -29,8 +29,8 @@ const kaisei = localFont({
 });
 
 export const metadata = {
-    title: "Ephraim Duncan",
-    description: "✨ My personal website and portfolio.",
+    title: "ZEROAUTH",
+    description: "Unlock the World.",
 };
 
 interface RootLayoutProps {
@@ -52,10 +52,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
                     <main className="max-w-[712px] mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)] mb-10">
                         <Navbar />
+                        
                         {children}
                     </main>
 
-                    <footer className="fixed bottom-0 w-full dark:bg-grey-950 z-1000 py-2 border-t border-solid border-grey-100 dark:border-grey-700">
+                    <footer className="fixed bottom-0 w-full bg-white dark:bg-grey-950 z-1000 py-2 border-t border-solid border-grey-100 dark:border-grey-700">
                         <div className="mx-auto max-w-[712px] px-4 md:px-0 flex justify-between">
                             <a href="https://twitter.com/EphraimDuncan_">
                                 <svg
@@ -82,13 +83,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </body>
             {process.env.NODE_ENV === "production" && (
                 <>
-                    <Script
-                        async
-                        src="https://analytics.duncan.land/script.js"
-                        data-website-id="48972d0a-03c2-4a49-b638-d3a0ad8da3e0"
-                    />
-
-                    <Script async src="https://0.observe.so/script.js" data-app="clx3apzln02eqarwk2byw7gy0" />
+        
                 </>
             )}
         </html>

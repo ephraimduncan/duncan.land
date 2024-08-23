@@ -1,7 +1,6 @@
 import { Post, allPosts } from "@/.contentlayer/generated";
 import { ExternalLink } from "@/components/ui/ExternalLink";
 import Link from "next/link";
-import { ModeToggle } from "@/components/mode-toggle";
 import { MotionDiv, MotionHeader } from "@/components/motion";
 
 const containerVariants = {
@@ -24,19 +23,11 @@ export default function Home() {
             <MotionHeader variants={childVariants}>
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h1 className="text-2xl">Ephraim Duncan</h1>
+                        <h1 className="text-2xl">ZEROAUTH</h1>
                         <h3 className="text-grey-400 text-lg mt-1">
-                            Software Engineer at{" "}
-                            <a
-                                href="http://documenso.com/?ref=ephraimduncan.com"
-                                className="hover:underline cursor-pointer"
-                            >
-                                Documenso
-                            </a>
+                        Unlock the World.
                         </h3>
                     </div>
-
-                    <ModeToggle />
                 </div>
             </MotionHeader>
 

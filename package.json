@@ -30,6 +30,7 @@
         "eslint-config-next": "latest",
         "framer-motion": "^10.16.4",
         "geist": "^1.0.0",
+        "glob": "^11.0.0",
         "lucia": "^3.2.0",
         "next": "latest",
         "next-contentlayer": "^0.3.2",

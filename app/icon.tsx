@@ -18,7 +18,7 @@ export default function Icon() {
                     height: 32,
                 }}
             >
-                E
+                0A
             </div>
         ),
         {
