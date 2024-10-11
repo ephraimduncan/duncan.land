@@ -2,6 +2,7 @@ import { Post, allPosts } from "@/.contentlayer/generated";
 import { ExternalLink } from "@/components/ui/ExternalLink";
 import Link from "next/link";
 import { MotionDiv, MotionHeader } from "@/components/motion";
+import { ContactContainer } from "@/components/main/contact";
 
 const containerVariants = {
     hidden: {},
@@ -67,7 +68,8 @@ export default function Home() {
                 <ExternalLink text="let's collaborate on github" href="https://github.com/ephraimduncan" />
 
                 <ExternalLink text="love to talk?" href="https://cal.com/astrosaurus/30min" />
-            </MotionDiv>
+                <ContactContainer/>
+                </MotionDiv>
         </MotionDiv>
     );
 }
