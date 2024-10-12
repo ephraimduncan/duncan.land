@@ -32,6 +32,7 @@
         "geist": "^1.0.0",
         "glob": "^11.0.0",
         "lucia": "^3.2.0",
+        "lucide-react": "^0.452.0",
         "next": "latest",
         "next-contentlayer": "^0.3.2",
         "next-themes": "^0.2.1",

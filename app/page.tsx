@@ -1,8 +1,7 @@
 import { Post, allPosts } from "@/.contentlayer/generated";
-import { ExternalLink } from "@/components/ui/ExternalLink";
 import Link from "next/link";
 import { MotionDiv, MotionHeader } from "@/components/motion";
-import { ContactContainer } from "@/components/main/contact";
+import  SocialLinks  from "@/components/ui/ExternalLink";
 
 const containerVariants = {
     hidden: {},
@@ -17,6 +16,12 @@ const childVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
+
+const socialLinks = [
+    { href: 'https://github.com/Trixzyy', name: 'github', icon: '/socials/github.png' },
+    { href: 'https://x.com/trixzydev', name: 'x', icon: '/socials/x.png' },
+    { href: 'https://discord.com/users/992171799536218142', name: 'discord', icon: '/socials/discord.png' },
+  ]
 
 export default function Home() {
     return (
@@ -63,12 +68,7 @@ export default function Home() {
                     ></path>
                 </svg>
 
-                <ExternalLink text="follow me on x" href="https://twitter.com/EphraimDuncan_" />
-
-                <ExternalLink text="let's collaborate on github" href="https://github.com/ephraimduncan" />
-
-                <ExternalLink text="love to talk?" href="https://cal.com/astrosaurus/30min" />
-                <ContactContainer/>
+                <SocialLinks links={socialLinks} />
                 </MotionDiv>
         </MotionDiv>
     );
