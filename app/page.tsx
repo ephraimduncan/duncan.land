@@ -2,6 +2,7 @@ import { Post, allPosts } from "@/.contentlayer/generated";
 import Link from "next/link";
 import { MotionDiv, MotionHeader } from "@/components/motion";
 import  SocialLinks  from "@/components/ui/ExternalLink";
+import DiscordProfile from "@/components/ui/DiscordProfile";
 
 const containerVariants = {
     hidden: {},
@@ -27,14 +28,7 @@ export default function Home() {
     return (
         <MotionDiv initial="hidden" animate="visible" variants={containerVariants}>
             <MotionHeader variants={childVariants}>
-                <div className="flex items-center justify-between mb-4">
-                    <div>
-                        <h1 className="text-2xl">Hi I'm Zac</h1>
-                        <h3 className="text-grey-400 text-lg mt-1">
-                        Of course I'm a machine.
-                        </h3>
-                    </div>
-                </div>
+                <DiscordProfile/>
             </MotionHeader>
 
             <MotionDiv variants={childVariants} className=" dark:text-grey-100 text-grey-800 mt-10 space-y-5">
