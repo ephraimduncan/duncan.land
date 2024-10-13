@@ -4,77 +4,88 @@ import { useDiscordStatus } from '@/lib/hooks/use-discord-status'
 import { useState, useEffect } from 'react'
 
 export default function DiscordProfile() {
-  const { avatar, discordStatus, customStatus } = useDiscordStatus()
-  const [isLoaded, setIsLoaded] = useState(false)
+    const { avatar, discordStatus, customStatus } = useDiscordStatus()
+    const [isLoaded, setIsLoaded] = useState(false)
 
-  useEffect(() => {
-    if (discordStatus) {
-      setIsLoaded(true)
+    useEffect(() => {
+        if (discordStatus) {
+            setIsLoaded(true)
+        }
+    }, [discordStatus])
+
+    const getStatusColor = (status: string | undefined) => {
+        switch (status) {
+            case 'online': return 'bg-green-500'
+            case 'idle': return 'bg-yellow-500'
+            case 'dnd': return 'bg-red-500'
+            default: return 'bg-gray-500'
+        }
     }
-  }, [discordStatus])
 
-  const getStatusColor = (status: string | undefined) => {
-    switch (status) {
-      case 'online': return 'bg-green-500'
-      case 'idle': return 'bg-yellow-500'
-      case 'dnd': return 'bg-red-500'
-      default: return 'bg-gray-500'
-    }
-  }
+    const statusColor = getStatusColor(discordStatus?.discord_status)
 
-  const statusColor = getStatusColor(discordStatus?.discord_status)
-
-  const renderAvatar = () => (
-    <div className="relative">
-      {isLoaded && avatar ? (
-        <img
-          src={avatar}
-          alt="Discord avatar"
-          className="w-16 h-16 rounded-md object-cover"
-        />
-      ) : (
-        <img
-          src="/static/avatar.gif"
-          alt="Trixzy's Discord Avatar"
-          className="w-16 h-16 rounded-md object-cover"
-        />
-      )}
-      <div className={`absolute bottom-0 right-0 w-4 h-4 ${statusColor} rounded-full border-2 border-white dark:border-gray-800 ${discordStatus?.discord_status === 'offline' ? '' : 'animate-pulse'}`} />
-    </div>
-  )
-
-  const renderStatus = () => {
-    if (!isLoaded) return <div className="h-4 w-24 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
-    
-    if (customStatus?.state) {
-      return (
-        <div className="flex items-center space-x-1">
-          {customStatus.emoji && (
-            <img
-              src={`https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.png`}
-              alt={customStatus.emoji.name}
-              className="w-4 h-4"
-            />
-          )}
-          <span className="text-sm text-gray-600 dark:text-gray-400">{customStatus.state}</span>
+    const renderAvatar = () => (
+        <div className="relative w-16 h-16">
+                {isLoaded && avatar ? (
+                        <img
+                                src={avatar}
+                                alt="Discord avatar"
+                                className="w-full h-full rounded-md object-cover"
+                                onError={(e) => { e.currentTarget.src = '/static/avatar.gif'; }}
+                        />
+                ) : (
+                        <img
+                                src="/static/avatar.gif"
+                                alt="Fallback avatar"
+                                className="w-full h-full rounded-md object-cover"
+                        />
+                )}
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 flex items-center justify-center">
+                        {discordStatus?.discord_status !== 'offline' && (
+                                <span className={`absolute inline-flex w-3 h-3 rounded-full ${statusColor} opacity-75 animate-ping`} style={{ animationDuration: '2s' }} />
+                        )}
+                        <span className={`relative inline-flex rounded-full ${statusColor} w-3 h-3`} />
+                </div>
         </div>
-      )
-    }
-    
-    return (
-      <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-        {discordStatus?.discord_status || 'Offline'}
-      </p>
     )
-  }
 
-  return (
-    <div className="flex items-center space-x-4">
-      {renderAvatar()}
-      <div>
-        <h1 className="text-2xl font-semibold">Hi I'm Zac</h1>
-        {renderStatus()}
-      </div>
-    </div>
-  )
+    const renderEmoji = (emoji: { name: string; id: string; animated: boolean }) => {
+        const extension = emoji.animated ? 'gif' : 'png'
+        return (
+            <img
+                src={`https://cdn.discordapp.com/emojis/${emoji.id}.${extension}`}
+                alt={emoji.name}
+                className="w-4 h-4 mr-1"
+            />
+        )
+    }
+
+    const renderStatus = () => {
+        if (!isLoaded) return <div className="h-5 w-14 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
+        
+        if (customStatus?.state) {
+            return (
+                <div className="flex items-center space-x-1">
+                    {customStatus.emoji && renderEmoji(customStatus.emoji)}
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{customStatus.state}</span>
+                </div>
+            )
+        }
+        
+        return (
+            <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                {discordStatus?.discord_status || 'Offline'}
+            </p>
+        )
+    }
+
+    return (
+        <div className="flex items-center space-x-5">
+            {renderAvatar()}
+            <div>
+                <h1 className="text-2xl font-semibold">Zac</h1>
+                {renderStatus()}
+            </div>
+        </div>
+    )
 }
