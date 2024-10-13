@@ -58,7 +58,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
                     <footer className="fixed bottom-0 w-full bg-white dark:bg-grey-950 z-1000 py-2 border-t border-solid border-grey-100 dark:border-grey-700">
                         <div className="mx-auto max-w-[712px] px-4 md:px-0 flex justify-between">
-                            <a href="https://github.com/Trixzyy" target="_blank" rel="noopener noreferrer" className="text-grey-500 dark:text-grey-400">
+                            <a href="https://github.com/Trixzyy" target="_blank" rel="noopener noreferrer" className="text-grey-500 dark:text-grey-400 hover:text-grey-700 dark:hover:text-grey-200 transition-colors duration-300">
                             <svg
                                     width="30"
                                     height="30"

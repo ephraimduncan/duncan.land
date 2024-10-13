@@ -97,7 +97,7 @@ const LoadMore = <T extends string | number = any>({
             {loadMoreNodes}
 
             {hasMore && (
-                <span className="flex items-center justify-center">
+                <span className="flex items-center justify-center mt-16">
                     <Button className="" disabled={loading} onClick={() => loadMore()} ref={ref}>
                         {loading ? (
                             <span className="flex items-center justify-center">

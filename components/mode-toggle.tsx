@@ -25,20 +25,18 @@ export function ModeToggle() {
     return (
         <button
             onClick={toggleTheme}
-            className={`border rounded-md w-6 h-6 flex items-center justify-center border-${
-                theme === "light" ? "grey-800" : "gray-100"
-            }`}
+            className={`border rounded-md w-6 h-6 flex items-center justify-center border-grey-200 dark:border-slate-600 hover:border-grey-300 dark:hover:border-grey-700 transition-colors duration-300`}
         >
             <span className="sr-only">Toggle Theme</span>
             <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className={`w-4 h-4 text-${theme === "light" ? "grey-800" : "gray-100"}`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className={`w-4 h-4 text-${theme === "light" ? "grey-800" : "grey-100"}`}
             >
-                <path strokeLinecap="round" strokeLinejoin="round" d={svgPath} />
+            <path strokeLinecap="round" strokeLinejoin="round" d={svgPath} />
             </svg>
         </button>
     );

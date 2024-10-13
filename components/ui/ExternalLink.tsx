@@ -74,8 +74,8 @@ const SocialLink: React.FC<SocialLinkProps> = ({ href, name, icon }) => {
           >
             <Image 
               src={icon} 
-              width={48} 
-              height={48} 
+              width={128} 
+              height={128} 
               alt={name} 
               className="w-full h-full object-cover"
             />

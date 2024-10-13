@@ -29,9 +29,9 @@ export default function Home() {
             <MotionHeader variants={childVariants}>
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h1 className="text-2xl">ZEROAUTH</h1>
+                        <h1 className="text-2xl">Hi I'm Zac</h1>
                         <h3 className="text-grey-400 text-lg mt-1">
-                        Unlock the World.
+                        Of course I'm a machine.
                         </h3>
                     </div>
                 </div>
