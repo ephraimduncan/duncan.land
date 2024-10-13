@@ -36,24 +36,24 @@ const SocialLink: React.FC<SocialLinkProps> = ({ href, name, icon }) => {
     hidden: {
       opacity: 0,
       y: 15,
-      translateX: '-50%',
-      scale: 0.8,
-      rotate: '0deg',
-    },
-    show: (custom: { rotateRight: boolean }) => ({
+      translateX: "-50%",
+      filter: "blur(3px)",
+      rotate: "0deg",
+  },
+  show: (custom: { rotateRight: boolean }) => ({
       opacity: 1,
       y: 0,
-      scale: 1,
-      rotate: custom?.rotateRight ? '6deg' : '-3deg',
-    }),
-    exit: {
+      filter: "blur(0px)",
+      rotate: custom?.rotateRight ? "6deg" : "-3deg",
+  }),
+  exit: {
       opacity: 0,
       y: 15,
-      scale: 0.8,
-      rotate: '0deg',
+      filter: "blur(3px)",
+      rotate: "0deg",
       transition: { ...transition, duration: 0.5 },
-    },
-  }
+  },
+};
 
   return (
     <Link
@@ -70,12 +70,12 @@ const SocialLink: React.FC<SocialLinkProps> = ({ href, name, icon }) => {
             initial="hidden"
             animate="show"
             exit="exit"
-            className="absolute -top-14 left-1/2 w-12 h-12 -translate-x-1/2 rotate-3 overflow-hidden rounded-lg shadow-md"
+            className="absolute -top-12 left-1/2 w-10 h-10 -translate-x-1/2 rotate-3 overflow-hidden rounded-lg shadow-md"
           >
             <Image 
               src={icon} 
-              width={128} 
-              height={128} 
+              width={64} 
+              height={64} 
               alt={name} 
               className="w-full h-full object-cover"
             />
