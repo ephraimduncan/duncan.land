@@ -3,6 +3,7 @@
 import { useDiscordStatus } from '@/lib/hooks/use-discord-status'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function DiscordProfile() {
     const { avatar, discordStatus, customStatus } = useDiscordStatus()
@@ -66,21 +67,41 @@ export default function DiscordProfile() {
     }
 
     const renderStatus = () => {
-        if (!isLoaded) return <div className="h-5 w-14 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
-        
-        if (customStatus?.state) {
+        if (!isLoaded) {
             return (
-                <div className="flex items-center space-x-1">
-                    {customStatus.emoji && renderEmoji(customStatus.emoji)}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{customStatus.state}</span>
+                <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400 animate-pulse">Loading...</span>
                 </div>
             )
         }
-        
+
         return (
-            <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                {discordStatus?.discord_status || 'Offline'}
-            </p>
+            <AnimatePresence mode="wait">
+                {customStatus?.state ? (
+                    <motion.div
+                        key="customStatus"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex items-center space-x-1"
+                    >
+                        {customStatus.emoji && renderEmoji(customStatus.emoji)}
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{customStatus.state}</span>
+                    </motion.div>
+                ) : (
+                    <motion.p
+                        key="discordStatus"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-sm text-gray-600 dark:text-gray-400 capitalize"
+                    >
+                        {discordStatus?.discord_status || 'Offline'}
+                    </motion.p>
+                )}
+            </AnimatePresence>
         )
     }
 
