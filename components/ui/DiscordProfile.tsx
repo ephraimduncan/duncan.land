@@ -34,11 +34,11 @@ export default function DiscordProfile() {
                     alt="Discord avatar"
                     layout="fill"
                     className="rounded-md object-cover"
-                    onError={(e) => { e.currentTarget.src = '/static/avatar.gif'; }}
+                    onError={(e) => { e.currentTarget.src = '/static/avatar.png'; }}
                 />
             ) : (
                 <Image
-                    src="/static/avatar.gif"
+                    src="/static/avatar.png"
                     alt="Fallback avatar"
                     layout="fill"
                     className="rounded-md object-cover"
