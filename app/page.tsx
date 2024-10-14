@@ -33,18 +33,16 @@ export default function Home() {
 
             <MotionDiv variants={childVariants} className=" dark:text-grey-100 text-grey-800 mt-10 space-y-5">
                 <p>
-                    Building polished software experiences with magical, unique and delightful details, for the web. I
-                    aim to create beautiful and functional software that is both intuitive and enjoyable for users.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
                 </p>
                 <p>
-                    I have a passion for learning, and I am constantly seeking to improve my skills mostly through{" "}
-                    <span className="inline-link">reading</span> and{" "}
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.{" "}
+                    <span className="inline-link">Lorem ipsum</span> dolor sit amet,{" "}
                     <Link href="/blog">
-                        <span className="inline-link">writing</span>
+                        <span className="inline-link">consectetur adipiscing</span>
                     </Link>
-                    . I'm interested in
-                    <em> TypeScript</em> and <em> Rust</em>, and at the same time, I'm also experimenting with native
-                    apps with <em> Swift</em>.
+                    . Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+                    <em> Lorem ipsum</em> dolor sit amet, <em> consectetur adipiscing</em> elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
                 </p>
             </MotionDiv>
             <MotionDiv variants={childVariants}>
