@@ -29,6 +29,24 @@ const albumHoverVariants = {
   hover: { scale: 1.05, transition: { duration: 0.3 } },
 }
 
+interface Track {
+  name: string;
+  url: string;
+  artist: {
+    '#text': string;
+  };
+  image: Array<{
+    size: string;
+    '#text': string;
+  }>;
+  date?: {
+    uts: string;
+  };
+  '@attr'?: {
+    nowplaying: string;
+  };
+}
+
 export default function MusicPage() {
   const [period, setPeriod] = useState<'7day' | '1month' | '3month' | '6month' | '12month' | 'overall'>('1month')
   const { data, loading, error } = useLastFmData(period)
@@ -72,7 +90,7 @@ export default function MusicPage() {
               </li>
             ))
           ) : (
-            data?.recentTracks.map((track, index) => (
+            data?.recentTracks.map((track: Track, index: number) => (
               <li key={index} className="flex items-center space-x-4 border-b border-gray-700 pb-4">
                 <Link href={track.url} className="relative flex-shrink-0 w-16 h-16 overflow-hidden rounded">
                   <MotionDiv
@@ -94,7 +112,7 @@ export default function MusicPage() {
                   <p className="text-sm text-gray-400 truncate">{track.artist['#text']}</p>
                 </div>
                 <div className="text-sm text-gray-500 whitespace-nowrap">
-                {track['@attr']?.nowplaying ? 'Scrobbling now' : getRelativeTime(track.date.uts)}
+                  {track['@attr']?.nowplaying === 'true' ? 'Scrobbling now' : track.date ? getRelativeTime(track.date.uts) : 'Unknown time'}
                 </div>
               </li>
             ))
