@@ -5,7 +5,7 @@ import { useLastFmData } from '@/lib/hooks/use-music-data'
 import { motion } from 'framer-motion';
 import Link from 'next/link'
 import CustomSelect from '@/components/music/CustomSelect'
-import AlbumCard from '@/components/music/AlbumCard'
+import ImageGrid from '@/components/music/ImageGrid'
 import { getRelativeTime } from '@/components/music/getRelativeTime'
 
 const MotionDiv = motion.div;
@@ -29,26 +29,11 @@ const albumHoverVariants = {
   hover: { scale: 1.05, transition: { duration: 0.3 } },
 }
 
-const ImageGrid: React.FC<{ albums: any[] }> = ({ albums }) => {
-  return (
-    <div className="overflow-hidden rounded-md flex flex-col md:flex-row">
-      <div className="md:w-1/2 flex-shrink-0">
-        <AlbumCard album={albums[0]} isLarge={true} />
-      </div>
-      <div className="md:w-1/2 grid grid-cols-2">
-        {albums.slice(1, 5).map((album, index) => (
-          <AlbumCard key={index} album={album} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
 export default function MusicPage() {
   const [period, setPeriod] = useState<'7day' | '1month' | '3month' | '6month' | '12month' | 'overall'>('1month')
   const { data, loading, error } = useLastFmData(period)
 
-  if (error) return <div className="text-center mt-10 text-red-500">Error: {error.message}</div>
+  if (error) return <div className="text-center mt-10 text-red-500">Error: {error.message} 😔</div>
 
   return (
     <MotionDiv initial="hidden" animate="visible" variants={containerVariants} className="max-w-4xl mx-auto px-4">
@@ -69,11 +54,7 @@ export default function MusicPage() {
       </MotionDiv>
 
       <MotionDiv variants={childVariants} className="mb-10">
-        {loading ? (
-          <div className="w-full aspect-[3/2] bg-gray-800 animate-pulse rounded-xl"></div>
-        ) : (
-          <ImageGrid albums={data?.topAlbums || []} />
-        )}
+        <ImageGrid albums={data?.topAlbums || []} isLoading={loading} />
       </MotionDiv>
 
       <MotionDiv variants={childVariants}>
@@ -93,27 +74,27 @@ export default function MusicPage() {
           ) : (
             data?.recentTracks.map((track, index) => (
               <li key={index} className="flex items-center space-x-4 border-b border-gray-700 pb-4">
-                <Link href={track.url} className="relative w-16 h-16 overflow-hidden rounded">
+                <Link href={track.url} className="relative flex-shrink-0 w-16 h-16 overflow-hidden rounded">
                   <MotionDiv
                     variants={albumHoverVariants}
                     initial="rest"
                     whileHover="hover"
                   >
                     <img 
-                      src={track.image.find(img => img.size === 'medium')?.['#text'] || '/placeholder.svg?height=64&width=64'} 
+                      src={track.image.find(img => img.size === 'large')?.['#text'] || '/placeholder.svg?height=128&width=128'} 
                       alt={`${track.name} by ${track.artist['#text']}`}
                       className="w-full h-full object-cover"
                     />
                   </MotionDiv>
                 </Link>
-                <div className="flex-grow">
-                  <Link href={track.url} className="hover:underline">
-                    <h3 className="text-lg font-semibold">{track.name}</h3>
+                <div className="flex-grow min-w-0">
+                  <Link href={track.url} className="hover:underline block">
+                    <h3 className="text-lg font-semibold truncate">{track.name}</h3>
                   </Link>
-                  <p className="text-sm text-gray-400">{track.artist['#text']}</p>
+                  <p className="text-sm text-gray-400 truncate">{track.artist['#text']}</p>
                 </div>
-                <div className="text-sm text-gray-500">
-                  {track['@attr']?.nowplaying ? 'Scrobbling now' : getRelativeTime(track.date?.['#text'] || '')}
+                <div className="text-sm text-gray-500 whitespace-nowrap">
+                {track['@attr']?.nowplaying ? 'Scrobbling now' : getRelativeTime(track.date.uts)}
                 </div>
               </li>
             ))

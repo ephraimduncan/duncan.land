@@ -1,59 +1,75 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Option {
-  value: string;
-  label: string;
+    value: string;
+    label: string;
 }
 
 interface CustomSelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: Option[];
+    value: string;
+    onChange: (value: string) => void;
+    options: Option[];
 }
 
 export default function CustomSelect({ value, onChange, options }: CustomSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const selectRef = useRef<HTMLDivElement>(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const selectRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  return (
-    <div ref={selectRef} className="relative">
-      <div
-        className="bg-transparent rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 cursor-pointer flex items-center justify-between min-w-[120px]"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span>{options.find(option => option.value === value)?.label}</span>
-        <ChevronDown className="w-4 h-4 ml-2" />
-      </div>
-      {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-full bg-gray-800 rounded shadow-lg z-10">
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className="px-2 py-1 hover:bg-gray-700 cursor-pointer"
-              onClick={() => {
-                onChange(option.value);
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
-              }}
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <div ref={selectRef} className="relative">
+            <motion.div
+                className="rounded-md px-3 py-2 text-sm text-black dark:text-white cursor-pointer flex items-center justify-between min-w-[150px]"
+                onClick={() => setIsOpen(!isOpen)}
+                whileTap={{ scale: 0.98 }}
             >
-              {option.label}
-            </div>
-          ))}
+                <span>{options.find(option => option.value === value)?.label}</span>
+                <motion.div
+                    animate={{ scale: isOpen ? 1.1 : 1 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    {isOpen ? <ChevronUp className="w-4 h-4 ml-2" /> : <ChevronDown className="w-4 h-4 ml-2" />}
+                </motion.div>
+            </motion.div>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 mt-1 w-full bg-gray-800 rounded-md shadow-lg z-10 overflow-hidden"
+                    >
+                        {options.map((option) => (
+                            <motion.div
+                                key={option.value}
+                                className={`px-3 py-2 cursor-pointer text-white text-sm ${value === option.value ? 'bg-gray-700 dark:bg-gray-600' : 'hover:bg-gray-700 dark:hover:bg-gray-600'}`}
+                                onClick={() => {
+                                    onChange(option.value);
+                                    setIsOpen(false);
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                {option.label}
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
-      )}
-    </div>
-  );
+    );
 }
