@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react'
 import { useLastFmData } from '@/lib/hooks/use-music-data'
-import { MotionDiv } from "@/components/motion"
-import Link from 'next/link'
 import { motion } from 'framer-motion';
-const MotionLink = motion(Link);
+import Link from 'next/link'
+import CustomSelect from '@/components/music/CustomSelect'
+import AlbumCard from '@/components/music/AlbumCard'
+import { getRelativeTime } from '@/components/music/getRelativeTime'
+
+const MotionDiv = motion.div;
 
 const containerVariants = {
   hidden: {},
@@ -26,11 +29,6 @@ const albumHoverVariants = {
   hover: { scale: 1.05, transition: { duration: 0.3 } },
 }
 
-const imageHoverVariants = {
-  rest: { scale: 1 },
-  hover: { scale: 1.05, transition: { duration: 0.3 } },
-}
-
 const ImageGrid: React.FC<{ albums: any[] }> = ({ albums }) => {
   return (
     <div className="overflow-hidden rounded-md flex flex-col md:flex-row">
@@ -44,65 +42,6 @@ const ImageGrid: React.FC<{ albums: any[] }> = ({ albums }) => {
       </div>
     </div>
   );
-};
-
-const AlbumCard: React.FC<{ album: any; isLarge?: boolean }> = ({ album, isLarge = false }) => {
-  if (!album) return null;
-
-  return (
-    <Link 
-      href={album.url} 
-      className="relative overflow-hidden block h-full"
-    >
-      <MotionDiv 
-        className="w-full h-full"
-        variants={imageHoverVariants}
-        initial="rest"
-        whileHover="hover"
-      >
-        <img 
-          src={album.image.find(img => img.size === 'extralarge')?.['#text'] || `/placeholder.svg?height=${isLarge ? 600 : 300}&width=${isLarge ? 600 : 300}`} 
-          alt={`${album.name} by ${album.artist.name}`}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-      </MotionDiv>
-      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-        <h3 className="text-sm font-semibold truncate">{album.name}</h3>
-        <p className="text-xs truncate">{album.artist.name}</p>
-        <p className="text-xs">{album.playcount} plays</p>
-      </div>
-    </Link>
-  );
-};
-
-const CustomSelect: React.FC<{
-  value: string,
-  onChange: (value: string) => void,
-  options: { value: string, label: string }[]
-}> = ({ value, onChange, options }) => {
-  return (
-    <select 
-      value={value} 
-      onChange={(e) => onChange(e.target.value)}
-      className="bg-transparent rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>{option.label}</option>
-      ))}
-    </select>
-  );
-};
-
-const getRelativeTime = (date: string) => {
-  const now = new Date();
-  const past = new Date(date);
-  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-
-  if (diffInSeconds < 60) return 'Just now';
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-  return `${Math.floor(diffInSeconds / 86400)} days ago`;
 };
 
 export default function MusicPage() {
