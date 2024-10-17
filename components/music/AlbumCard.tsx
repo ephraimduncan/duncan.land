@@ -9,8 +9,25 @@ const imageHoverVariants = {
   hover: { scale: 1.05, transition: { duration: 0.3 } },
 };
 
+interface ImageObject {
+  size: string;
+  '#text': string;
+}
+
+interface Artist {
+  name: string;
+}
+
+interface Album {
+  url: string;
+  image: ImageObject[];
+  name: string;
+  artist: Artist;
+  playcount: number;
+}
+
 interface AlbumCardProps {
-  album: any;
+  album: Album;
   isLarge?: boolean;
 }
 
@@ -29,7 +46,7 @@ export default function AlbumCard({ album, isLarge = false }: AlbumCardProps) {
         whileHover="hover"
       >
         <img 
-          src={album.image.find(img => img.size === 'extralarge')?.['#text'] || `/placeholder.svg?height=${isLarge ? 600 : 300}&width=${isLarge ? 600 : 300}`} 
+          src={album.image.find((img: ImageObject) => img.size === 'extralarge')?.['#text'] || `/placeholder.svg?height=${isLarge ? 600 : 300}&width=${isLarge ? 600 : 300}`} 
           alt={`${album.name} by ${album.artist.name}`}
           className="w-full h-full object-cover"
         />
