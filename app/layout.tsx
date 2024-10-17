@@ -29,8 +29,8 @@ const kaisei = localFont({
 });
 
 export const metadata = {
-    title: "ZEROAUTH",
-    description: "Unlock the World.",
+    title: "zac.ong",
+    description: "my personal website",
 };
 
 interface RootLayoutProps {

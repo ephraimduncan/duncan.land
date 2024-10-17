@@ -32,18 +32,12 @@ export default function Home() {
             </MotionHeader>
 
             <MotionDiv variants={childVariants} className=" dark:text-grey-100 text-grey-800 mt-10 space-y-5">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-                </p>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.{" "}
-                    <span className="inline-link">Lorem ipsum</span> dolor sit amet,{" "}
-                    <Link href="/blog">
-                        <span className="inline-link">consectetur adipiscing</span>
-                    </Link>
-                    . Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-                    <em> Lorem ipsum</em> dolor sit amet, <em> consectetur adipiscing</em> elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-                </p>
+            <p>
+  Welcome to my corner of the web, where I build clever web applications. My journey into web development started with creating games on Scratch and Discord bots, eventually leading me to Node.js and TypeScript.
+</p>
+<p>
+  Currently, I'm using <em>Bun</em> and <em>Next.js</em> to develop efficient web apps. I love that my projects can connect people and make a positive impact. Check out my <Link href="/blog"><span className="inline-link">blog</span></Link> for insights and updates. Also, explore my top listened to albums-I enjoy coding with <Link href="/music"><span className="inline-link">music</span></Link>!
+</p>
             </MotionDiv>
             <MotionDiv variants={childVariants}>
                 <svg
