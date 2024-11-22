@@ -1,4 +1,4 @@
-import { ModeToggle } from "@/components/mode-toggle";
+import { AppThemeSwitcher } from "@/components/mode-toggle";
 import * as FadeIn from "@/components/motion";
 import { ExternalLink } from "@/components/ui/ExternalLink";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export default function Home() {
             </h3>
           </div>
 
-          <ModeToggle />
+          <AppThemeSwitcher />
         </div>
       </FadeIn.Item>
 

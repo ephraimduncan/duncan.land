@@ -1,45 +1,67 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import type React from "react";
 
-export function ModeToggle() {
-    const { setTheme, theme } = useTheme();
+import { cn } from "@/lib/utils";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { ThemeProvider, useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
-    const toggleTheme = () => {
-        setTheme(theme === "light" ? "dark" : "light");
-    };
+export const AppThemeSwitcher = () => {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
-    let svgPath = "";
-    let spanContent = "";
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    if (theme === "light") {
-        svgPath =
-            "M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z";
-        spanContent = "Toggle to Dark Mode";
-    } else {
-        svgPath =
-            "M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z";
-        spanContent = "Toggle to Light Mode";
-    }
+  if (!mounted) return null;
 
-    return (
+  const buttons = [
+    {
+      label: "system",
+      icon: <Monitor width={13} />,
+      active: theme === "system",
+    },
+    { label: "dark", icon: <Moon width={13} />, active: theme === "dark" },
+    { label: "light", icon: <Sun width={13} />, active: theme === "light" },
+  ];
+
+  return (
+    <span className="flex w-fit items-center gap-0.5 overflow-hidden rounded-[6px] dark:bg-grey-900 bg-grey-100 p-[2px]">
+      {buttons.map(({ label, icon, active }) => (
         <button
-            onClick={toggleTheme}
-            className={`border rounded-md w-6 h-6 flex items-center justify-center border-${
-                theme === "light" ? "grey-800" : "gray-100"
-            }`}
+          type="button"
+          key={label}
+          onClick={() => setTheme(label)}
+          className={cn(
+            "transition-all flex h-6 w-6 items-center justify-center rounded-[4px] hover:opacity-50 text-grey-600 dark:text-grey-300",
+            {
+              "bg-grey-200 dark:bg-grey-600 text-grey-800 dark:text-grey-100":
+                active,
+            },
+          )}
         >
-            <span className="sr-only">Toggle Theme</span>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className={`w-4 h-4 text-${theme === "light" ? "grey-800" : "gray-100"}`}
-            >
-                <path strokeLinecap="round" strokeLinejoin="round" d={svgPath} />
-            </svg>
+          {icon}
         </button>
-    );
-}
+      ))}
+    </span>
+  );
+};
+
+export const AppThemeProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  return (
+    <ThemeProvider
+      enableSystem={true}
+      attribute="class"
+      storageKey="theme"
+      defaultTheme="system"
+    >
+      {children}
+    </ThemeProvider>
+  );
+};
