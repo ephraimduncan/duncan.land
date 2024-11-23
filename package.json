@@ -35,6 +35,7 @@
     "next": "latest",
     "next-contentlayer": "^0.3.2",
     "next-themes": "^0.2.1",
+    "next-view-transitions": "^0.3.2",
     "oslo": "^1.2.0",
     "perfect-freehand": "^1.2.2",
     "postcss": "8.4.23",
