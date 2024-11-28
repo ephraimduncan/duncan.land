@@ -32,8 +32,8 @@ const components = {
 
   em: (
     props: JSX.IntrinsicAttributes &
-      ClassAttributes<HTMLHeadingElement> &
-      HTMLAttributes<HTMLHeadingElement>,
+      ClassAttributes<HTMLElement> &
+      HTMLAttributes<HTMLElement>,
   ) => <em {...props} className="italic text-lg" />,
 };
 
