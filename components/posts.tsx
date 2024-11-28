@@ -35,7 +35,7 @@ export const Posts = ({ category }: PostProps) => {
   return (
     <div className="flex flex-col">
       <NextViewTransition
-        href={`/${category}`}
+        href={`/${category === "posts" ? "blog" : category}`}
         className="flex justify-between"
       >
         <h2 className="py-2 text-grey-100">
