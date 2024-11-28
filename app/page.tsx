@@ -39,8 +39,8 @@ export default function Home() {
             <span className="inline-link">writing</span>
           </Link>
           . I'm interested in
-          <em> TypeScript</em> and <em> Rust</em>, and at the same time, I'm
-          also experimenting with native apps with <em> Swift</em>.
+          <em> TypeScript</em> and <em> Go</em>, and at the same time, I'm also
+          experimenting with native apps with <em> Swift</em>.
         </p>
       </FadeIn.Item>
       <FadeIn.Item>
