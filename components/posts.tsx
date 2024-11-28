@@ -40,7 +40,7 @@ export const Posts = ({ category }: PostProps) => {
       >
         <h2 className="py-2 text-grey-100">
           {category === "posts" ? "blog" : category}{" "}
-          {posts.length > 0 && `(${posts.length})`}
+          {/* {posts.length > 0 && `(${posts.length})`} */}
         </h2>
       </NextViewTransition>
 
