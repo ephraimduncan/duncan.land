@@ -15,26 +15,32 @@ const components = {
   h1: (
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
-      HTMLAttributes<HTMLHeadingElement>,
+      HTMLAttributes<HTMLHeadingElement>
   ) => <h1 {...props} className="text-2xl" />,
 
   h2: (
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
-      HTMLAttributes<HTMLHeadingElement>,
-  ) => <h2 {...props} className="text-xl" />,
+      HTMLAttributes<HTMLHeadingElement>
+  ) => <h2 {...props} className="text-xl font-medium" />,
 
   h3: (
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
-      HTMLAttributes<HTMLHeadingElement>,
-  ) => <h3 {...props} className="text-lg" />,
+      HTMLAttributes<HTMLHeadingElement>
+  ) => <h3 {...props} className="text-lg font-medium" />,
 
   em: (
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLElement> &
-      HTMLAttributes<HTMLElement>,
+      HTMLAttributes<HTMLElement>
   ) => <em {...props} className="italic text-lg" />,
+
+  a: (
+    props: JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLAnchorElement> &
+      HTMLAttributes<HTMLAnchorElement>
+  ) => <a {...props} target="_blank" rel="noopener noreferrer" />,
 };
 
 interface MdxProps {
