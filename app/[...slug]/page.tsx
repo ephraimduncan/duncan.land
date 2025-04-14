@@ -52,10 +52,10 @@ export default async function PagePage({ params }: PageProps) {
 
   return (
     <FadeIn.Container>
-      <article className="py-8 prose dark:prose-invert">
+      <article className=" prose dark:prose-invert">
         <FadeIn.Item>
           <div>
-            <h1 className="text-2xl my-0">{page.title}</h1>
+            <h1 className="text-2xl font-normal">{page.title}</h1>
             {page.description && (
               <p className="text-xl my-0">{page.description}</p>
             )}

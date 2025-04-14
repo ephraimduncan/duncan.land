@@ -22,13 +22,13 @@ const components = {
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>
-  ) => <h2 {...props} className="text-xl font-medium" />,
+  ) => <h2 {...props} className="text-xl font-normal my-4" />,
 
   h3: (
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>
-  ) => <h3 {...props} className="text-lg font-medium" />,
+  ) => <h3 {...props} className="text-lg font-normal my-4" />,
 
   em: (
     props: JSX.IntrinsicAttributes &
