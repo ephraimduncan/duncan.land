@@ -41,6 +41,18 @@ const components = {
       ClassAttributes<HTMLAnchorElement> &
       HTMLAttributes<HTMLAnchorElement>
   ) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+
+  ul: (
+    props: JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLUListElement> &
+      HTMLAttributes<HTMLUListElement>
+  ) => <ul {...props} className="list-disc list-inside" />,
+
+  li: (
+    props: JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLLIElement> &
+      HTMLAttributes<HTMLLIElement>
+  ) => <li {...props} className="marker:text-current" />,
 };
 
 interface MdxProps {
