@@ -18,7 +18,7 @@ export default async function GuestLayout({ children }: GuestLayoutProps) {
       <FadeIn.Item>
         <div className="space-y-4">
           <h1 className="font-medium text-2xl tracking-tighter">
-            Sign my guestbook
+            {user ? `Hello, ${user.name}!` : "Sign my guestbook"}
           </h1>
 
           {user ? (

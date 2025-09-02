@@ -1,6 +1,6 @@
 import { github, lucia } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { OAuth2RequestError } from "arctic";
+import * as arctic from "arctic";
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
 
@@ -38,13 +38,13 @@ export async function GET(request: Request): Promise<Response> {
     const tokens = await github.validateAuthorizationCode(code);
     const githubUserResponse = await fetch("https://api.github.com/user", {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+        Authorization: `Bearer ${tokens.accessToken()}`,
       },
     });
     const githubUser: GitHubUser = await githubUserResponse.json();
     const emailResponse = await fetch("https://api.github.com/user/emails", {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+        Authorization: `Bearer ${tokens.accessToken()}`,
       },
     });
 
@@ -114,7 +114,7 @@ export async function GET(request: Request): Promise<Response> {
     });
   } catch (e) {
     if (
-      e instanceof OAuth2RequestError &&
+      e instanceof arctic.OAuth2RequestError &&
       e.message === "bad_verification_code"
     ) {
       return new Response(null, {

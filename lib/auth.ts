@@ -1,5 +1,5 @@
 import { LibSQLAdapter } from "@lucia-auth/adapter-sqlite";
-import { GitHub } from "arctic";
+import * as arctic from "arctic";
 import type { Session, User } from "lucia";
 import { Lucia } from "lucia";
 import { cookies } from "next/headers";
@@ -69,7 +69,8 @@ export const auth = cache(
   }
 );
 
-export const github = new GitHub(
+export const github = new arctic.GitHub(
   process.env.GITHUB_CLIENT_ID!,
-  process.env.GITHUB_CLIENT_SECRET!
+  process.env.GITHUB_CLIENT_SECRET!,
+  process.env.GITHUB_REDIRECT_URI || "http://localhost:3000/login/github/callback"
 );
