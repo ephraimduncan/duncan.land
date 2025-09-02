@@ -4,9 +4,7 @@ import { github } from "../../../lib/auth";
 
 export async function GET(): Promise<Response> {
   const state = arctic.generateState();
-  const url = await github.createAuthorizationURL(state, {
-    scopes: ["read:user", "user:email"],
-  });
+  const url = github.createAuthorizationURL(state, ["read:user", "user:email"]);
 
   (await cookies()).set("github_oauth_state", state, {
     path: "/",
