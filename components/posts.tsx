@@ -1,5 +1,4 @@
-import { allPosts } from "@/.contentlayer/generated";
-import { allThoughts } from "@/.contentlayer/generated/index.mjs";
+import { allPosts, allThoughts } from "content-collections";
 import { formatter } from "@/lib/utils";
 
 import { Link as NextViewTransition } from "next-view-transitions";

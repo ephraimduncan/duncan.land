@@ -1,5 +1,5 @@
 import * as FadeIn from "@/components/motion";
-import { allPages } from "contentlayer/generated";
+import { allPages } from "content-collections";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -63,7 +63,7 @@ export default async function PagePage({ params }: PageProps) {
         </FadeIn.Item>
 
         <FadeIn.Item>
-          <Mdx code={page.body.code} />
+          <Mdx code={page.body} />
         </FadeIn.Item>
       </article>
     </FadeIn.Container>

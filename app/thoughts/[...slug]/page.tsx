@@ -1,5 +1,5 @@
 import * as FadeIn from "@/components/motion";
-import { allThoughts } from "contentlayer/generated";
+import { allThoughts } from "content-collections";
 import { notFound } from "next/navigation";
 
 import { Mdx } from "@/components/mdx-components";
@@ -72,7 +72,7 @@ export default async function ThoughtPage({ params }: ThoughtsProps) {
             </p>
           </div>
 
-          <Mdx code={thought.body.code} />
+          <Mdx code={thought.body} />
         </article>
       </FadeIn.Item>
     </FadeIn.Container>

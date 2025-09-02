@@ -1,5 +1,5 @@
 import { Code } from "bright";
-import { useMDXComponent } from "next-contentlayer/hooks";
+import { MDXContent } from "@content-collections/mdx/react";
 import Image from "next/image";
 import React, { ClassAttributes, HTMLAttributes } from "react";
 
@@ -60,7 +60,5 @@ interface MdxProps {
 }
 
 export function Mdx({ code }: MdxProps) {
-  const Component = useMDXComponent(code);
-
-  return <Component components={components} />;
+  return <MDXContent code={code} components={components} />;
 }

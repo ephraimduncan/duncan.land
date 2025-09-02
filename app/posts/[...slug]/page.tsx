@@ -1,5 +1,5 @@
 import * as FadeIn from "@/components/motion";
-import { allPosts } from "contentlayer/generated";
+import { allPosts } from "content-collections";
 import { notFound } from "next/navigation";
 
 import { Mdx } from "@/components/mdx-components";
@@ -86,7 +86,7 @@ export default async function PostPage({ params }: PostProps) {
               </p>
             </div>
           </div>
-          <Mdx code={post.body.code} />
+          <Mdx code={post.body} />
 
           {post.reference && (
             <div
