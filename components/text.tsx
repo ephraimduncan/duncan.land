@@ -17,7 +17,7 @@ export function TextLink({ className, ...props }: React.ComponentPropsWithoutRef
             {...props}
             className={clsx(
                 className,
-                "text-grey-950 underline decoration-grey-950/50 data-[hover]:decoration-grey-950 dark:text-white dark:decoration-white/50 dark:data-[hover]:decoration-white"
+                "text-grey-950 underline decoration-grey-950/50 data-hover:decoration-grey-950 dark:text-white dark:decoration-white/50 dark:data-hover:decoration-white"
             )}
         />
     );
@@ -33,7 +33,7 @@ export function Code({ className, ...props }: React.ComponentPropsWithoutRef<"co
             {...props}
             className={clsx(
                 className,
-                "rounded border border-grey-950/10 bg-grey-950/[2.5%] px-0.5 text-sm font-medium text-grey-950 sm:text-[0.8125rem] dark:border-white/20 dark:bg-white/5 dark:text-white"
+                "rounded-sm border border-grey-950/10 bg-grey-950/2.5 px-0.5 text-sm font-medium text-grey-950 sm:text-[0.8125rem] dark:border-white/20 dark:bg-white/5 dark:text-white"
             )}
         />
     );

@@ -71,7 +71,7 @@ export const SignDialog = ({ user }: SignDialogProps) => {
               <Label>Sign Here</Label>
               <SignaturePad
                 className={cn(
-                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow dark:shadow-none",
+                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-sm dark:shadow-none",
                   "border border-grey-950/10 dark:border-black/10 ",
                   "bg-transparent dark:bg-black/5",
                 )}

@@ -268,7 +268,7 @@ export const SignaturePad = ({
       <div className="absolute bottom-4 right-4 flex gap-2">
         <button
           type="button"
-          className="focus-visible:ring-ring ring-offset-background text-muted-foreground/60 hover:text-muted-foreground rounded-full p-0 text-xs focus-visible:outline-none focus-visible:ring-2"
+          className="focus-visible:ring-ring ring-offset-background text-muted-foreground/60 hover:text-muted-foreground rounded-full p-0 text-xs focus-visible:outline-hidden focus-visible:ring-2"
           onClick={() => onClearClick()}
         >
           Clear Signature
@@ -280,7 +280,7 @@ export const SignaturePad = ({
           <button
             type="button"
             title="undo"
-            className="focus-visible:ring-ring ring-offset-background text-muted-foreground/60 hover:text-muted-foreground rounded-full p-0 text-xs focus-visible:outline-none focus-visible:ring-2"
+            className="focus-visible:ring-ring ring-offset-background text-muted-foreground/60 hover:text-muted-foreground rounded-full p-0 text-xs focus-visible:outline-hidden focus-visible:ring-2"
             onClick={() => onUndoClick()}
           >
             Undo

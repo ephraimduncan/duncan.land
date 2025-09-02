@@ -1,6 +1,46 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-kaisei);
+  --font-emp: var(--font-newsreader);
+  --font-nwr: var(--font-newsreader-regular);
+
+  --color-grey-50: #f7f6f6;
+  --color-grey-100: #e6e2e1;
+  --color-grey-200: #cdc5c2;
+  --color-grey-300: #aca19c;
+  --color-grey-400: #8a7d77;
+  --color-grey-500: #70615c;
+  --color-grey-600: #584e49;
+  --color-grey-700: #48423d;
+  --color-grey-800: #3c3633;
+  --color-grey-900: #342f2d;
+  --color-grey-950: #1c1917;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 em {
     @apply font-emp italic;
