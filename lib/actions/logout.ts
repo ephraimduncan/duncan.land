@@ -8,19 +8,18 @@ interface ActionResult {
     error: string | null;
 }
 
-export async function logout(): Promise<ActionResult> {
+export async function logout(): Promise<void> {
     "use server";
     const { session } = await auth();
 
     if (!session) {
-        return {
-            error: "Unauthorized",
-        };
+        redirect("/");
+        return;
     }
 
     await lucia.invalidateSession(session.id);
 
     const sessionCookie = lucia.createBlankSessionCookie();
-    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    return redirect("/");
+    (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    redirect("/");
 }

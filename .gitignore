@@ -38,3 +38,5 @@ features
 .env
 *.db
 local.dbs
+
+.claude

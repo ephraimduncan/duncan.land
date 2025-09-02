@@ -1,7 +1,7 @@
 import { Code } from "bright";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import Image from "next/image";
-import { ClassAttributes, HTMLAttributes } from "react";
+import React, { ClassAttributes, HTMLAttributes } from "react";
 
 Code.theme = {
   dark: "github-dark",
@@ -13,43 +13,43 @@ const components = {
   Image,
   pre: Code,
   h1: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>
   ) => <h1 {...props} className="text-2xl" />,
 
   h2: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>
   ) => <h2 {...props} className="text-xl font-normal my-4" />,
 
   h3: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>
   ) => <h3 {...props} className="text-lg font-normal my-4" />,
 
   em: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLElement> &
       HTMLAttributes<HTMLElement>
   ) => <em {...props} className="italic text-lg" />,
 
   a: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLAnchorElement> &
       HTMLAttributes<HTMLAnchorElement>
   ) => <a {...props} target="_blank" rel="noopener noreferrer" />,
 
   ul: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLUListElement> &
       HTMLAttributes<HTMLUListElement>
   ) => <ul {...props} className="list-disc list-inside" />,
 
   li: (
-    props: JSX.IntrinsicAttributes &
+    props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLLIElement> &
       HTMLAttributes<HTMLLIElement>
   ) => <li {...props} className="marker:text-current" />,

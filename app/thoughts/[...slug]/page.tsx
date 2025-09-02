@@ -6,12 +6,12 @@ import { Mdx } from "@/components/mdx-components";
 import { Metadata } from "next";
 
 interface ThoughtsProps {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 }
 
-async function getThoughtsFromParams(params: ThoughtsProps["params"]) {
+async function getThoughtsFromParams(params: { slug: string[] }) {
   const slug = params?.slug?.join("/");
   const thought = allThoughts.find((thought) => thought.slugAsParams === slug);
 
@@ -25,7 +25,7 @@ async function getThoughtsFromParams(params: ThoughtsProps["params"]) {
 export async function generateMetadata({
   params,
 }: ThoughtsProps): Promise<Metadata> {
-  const thought = await getThoughtsFromParams(params);
+  const thought = await getThoughtsFromParams(await params);
 
   if (!thought) {
     return {};
@@ -36,16 +36,14 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams(): Promise<
-  ThoughtsProps["params"][]
-> {
+export async function generateStaticParams() {
   return allThoughts.map((thought) => ({
     slug: thought.slugAsParams.split("/"),
   }));
 }
 
 export default async function ThoughtPage({ params }: ThoughtsProps) {
-  const thought = await getThoughtsFromParams(params);
+  const thought = await getThoughtsFromParams(await params);
 
   if (!thought) {
     notFound();
