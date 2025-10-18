@@ -53,5 +53,9 @@
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/next": "^0.2.7",
     "zod": "^4.1.5"
-  }
+  },
+  "trustedDependencies": [
+    "@tailwindcss/oxide",
+    "unrs-resolver"
+  ]
 }
