@@ -90,7 +90,7 @@ export function useSignGuestbook() {
     onMutate: async (variables) => {
       // Cancel outgoing refetches
       await queryClient.cancelQueries({
-        queryKey: guestbookKeys.posts()
+        queryKey: guestbookKeys.all
       });
 
       // Snapshot previous value
@@ -135,7 +135,7 @@ export function useSignGuestbook() {
 
       // Invalidate to fetch real data
       queryClient.invalidateQueries({
-        queryKey: guestbookKeys.posts()
+        queryKey: guestbookKeys.all
       });
 
       // Update eligibility (user can no longer sign)
@@ -165,7 +165,7 @@ export function useSignGuestbook() {
     // Always refetch after mutation settles
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: guestbookKeys.posts()
+        queryKey: guestbookKeys.all
       });
     },
   });

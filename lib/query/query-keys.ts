@@ -1,25 +1,9 @@
 /**
- * Query key factory for guestbook feature
- * Follows TanStack Query best practices for hierarchical keys
- *
- * Structure:
- * - ['guestbook'] - all guestbook queries
- * - ['guestbook', 'posts'] - all posts lists
- * - ['guestbook', 'posts', { cursor }] - specific page
- * - ['guestbook', 'eligibility'] - user eligibility
+ * Query key factory for type-safe key generation
+ * @see https://tanstack.com/query/latest/docs/react/guides/query-keys
  */
-
 export const guestbookKeys = {
-  // Base key for all guestbook queries
   all: ['guestbook'] as const,
-
-  // All post lists (invalidate all infinite queries)
-  posts: () => [...guestbookKeys.all, 'posts'] as const,
-
-  // Specific infinite query with filters
-  postsList: (filters?: { cursor?: number }) =>
-    [...guestbookKeys.posts(), filters] as const,
-
-  // User eligibility to sign
+  postsList: () => [...guestbookKeys.all, 'posts', 'list'] as const,
   eligibility: () => [...guestbookKeys.all, 'eligibility'] as const,
 } as const;
