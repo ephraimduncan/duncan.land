@@ -10,7 +10,7 @@ import {
 import { Field, Label } from "@/components/fieldset";
 import { SignaturePad } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
-import { sign } from "@/lib/actions/sign";
+import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
 import { cn } from "@/lib/utils";
 import { User } from "lucia";
 import { FormEvent, useState } from "react";
@@ -22,35 +22,43 @@ type SignDialogProps = {
 
 export const SignDialog = ({ user }: SignDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [localSignature, setLocalSignature] = useState<string>("");
-  const [textInvalid, setTextInvalid] = useState(false);
-  const [formLoading, setFormLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [signature, setSignature] = useState("");
+  const [messageInvalid, setMessageInvalid] = useState(false);
+
+  const signMutation = useSignGuestbook();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFormLoading(true);
-    const formData = new FormData(event.target as HTMLFormElement);
 
-    if (!formData.get("message")) {
-      setTextInvalid(true);
-      setIsOpen(true);
-
+    // Validation
+    if (!message.trim()) {
+      setMessageInvalid(true);
       toast.error("Please enter a message");
-      setFormLoading(false);
       return;
     }
 
-    formData.append("signature", localSignature);
+    setMessageInvalid(false);
 
-    try {
-      await sign(formData);
-      setIsOpen(false);
-      setFormLoading(false);
-    } catch (err: any) {
-      toast.error(err.message);
-      setIsOpen(false);
-      setFormLoading(false);
-    }
+    // Execute mutation with user info for optimistic updates
+    signMutation.mutate(
+      {
+        message: message.trim(),
+        signature,
+        optimisticUser: {
+          username: user.username,
+          name: user.name ?? null,
+        },
+      },
+      {
+        onSuccess: () => {
+          // Close dialog and reset form
+          setIsOpen(false);
+          setMessage("");
+          setSignature("");
+        },
+      }
+    );
   };
 
   return (
@@ -58,6 +66,7 @@ export const SignDialog = ({ user }: SignDialogProps) => {
       <Button type="button" onClick={() => setIsOpen(true)}>
         Sign guestbook
       </Button>
+
       <Dialog open={isOpen} onClose={setIsOpen}>
         <form onSubmit={handleSubmit}>
           <DialogTitle>Sign my guestbook</DialogTitle>
@@ -65,26 +74,41 @@ export const SignDialog = ({ user }: SignDialogProps) => {
           <DialogBody className="space-y-4">
             <Field>
               <Label>Leave a message</Label>
-              <Textarea invalid={textInvalid} rows={3} name="message" />
+              <Textarea
+                invalid={messageInvalid}
+                rows={3}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                maxLength={500}
+              />
             </Field>
+
             <Field>
               <Label>Sign Here</Label>
               <SignaturePad
                 className={cn(
                   "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-sm dark:shadow-none",
-                  "border border-grey-950/10 dark:border-black/10 ",
-                  "bg-transparent dark:bg-black/5",
+                  "border border-grey-950/10 dark:border-black/10",
+                  "bg-transparent dark:bg-black/5"
                 )}
-                onChange={(value) => setLocalSignature(value ?? "")}
+                onChange={(value) => setSignature(value ?? "")}
               />
             </Field>
           </DialogBody>
+
           <DialogActions>
-            <Button plain onClick={() => setIsOpen(false)}>
+            <Button
+              plain
+              onClick={() => setIsOpen(false)}
+              type="button"
+            >
               Cancel
             </Button>
-            <Button disabled={formLoading} type="submit">
-              Sign
+            <Button
+              disabled={signMutation.isPending}
+              type="submit"
+            >
+              {signMutation.isPending ? "Signing..." : "Sign"}
             </Button>
           </DialogActions>
         </form>
