@@ -40,7 +40,8 @@ export const getGuestbookPosts = cache(
         args: [PAGE_SIZE + 1, cursor],
       });
 
-      const posts = postsQuery.rows as unknown as GuestbookPost[];
+      // Convert to plain objects for RSC serialization
+      const posts = postsQuery.rows.map(row => ({ ...row })) as unknown as GuestbookPost[];
       const hasMore = posts.length > PAGE_SIZE;
       const postsToReturn = hasMore ? posts.slice(0, PAGE_SIZE) : posts;
 
@@ -66,7 +67,8 @@ export const getGuestbookCount = cache(async (): Promise<number> => {
       args: [],
     });
 
-    const row = result.rows[0] as unknown as { count: number };
+    // Convert to plain object for RSC serialization
+    const row = (result.rows[0] ? { ...result.rows[0] } : null) as { count: number } | null;
     return row?.count ?? 0;
   } catch (error) {
     console.error('[GUESTBOOK_COUNT]', error);
