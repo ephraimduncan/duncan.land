@@ -45,6 +45,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <html
         lang="en"
         className={`${kaisei.variable} ${newsreader.variable} ${newsreaderRegular.variable} ${GeistSans.variable} ${GeistMono.variable}`}
+        suppressHydrationWarning
       >
         <head>
           <link
