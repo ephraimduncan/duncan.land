@@ -1,0 +1,24 @@
+# Lefthook configuration for git hooks
+# Documentation: https://github.com/evilmartians/lefthook
+
+# Pre-commit hook: Fast checks on staged files + full type checking
+pre-commit:
+  parallel: true
+  commands:
+    # Run ESLint on staged files only (fast)
+    lint:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: bun run lint --fix {staged_files}
+      stage_fixed: true
+
+    # Run TypeScript type checking on entire project
+    # This catches type errors across the codebase
+    typecheck:
+      run: bun run typecheck
+
+# Pre-push hook: Ensure the build passes before pushing to remote
+pre-push:
+  commands:
+    # Full build verification
+    build:
+      run: bun run build
