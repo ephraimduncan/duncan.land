@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function Page() {
     const { user } = await auth();
@@ -10,7 +11,7 @@ export default async function Page() {
     return (
         <>
             <h1>Sign in</h1>
-            <a href="/login/github">Sign in with GitHub</a>
+            <Link href="/login/github">Sign in with GitHub</Link>
         </>
     );
 }

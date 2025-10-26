@@ -38,8 +38,8 @@ export default function Home() {
           <Link href="/blog">
             <span className="inline-link">writing</span>
           </Link>
-          . I'm interested in
-          <em> TypeScript</em> and <em> Go</em>, and at the same time, I'm also
+          . I&apos;m interested in
+          <em> TypeScript</em> and <em> Go</em>, and at the same time, I&apos;m also
           experimenting with native apps with <em> Swift</em>.
         </p>
       </FadeIn.Item>
@@ -70,7 +70,7 @@ export default function Home() {
 
         <ExternalLink
           text="love to talk?"
-          href="https://cal.com/astrosaurus/30min"
+          href="https://cal.com/ephraimduncan/30min"
         />
       </FadeIn.Item>
     </FadeIn.Container>

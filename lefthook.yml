@@ -8,7 +8,7 @@ pre-commit:
     # Run ESLint on staged files only (fast)
     lint:
       glob: "*.{js,jsx,ts,tsx}"
-      run: bun run lint --fix {staged_files}
+      run: bunx eslint --fix {staged_files}
       stage_fixed: true
 
     # Run TypeScript type checking on entire project
