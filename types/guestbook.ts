@@ -6,7 +6,7 @@
 export interface GuestbookPost {
   id: string;
   message: string;
-  created_at: number;
+  created_at: Date;
   signature: string | null;
   username: string;
   name: string | null;

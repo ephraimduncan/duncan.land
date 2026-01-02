@@ -21,4 +21,8 @@ export interface DatabaseUser {
   github_id: number;
   name?: string;
   email: string;
+  emailVerified?: boolean;
+  image?: string;
+  createdAt?: number;
+  updatedAt?: number;
 }

@@ -1,76 +1,34 @@
-import { LibSQLAdapter } from "@lucia-auth/adapter-sqlite";
-import * as arctic from "arctic";
-import type { Session, User } from "lucia";
-import { Lucia } from "lucia";
-import { cookies } from "next/headers";
-import { cache } from "react";
-import { type DatabaseUser, db } from "./db";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { drizzleDb } from "./drizzle";
+import * as schema from "./schema";
 
-const adapter = new LibSQLAdapter(db, {
-  user: "user",
-  session: "session",
-});
-
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    attributes: {
-      secure: process.env.NODE_ENV === "production",
+export const auth = betterAuth({
+  database: drizzleAdapter(drizzleDb, {
+    provider: "sqlite",
+    schema,
+  }),
+  user: {
+    additionalFields: {
+      github_id: { type: "number", required: true, input: false },
+      username: { type: "string", required: true, input: false },
     },
   },
-  getUserAttributes: (attributes) => {
-    return {
-      githubId: attributes.github_id,
-      username: attributes.username,
-      name: attributes.name,
-    };
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      scope: ["read:user", "user:email"],
+      mapProfileToUser: (profile) => ({
+        github_id: profile.id,
+        username: profile.login,
+        name: profile.name || profile.login,
+        email: profile.email,
+        image: profile.avatar_url,
+      }),
+    },
   },
 });
 
-declare module "lucia" {
-  interface Register {
-    Lucia: typeof lucia;
-    DatabaseUserAttributes: Omit<DatabaseUser, "id">;
-  }
-}
-
-export const auth = cache(
-  async (): Promise<
-    { user: User; session: Session } | { user: null; session: null }
-  > => {
-    const sessionId =
-      (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
-    if (!sessionId) {
-      return {
-        user: null,
-        session: null,
-      };
-    }
-
-    const result = await lucia.validateSession(sessionId);
-    try {
-      if (result.session && result.session.fresh) {
-        const sessionCookie = lucia.createSessionCookie(result.session.id);
-        (await cookies()).set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes
-        );
-      }
-      if (!result.session) {
-        const sessionCookie = lucia.createBlankSessionCookie();
-        (await cookies()).set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes
-        );
-      }
-    } catch {}
-    return result;
-  }
-);
-
-export const github = new arctic.GitHub(
-  process.env.GITHUB_CLIENT_ID!,
-  process.env.GITHUB_CLIENT_SECRET!,
-  process.env.GITHUB_REDIRECT_URI || "http://localhost:3000/login/github/callback"
-);
+export type Session = typeof auth.$Infer.Session.session;
+export type User = typeof auth.$Infer.Session.user;

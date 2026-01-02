@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth-server';
+import { checkUserHasPost } from '@/lib/data/guestbook';
 import type { EligibilityResponse } from '@/types/guestbook';
 
 /**
@@ -22,22 +22,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(response);
     }
 
-    // Check if user has already signed
-    const existingPostQuery = await db.execute({
-      sql: 'SELECT id FROM post WHERE user_id = ?',
-      args: [user.id],
-    });
-
-    const eligible = existingPostQuery.rows.length === 0;
+    const hasPost = await checkUserHasPost(user.id);
 
     const response: EligibilityResponse = {
-      eligible,
-      reason: eligible ? undefined : 'Already signed',
+      eligible: !hasPost,
+      reason: hasPost ? 'Already signed' : undefined,
     };
 
     return NextResponse.json(response, {
       headers: {
-        // Short cache since eligibility changes after signing
         'Cache-Control': 'private, max-age=30',
       },
     });

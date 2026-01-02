@@ -27,7 +27,7 @@ export function PostCard({ post }: PostCardProps) {
             <p className="font-bold">@{post.username}</p>
           )}
           <p>
-            {new Date(post.created_at * 1000).toLocaleString("en-US", {
+            {post.created_at.toLocaleString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",
