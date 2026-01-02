@@ -12,7 +12,7 @@ import { SignaturePad } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
 import { cn } from "@/lib/utils";
-import { User } from "lucia";
+import type { User } from "@/lib/auth";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -87,7 +87,7 @@ export const SignDialog = ({ user }: SignDialogProps) => {
               <Label>Sign Here</Label>
               <SignaturePad
                 className={cn(
-                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-sm dark:shadow-none",
+                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-xs dark:shadow-none",
                   "border border-grey-950/10 dark:border-black/10",
                   "bg-transparent dark:bg-black/5"
                 )}
@@ -97,17 +97,10 @@ export const SignDialog = ({ user }: SignDialogProps) => {
           </DialogBody>
 
           <DialogActions>
-            <Button
-              plain
-              onClick={() => setIsOpen(false)}
-              type="button"
-            >
+            <Button plain onClick={() => setIsOpen(false)} type="button">
               Cancel
             </Button>
-            <Button
-              disabled={signMutation.isPending}
-              type="submit"
-            >
+            <Button disabled={signMutation.isPending} type="submit">
               {signMutation.isPending ? "Signing..." : "Sign"}
             </Button>
           </DialogActions>

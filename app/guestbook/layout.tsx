@@ -1,10 +1,8 @@
-import { Button } from "@/components/button";
 import * as FadeIn from "@/components/motion";
-import { GithubIcon } from "@/components/ui/GithubIcon";
-import { SignOutIcon } from "@/components/ui/SignoutIcon";
-import { logout } from "@/lib/actions/logout";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth-server";
 import { SignDialog } from "./sign-dialog";
+import { SignInButton } from "./sign-in-button";
+import { SignOutButton } from "./sign-out-button";
 
 interface GuestLayoutProps {
   children: React.ReactNode;
@@ -24,18 +22,10 @@ export default async function GuestLayout({ children }: GuestLayoutProps) {
           {user ? (
             <div className="flex w-full justify-between items-center">
               <SignDialog user={user} />
-              <form action={logout}>
-                <Button plain type="submit">
-                  <SignOutIcon />
-                  Sign out
-                </Button>
-              </form>
+              <SignOutButton />
             </div>
           ) : (
-            <Button href="/login/github" color="light">
-              <GithubIcon />
-              Sign in with GitHub
-            </Button>
+            <SignInButton />
           )}
         </div>
       </FadeIn.Item>

@@ -109,7 +109,7 @@ export function useSignGuestbook() {
             id: `temp-${Date.now()}`,
             message: variables.message,
             signature: variables.signature,
-            created_at: Math.floor(Date.now() / 1000),
+            created_at: new Date(),
             username: variables.optimisticUser?.username || 'You',
             name: variables.optimisticUser?.name || null,
           };
