@@ -13,14 +13,15 @@ import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/auth";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { toast } from "sonner";
 
 type SignDialogProps = {
   user: User;
 };
 
-export const SignDialog = ({ user }: SignDialogProps) => {
+export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
@@ -28,10 +29,9 @@ export const SignDialog = ({ user }: SignDialogProps) => {
 
   const signMutation = useSignGuestbook();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    // Validation
     if (!message.trim()) {
       setMessageInvalid(true);
       toast.error("Please enter a message");
@@ -40,7 +40,6 @@ export const SignDialog = ({ user }: SignDialogProps) => {
 
     setMessageInvalid(false);
 
-    // Execute mutation with user info for optimistic updates
     signMutation.mutate(
       {
         message: message.trim(),
@@ -52,14 +51,13 @@ export const SignDialog = ({ user }: SignDialogProps) => {
       },
       {
         onSuccess: () => {
-          // Close dialog and reset form
           setIsOpen(false);
           setMessage("");
           setSignature("");
         },
       }
     );
-  };
+  }
 
   return (
     <>
