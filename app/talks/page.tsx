@@ -1,6 +1,7 @@
+import { Suspense } from "react";
 import * as FadeIn from "@/components/motion";
 import { Microphone } from "@/components/ui/Mic";
-import { formatDistance } from "date-fns";
+import { RelativeTime } from "./relative-time";
 
 const TALKS = [
   {
@@ -33,11 +34,9 @@ export default function TalksPage() {
                 <h2 className="text-lg  decoration-grey-100 hover:decoration-1 mb-1">
                   {talk.talk}
                 </h2>
-                <span className="text-sm">
-                  {formatDistance(new Date(talk.date), new Date(), {
-                    addSuffix: true,
-                  })}
-                </span>
+                <Suspense fallback={<span className="text-sm">{talk.date}</span>}>
+                  <RelativeTime date={talk.date} />
+                </Suspense>
               </div>
               {talk.location && (
                 <div className="flex gap-2">
