@@ -8,7 +8,7 @@
     "preview": "next build && next start",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "prepare": "lefthook install",
     "migrate": "turso db shell portfolio-local < lib/migrations.sql"
   },
@@ -50,14 +50,14 @@
     "server-only": "^0.0.1",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss": "^4.1.12",
-    "typescript": "^5.1.0"
+    "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
     "@content-collections/core": "^0.11.1",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/next": "^0.2.7",
     "@eslint/eslintrc": "^3.3.1",
+    "@typescript/native-preview": "latest",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
     "dotenv": "^17.2.3",
     "lefthook": "^2.0.0",
