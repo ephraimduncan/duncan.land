@@ -48,6 +48,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
       >
         <head>
+          {process.env.NODE_ENV !== "production" && (
+            <Script
+              crossOrigin="anonymous"
+              src="//unpkg.com/react-scan/dist/auto.global.js"
+            />
+          )}
+
           <link
             href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
             rel="stylesheet"

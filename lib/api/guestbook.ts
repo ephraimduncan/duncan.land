@@ -1,10 +1,23 @@
 import type {
   GuestbookPostsResponse,
+  GuestbookPost,
   SignGuestbookInput,
   SignGuestbookResponse,
   EligibilityResponse,
   ApiError
 } from '@/types/guestbook';
+
+// Raw post type from API (dates are ISO strings from JSON serialization)
+type RawGuestbookPost = Omit<GuestbookPost, 'created_at'> & {
+  created_at: string;
+};
+
+function transformPost(post: RawGuestbookPost): GuestbookPost {
+  return {
+    ...post,
+    created_at: new Date(post.created_at),
+  };
+}
 
 class GuestbookApiError extends Error {
   constructor(
@@ -41,17 +54,33 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
   return data as T;
 }
 
+type RawGuestbookPostsResponse = Omit<GuestbookPostsResponse, 'posts'> & {
+  posts: RawGuestbookPost[];
+};
+
+type RawSignGuestbookResponse = Omit<SignGuestbookResponse, 'post'> & {
+  post: RawGuestbookPost;
+};
+
 export const guestbookApi = {
   async getPosts(cursor: number = 0): Promise<GuestbookPostsResponse> {
-    return fetchApi<GuestbookPostsResponse>(`?cursor=${cursor}`);
+    const data = await fetchApi<RawGuestbookPostsResponse>(`?cursor=${cursor}`);
+    return {
+      ...data,
+      posts: data.posts.map(transformPost),
+    };
   },
 
   async sign(input: SignGuestbookInput): Promise<SignGuestbookResponse> {
     const { optimisticUser, ...apiInput } = input;
-    return fetchApi<SignGuestbookResponse>('/sign', {
+    const response = await fetchApi<RawSignGuestbookResponse>('/sign', {
       method: 'POST',
       body: JSON.stringify(apiInput),
     });
+    return {
+      ...response,
+      post: transformPost(response.post),
+    };
   },
 
   async checkEligibility(): Promise<EligibilityResponse> {

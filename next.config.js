@@ -7,6 +7,8 @@ const nextConfig = {
   // Enable React Compiler for automatic memoization
   reactCompiler: true,
 
+  cacheComponents: true,
+
   async rewrites() {
     return [
       {

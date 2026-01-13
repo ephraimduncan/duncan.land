@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { auth } from '@/lib/auth-server';
 import { checkUserHasPost, createPost, getPostWithUser } from '@/lib/data/guestbook';
 import type { SignGuestbookInput } from '@/types/guestbook';
@@ -42,6 +43,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     message: body.message.trim(),
     signature: body.signature || null,
   });
+
+  revalidateTag('guestbook-posts', 'max');
+  revalidateTag('guestbook-count', 'max');
 
   const post = await getPostWithUser(postId);
 

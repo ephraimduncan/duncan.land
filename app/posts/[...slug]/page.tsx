@@ -1,6 +1,7 @@
 import * as FadeIn from "@/components/motion";
 import { allPosts } from "content-collections";
 import { notFound } from "next/navigation";
+import { cacheLife } from "next/cache";
 
 import { Mdx } from "@/components/mdx-components";
 import { ReferenceLink } from "@/components/reference-link";
@@ -45,6 +46,9 @@ export async function generateStaticParams() {
 }
 
 export default async function PostPage({ params }: PostProps) {
+  'use cache';
+  cacheLife('max');
+
   const post = await getPostFromParams(await params);
 
   if (!post) {

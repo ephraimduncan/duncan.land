@@ -1,6 +1,7 @@
 import * as FadeIn from "@/components/motion";
 import { Microphone } from "@/components/ui/Mic";
 import { formatDistance } from "date-fns";
+import { cacheLife } from "next/cache";
 
 const TALKS = [
   {
@@ -17,7 +18,10 @@ const TALKS = [
   },
 ];
 
-export default function TalksPage() {
+export default async function TalksPage() {
+  'use cache';
+  cacheLife('days');
+
   return (
     <FadeIn.Container>
       <FadeIn.Item>
