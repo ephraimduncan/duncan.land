@@ -1,77 +1,99 @@
 import 'server-only';
 import { cache } from 'react';
-import { db } from '@/lib/db';
+import { drizzleDb } from '@/lib/drizzle';
+import { post, user } from '@/lib/schema';
+import { eq, desc, count } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
 import type { GuestbookPost, GuestbookPostsResponse } from '@/types/guestbook';
-
-/**
- * Server-side data access layer for guestbook
- * Uses React cache() for request-level memoization
- */
 
 const PAGE_SIZE = 40;
 
-/**
- * Fetch paginated guestbook posts from database
- * @param cursor - Offset for pagination (default: 0)
- * @returns Paginated posts with cursor info
- */
 export const getGuestbookPosts = cache(
   async (cursor: number = 0): Promise<GuestbookPostsResponse> => {
-    try {
-      if (cursor < 0 || !Number.isFinite(cursor)) {
-        throw new Error('Invalid cursor parameter');
-      }
-
-      // Fetch PAGE_SIZE + 1 to determine if there are more posts
-      const postsQuery = await db.execute({
-        sql: `
-          SELECT
-            post.id,
-            post.message,
-            post.created_at,
-            post.signature,
-            user.username,
-            user.name
-          FROM post
-          JOIN user ON post.user_id = user.id
-          ORDER BY post.created_at DESC
-          LIMIT ? OFFSET ?
-        `,
-        args: [PAGE_SIZE + 1, cursor],
-      });
-
-      // Convert to plain objects for RSC serialization
-      const posts = postsQuery.rows.map(row => ({ ...row })) as unknown as GuestbookPost[];
-      const hasMore = posts.length > PAGE_SIZE;
-      const postsToReturn = hasMore ? posts.slice(0, PAGE_SIZE) : posts;
-
-      return {
-        posts: postsToReturn,
-        nextCursor: hasMore ? cursor + PAGE_SIZE : null,
-        hasMore,
-      };
-    } catch (error) {
-      console.error('[GUESTBOOK_SERVER_FETCH]', error);
-      throw new Error('Failed to fetch guestbook posts from database');
+    if (cursor < 0 || !Number.isFinite(cursor)) {
+      throw new Error('Invalid cursor parameter');
     }
+
+    const posts = await drizzleDb
+      .select({
+        id: post.id,
+        message: post.message,
+        created_at: post.created_at,
+        signature: post.signature,
+        username: user.username,
+        name: user.name,
+      })
+      .from(post)
+      .innerJoin(user, eq(post.user_id, user.id))
+      .orderBy(desc(post.created_at))
+      .limit(PAGE_SIZE + 1)
+      .offset(cursor);
+
+    const hasMore = posts.length > PAGE_SIZE;
+
+    return {
+      posts: hasMore ? posts.slice(0, PAGE_SIZE) : posts,
+      nextCursor: hasMore ? cursor + PAGE_SIZE : null,
+      hasMore,
+    };
   }
 );
 
-/**
- * Get total count of guestbook posts
- */
 export const getGuestbookCount = cache(async (): Promise<number> => {
-  try {
-    const result = await db.execute({
-      sql: 'SELECT COUNT(*) as count FROM post',
-      args: [],
-    });
+  const result = await drizzleDb
+    .select({ count: count() })
+    .from(post);
 
-    // Convert to plain object for RSC serialization
-    const row = (result.rows[0] ? { ...result.rows[0] } : null) as { count: number } | null;
-    return row?.count ?? 0;
-  } catch (error) {
-    console.error('[GUESTBOOK_COUNT]', error);
-    return 0;
-  }
+  return result[0]?.count ?? 0;
 });
+
+export async function checkUserHasPost(userId: string): Promise<boolean> {
+  const result = await drizzleDb
+    .select({ id: post.id })
+    .from(post)
+    .where(eq(post.user_id, userId))
+    .limit(1);
+
+  return result.length > 0;
+}
+
+export async function createPost(data: {
+  userId: string;
+  message: string;
+  signature: string | null;
+}): Promise<string> {
+  const postId = nanoid();
+
+  await drizzleDb.insert(post).values({
+    id: postId,
+    created_at: new Date(),
+    message: data.message,
+    user_id: data.userId,
+    signature: data.signature,
+  });
+
+  return postId;
+}
+
+export async function getPostWithUser(postId: string): Promise<GuestbookPost> {
+  const rows = await drizzleDb
+    .select({
+      id: post.id,
+      message: post.message,
+      created_at: post.created_at,
+      signature: post.signature,
+      username: user.username,
+      name: user.name,
+    })
+    .from(post)
+    .innerJoin(user, eq(post.user_id, user.id))
+    .where(eq(post.id, postId))
+    .limit(1);
+
+  const row = rows[0];
+  if (!row) {
+    throw new Error('Post not found');
+  }
+
+  return row;
+}

@@ -12,15 +12,16 @@ import { SignaturePad } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
 import { cn } from "@/lib/utils";
-import { User } from "lucia";
-import { FormEvent, useState } from "react";
+import type { User } from "@/lib/auth";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { toast } from "sonner";
 
 type SignDialogProps = {
   user: User;
 };
 
-export const SignDialog = ({ user }: SignDialogProps) => {
+export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
@@ -28,10 +29,9 @@ export const SignDialog = ({ user }: SignDialogProps) => {
 
   const signMutation = useSignGuestbook();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    // Validation
     if (!message.trim()) {
       setMessageInvalid(true);
       toast.error("Please enter a message");
@@ -40,7 +40,6 @@ export const SignDialog = ({ user }: SignDialogProps) => {
 
     setMessageInvalid(false);
 
-    // Execute mutation with user info for optimistic updates
     signMutation.mutate(
       {
         message: message.trim(),
@@ -52,14 +51,13 @@ export const SignDialog = ({ user }: SignDialogProps) => {
       },
       {
         onSuccess: () => {
-          // Close dialog and reset form
           setIsOpen(false);
           setMessage("");
           setSignature("");
         },
       }
     );
-  };
+  }
 
   return (
     <>
@@ -87,7 +85,7 @@ export const SignDialog = ({ user }: SignDialogProps) => {
               <Label>Sign Here</Label>
               <SignaturePad
                 className={cn(
-                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-sm dark:shadow-none",
+                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-xs dark:shadow-none",
                   "border border-grey-950/10 dark:border-black/10",
                   "bg-transparent dark:bg-black/5"
                 )}
@@ -97,17 +95,10 @@ export const SignDialog = ({ user }: SignDialogProps) => {
           </DialogBody>
 
           <DialogActions>
-            <Button
-              plain
-              onClick={() => setIsOpen(false)}
-              type="button"
-            >
+            <Button plain onClick={() => setIsOpen(false)} type="button">
               Cancel
             </Button>
-            <Button
-              disabled={signMutation.isPending}
-              type="submit"
-            >
+            <Button disabled={signMutation.isPending} type="submit">
               {signMutation.isPending ? "Signing..." : "Sign"}
             </Button>
           </DialogActions>

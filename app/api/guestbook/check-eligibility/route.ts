@@ -1,53 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { auth } from '@/lib/auth';
+import { NextResponse } from 'next/server';
+import { auth } from '@/lib/auth-server';
+import { checkUserHasPost } from '@/lib/data/guestbook';
 import type { EligibilityResponse } from '@/types/guestbook';
 
-/**
- * GET /api/guestbook/check-eligibility
- *
- * Check if authenticated user can sign guestbook
- */
+export async function GET(): Promise<NextResponse<EligibilityResponse>> {
+  const { user } = await auth();
 
-export async function GET(request: NextRequest) {
-  try {
-    const { user } = await auth();
-
-    if (!user) {
-      const response: EligibilityResponse = {
-        eligible: false,
-        reason: 'Not authenticated',
-      };
-
-      return NextResponse.json(response);
-    }
-
-    // Check if user has already signed
-    const existingPostQuery = await db.execute({
-      sql: 'SELECT id FROM post WHERE user_id = ?',
-      args: [user.id],
-    });
-
-    const eligible = existingPostQuery.rows.length === 0;
-
-    const response: EligibilityResponse = {
-      eligible,
-      reason: eligible ? undefined : 'Already signed',
-    };
-
-    return NextResponse.json(response, {
-      headers: {
-        // Short cache since eligibility changes after signing
-        'Cache-Control': 'private, max-age=30',
-      },
-    });
-
-  } catch (error) {
-    console.error('[GUESTBOOK_ELIGIBILITY]', error);
-
-    return NextResponse.json(
-      { error: 'INTERNAL_ERROR', message: 'Failed to check eligibility' },
-      { status: 500 }
-    );
+  if (!user) {
+    return NextResponse.json({ eligible: false, reason: 'Not authenticated' });
   }
+
+  const hasPost = await checkUserHasPost(user.id);
+
+  return NextResponse.json(
+    { eligible: !hasPost, reason: hasPost ? 'Already signed' : undefined },
+    { headers: { 'Cache-Control': 'private, max-age=30' } }
+  );
 }

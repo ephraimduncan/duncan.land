@@ -2,10 +2,10 @@
 
 # duncan.land
 
--   **Framework**: [Next.js](https://nextjs.org/)
--   **Deployment**: [Vercel](https://vercel.com)
--   **Content**: [ContentLayer](https://contentlayer.dev/)
--   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Deployment**: [Vercel](https://vercel.com)
+- **Content**: [ContentLayer](https://contentlayer.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 
 ## Running Locally
 
