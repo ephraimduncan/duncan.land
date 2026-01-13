@@ -7,6 +7,15 @@ const nextConfig = {
   // Enable React Compiler for automatic memoization
   reactCompiler: true,
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
+    ],
+  },
+
   async rewrites() {
     return [
       {
