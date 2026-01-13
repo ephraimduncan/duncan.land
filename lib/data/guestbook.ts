@@ -5,7 +5,7 @@ import { eq, desc, count } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import type { GuestbookPost, GuestbookPostsResponse } from '@/types/guestbook';
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 30;
 
 export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPostsResponse> {
   if (cursor < 0 || !Number.isFinite(cursor)) {

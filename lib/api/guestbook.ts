@@ -43,7 +43,14 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
 
 export const guestbookApi = {
   async getPosts(cursor: number = 0): Promise<GuestbookPostsResponse> {
-    return fetchApi<GuestbookPostsResponse>(`?cursor=${cursor}`);
+    const response = await fetchApi<GuestbookPostsResponse>(`?cursor=${cursor}`);
+    return {
+      ...response,
+      posts: response.posts.map(post => ({
+        ...post,
+        created_at: new Date(post.created_at),
+      })),
+    };
   },
 
   async sign(input: SignGuestbookInput): Promise<SignGuestbookResponse> {
