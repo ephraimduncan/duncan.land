@@ -29,7 +29,7 @@ export function SignDialog({ user }: SignDialogProps) {
 
   const signMutation = useSignGuestbook();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
     if (!message.trim()) {
@@ -40,10 +40,33 @@ export function SignDialog({ user }: SignDialogProps) {
 
     setMessageInvalid(false);
 
+    let signatureUrl: string | null = null;
+
+    if (signature) {
+      try {
+        const uploadRes = await fetch('/api/signature/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ signature }),
+        });
+
+        if (!uploadRes.ok) {
+          toast.error("Failed to upload signature");
+          return;
+        }
+
+        const { url } = await uploadRes.json();
+        signatureUrl = url;
+      } catch {
+        toast.error("Failed to upload signature");
+        return;
+      }
+    }
+
     signMutation.mutate(
       {
         message: message.trim(),
-        signature,
+        signature: signatureUrl ?? "",
         optimisticUser: {
           username: user.username,
           name: user.name ?? null,
