@@ -9,6 +9,8 @@ import { getGuestbookPosts, getGuestbookCount } from "@/lib/data/guestbook";
 import type { GuestbookPostsResponse } from "@/types/guestbook";
 import { PostsList } from "./posts-list";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const [count, { posts }] = await Promise.all([
