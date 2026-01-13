@@ -51,14 +51,17 @@ export default async function GuestbookPage() {
 
   const queryClient = getQueryClient();
 
-  // Prefetch initial posts on server
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: guestbookKeys.postsList(),
-    queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage: GuestbookPostsResponse) =>
-      lastPage.hasMore ? lastPage.nextCursor : undefined,
-  });
+  try {
+    await queryClient.prefetchInfiniteQuery({
+      queryKey: guestbookKeys.postsList(),
+      queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: GuestbookPostsResponse) =>
+        lastPage.hasMore ? lastPage.nextCursor : undefined,
+    });
+  } catch (error) {
+    console.error('[GUESTBOOK_PREFETCH]', error);
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

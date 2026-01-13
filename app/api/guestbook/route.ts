@@ -12,8 +12,7 @@ import { getGuestbookPosts } from '@/lib/data/guestbook';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const cursor = parseInt(searchParams.get('cursor') || '0', 10);
+    const cursor = parseInt(request.nextUrl.searchParams.get('cursor') || '0', 10);
 
     // Validate cursor
     if (isNaN(cursor) || cursor < 0) {
