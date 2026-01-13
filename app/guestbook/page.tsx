@@ -1,4 +1,3 @@
-import { cacheTag, cacheLife } from "next/cache";
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
@@ -8,6 +7,8 @@ import { guestbookKeys } from "@/lib/query/query-keys";
 import { getGuestbookPosts } from "@/lib/data/guestbook";
 import type { GuestbookPostsResponse } from "@/types/guestbook";
 import { PostsList } from "./posts-list";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Guestbook | Ephraim Duncan",
@@ -19,10 +20,6 @@ export const metadata: Metadata = {
 };
 
 export default async function GuestbookPage() {
-  "use cache"
-  cacheTag('guestbook');
-  cacheLife('minutes');
-
   const queryClient = getQueryClient();
 
   try {

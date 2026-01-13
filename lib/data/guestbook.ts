@@ -1,5 +1,4 @@
 import 'server-only';
-import { cacheTag, cacheLife } from 'next/cache';
 import { drizzleDb } from '@/lib/drizzle';
 import { post, user } from '@/lib/schema';
 import { eq, desc, count } from 'drizzle-orm';
@@ -9,10 +8,6 @@ import type { GuestbookPost, GuestbookPostsResponse } from '@/types/guestbook';
 const PAGE_SIZE = 15;
 
 export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPostsResponse> {
-  "use cache"
-  cacheTag('guestbook');
-  cacheLife('minutes');
-
   if (cursor < 0 || !Number.isFinite(cursor)) {
     throw new Error('Invalid cursor parameter');
   }
@@ -42,10 +37,6 @@ export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPo
 }
 
 export async function getGuestbookCount(): Promise<number> {
-  "use cache"
-  cacheTag('guestbook');
-  cacheLife('minutes');
-
   const result = await drizzleDb
     .select({ count: count() })
     .from(post);
