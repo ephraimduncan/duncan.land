@@ -17,28 +17,33 @@ export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPo
     throw new Error('Invalid cursor parameter');
   }
 
-  const posts = await drizzleDb
-    .select({
-      id: post.id,
-      message: post.message,
-      created_at: post.created_at,
-      signature: post.signature,
-      username: user.username,
-      name: user.name,
-    })
-    .from(post)
-    .innerJoin(user, eq(post.user_id, user.id))
-    .orderBy(desc(post.created_at))
-    .limit(PAGE_SIZE + 1)
-    .offset(cursor);
+  try {
+    const posts = await drizzleDb
+      .select({
+        id: post.id,
+        message: post.message,
+        created_at: post.created_at,
+        signature: post.signature,
+        username: user.username,
+        name: user.name,
+      })
+      .from(post)
+      .innerJoin(user, eq(post.user_id, user.id))
+      .orderBy(desc(post.created_at))
+      .limit(PAGE_SIZE + 1)
+      .offset(cursor);
 
-  const hasMore = posts.length > PAGE_SIZE;
+    const hasMore = posts.length > PAGE_SIZE;
 
-  return {
-    posts: hasMore ? posts.slice(0, PAGE_SIZE) : posts,
-    nextCursor: hasMore ? cursor + PAGE_SIZE : null,
-    hasMore,
-  };
+    return {
+      posts: hasMore ? posts.slice(0, PAGE_SIZE) : posts,
+      nextCursor: hasMore ? cursor + PAGE_SIZE : null,
+      hasMore,
+    };
+  } catch (error) {
+    console.error('[GUESTBOOK_POSTS]', error);
+    return { posts: [], nextCursor: null, hasMore: false };
+  }
 }
 
 export async function getGuestbookCount(): Promise<number> {
@@ -46,11 +51,16 @@ export async function getGuestbookCount(): Promise<number> {
   cacheTag('guestbook-count');
   cacheLife('minutes');
 
-  const result = await drizzleDb
-    .select({ count: count() })
-    .from(post);
+  try {
+    const result = await drizzleDb
+      .select({ count: count() })
+      .from(post);
 
-  return result[0]?.count ?? 0;
+    return result[0]?.count ?? 0;
+  } catch (error) {
+    console.error('[GUESTBOOK_COUNT]', error);
+    return 0;
+  }
 }
 
 export async function checkUserHasPost(userId: string): Promise<boolean> {
