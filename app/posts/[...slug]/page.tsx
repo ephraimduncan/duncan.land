@@ -1,3 +1,4 @@
+import { cacheLife } from "next/cache";
 import * as FadeIn from "@/components/motion";
 import { allPosts } from "content-collections";
 import { notFound } from "next/navigation";
@@ -45,6 +46,9 @@ export async function generateStaticParams() {
 }
 
 export default async function PostPage({ params }: PostProps) {
+  "use cache"
+  cacheLife("max");
+
   const post = await getPostFromParams(await params);
 
   if (!post) {

@@ -2,6 +2,7 @@ const { withContentCollections } = require("@content-collections/next");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  cacheComponents: true,
   reactStrictMode: true,
 
   // Enable React Compiler for automatic memoization
