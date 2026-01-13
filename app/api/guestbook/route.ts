@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGuestbookPosts } from '@/lib/data/guestbook';
 
+type PrerenderBailoutError = { digest?: string };
+
+function isPrerenderBailoutError(error: unknown): error is PrerenderBailoutError {
+  if (!error || typeof error !== 'object' || !('digest' in error)) {
+    return false;
+  }
+
+  return (error as PrerenderBailoutError).digest === 'NEXT_PRERENDER_INTERRUPTED';
+}
+
 /**
  * GET /api/guestbook
  *
@@ -10,7 +20,7 @@ import { getGuestbookPosts } from '@/lib/data/guestbook';
  * Uses the same data layer as SSR for consistency
  */
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const cursor = parseInt(request.nextUrl.searchParams.get('cursor') || '0', 10);
 
@@ -33,6 +43,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
+    if (isPrerenderBailoutError(error)) {
+      throw error;
+    }
+
     console.error('[GUESTBOOK_GET]', error);
 
     return NextResponse.json(

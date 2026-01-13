@@ -9,7 +9,6 @@ import { getGuestbookPosts, getGuestbookCount } from "@/lib/data/guestbook";
 import type { GuestbookPostsResponse } from "@/types/guestbook";
 import { PostsList } from "./posts-list";
 
-export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -53,13 +52,17 @@ export default async function GuestbookPage() {
   const queryClient = getQueryClient();
 
   // Prefetch initial posts on server (data is cached via 'use cache' in getGuestbookPosts)
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: guestbookKeys.postsList(),
-    queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage: GuestbookPostsResponse) =>
-      lastPage.hasMore ? lastPage.nextCursor : undefined,
-  });
+  try {
+    await queryClient.prefetchInfiniteQuery({
+      queryKey: guestbookKeys.postsList(),
+      queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: GuestbookPostsResponse) =>
+        lastPage.hasMore ? lastPage.nextCursor : undefined,
+    });
+  } catch (error) {
+    console.error('[GUESTBOOK_PREFETCH]', error);
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
