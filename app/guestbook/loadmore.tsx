@@ -21,25 +21,25 @@ export function LoadMore<T extends string | number = any>({
   const [loading, setLoading] = useState(false);
   const { ref, inView } = useInView();
 
-  useEffect(() => {
-    const loadMoreItems = async () => {
-      if (loading || !offset) return;
-      setLoading(true);
-      try {
-        const [newItems, nextOffset] = await loadMoreAction(offset);
-        setItems((prev) => [...prev, newItems]);
-        setOffset(nextOffset);
-      } catch (error) {
-        console.error("Error loading more items:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadMoreItems = async () => {
+    if (loading || !offset) return;
+    setLoading(true);
+    try {
+      const [newItems, nextOffset] = await loadMoreAction(offset);
+      setItems((prev) => [...prev, newItems]);
+      setOffset(nextOffset);
+    } catch (error) {
+      console.error("Error loading more items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (inView) {
       loadMoreItems();
     }
-  }, [inView, loading, loadMoreAction, offset]);
+  }, [inView]);
 
   return (
     <>
@@ -47,7 +47,7 @@ export function LoadMore<T extends string | number = any>({
       {items}
       {offset && (
         <div ref={ref} className="flex justify-center mt-4">
-          <Button disabled={loading} onClick={() => {}}>
+          <Button disabled={loading} onClick={loadMoreItems}>
             {loading ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />

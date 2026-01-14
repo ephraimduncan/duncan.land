@@ -40,7 +40,7 @@ export function PostCard({ post }: PostCardProps) {
         {post.signature && (
           <div className="dark:invert -mb-4 -mr-4">
             <Image
-              alt="signature"
+              alt={`Handwritten signature by ${post.name || post.username}`}
               src={post.signature}
               width={150}
               height={150}

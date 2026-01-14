@@ -96,6 +96,9 @@ export function SignDialog({ user }: SignDialogProps) {
             <Field>
               <Label>Leave a message</Label>
               <Textarea
+                name="message"
+                autoComplete="off"
+                placeholder="Write your message here…"
                 invalid={messageInvalid}
                 rows={3}
                 value={message}

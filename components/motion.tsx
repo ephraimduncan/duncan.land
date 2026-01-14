@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 const container = {
   hidden: {},
@@ -10,6 +10,11 @@ const container = {
       delayChildren: 0.2,
     },
   },
+};
+
+const containerReduced = {
+  hidden: {},
+  show: {},
 };
 
 const item = {
@@ -32,15 +37,22 @@ const item = {
   },
 };
 
+const itemReduced = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0 } },
+};
+
 interface ContainerProps {
   children: React.ReactNode;
   className?: string;
 }
 
 function Container({ children, className }: ContainerProps) {
+  const shouldReduceMotion = useReducedMotion();
+  
   return (
     <motion.div 
-      variants={container} 
+      variants={shouldReduceMotion ? containerReduced : container} 
       initial="hidden" 
       animate="show" 
       {...(className ? { className } : {})}
@@ -51,7 +63,9 @@ function Container({ children, className }: ContainerProps) {
 }
 
 function Item({ children }: { children: React.ReactNode }) {
-  return <motion.div variants={item}>{children}</motion.div>;
+  const shouldReduceMotion = useReducedMotion();
+  
+  return <motion.div variants={shouldReduceMotion ? itemReduced : item}>{children}</motion.div>;
 }
 
 export { Container, Item };

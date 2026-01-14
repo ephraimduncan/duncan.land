@@ -52,6 +52,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
             href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
             rel="stylesheet"
           />
+          <meta name="theme-color" content="#f7f6f6" media="(prefers-color-scheme: light)" />
+          <meta name="theme-color" content="#1c1917" media="(prefers-color-scheme: dark)" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  var theme = localStorage.getItem('theme');
+                  var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+                })();
+              `,
+            }}
+          />
         </head>
         <body className="antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
           <Toaster richColors />

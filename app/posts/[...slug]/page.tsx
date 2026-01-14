@@ -91,7 +91,7 @@ export default async function PostPage({ params }: PostProps) {
           {post.reference && (
             <div
               id="references"
-              className="mt-16 pt-4 border-t border-grey-200 dark:border-grey-800"
+              className="mt-16 pt-4 border-t border-grey-200 dark:border-grey-800 scroll-mt-20"
             >
               <ReferenceLink reference={post.reference} />
             </div>
