@@ -43,7 +43,7 @@ function Container({ children, className }: ContainerProps) {
       variants={container}
       initial="hidden"
       animate="show"
-      {...(className ? { className } : {})}
+      className={className}
     >
       {children}
     </motion.div>

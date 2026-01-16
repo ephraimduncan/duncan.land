@@ -11,15 +11,14 @@ import { Field, Label } from "@/components/fieldset";
 import { SignaturePad } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
-import { cn } from "@/lib/utils";
 import type { User } from "@/lib/auth";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 
-type SignDialogProps = {
+interface SignDialogProps {
   user: User;
-};
+}
 
 export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,11 +106,7 @@ export function SignDialog({ user }: SignDialogProps) {
             <Field>
               <Label>Sign Here</Label>
               <SignaturePad
-                className={cn(
-                  "aspect-video h-40 mt-2 w-full rounded-lg border bg-transparent shadow-xs dark:shadow-none",
-                  "border border-grey-950/10 dark:border-black/10",
-                  "bg-transparent dark:bg-black/5"
-                )}
+                className="aspect-video h-40 mt-2 w-full rounded-lg border border-grey-950/10 bg-transparent shadow-xs dark:border-black/10 dark:bg-black/5 dark:shadow-none"
                 onChange={(value) => setSignature(value ?? "")}
               />
             </Field>
@@ -129,4 +124,4 @@ export function SignDialog({ user }: SignDialogProps) {
       </Dialog>
     </>
   );
-};
+}

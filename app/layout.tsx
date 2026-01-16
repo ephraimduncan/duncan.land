@@ -1,10 +1,9 @@
 import { Analytics } from "@/components/analytics";
 import { AppThemeProvider } from "@/components/mode-toggle";
-import { Navbar } from "@/components/navbar";
 import { QueryProvider } from "@/lib/query/providers";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-import { Link, ViewTransitions } from "next-view-transitions";
+import { ViewTransitions } from "next-view-transitions";
 import { Newsreader } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";

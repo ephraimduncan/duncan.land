@@ -59,11 +59,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
       }
 
       if (toReveal.length > 0) {
-        setRevealedIds((prev) => {
-          const next = new Set(prev);
-          toReveal.forEach((id) => next.add(id));
-          return next;
-        });
+        setRevealedIds((prev) => new Set([...prev, ...toReveal]));
       }
 
       if (currentIndex < revealOrder.length) {

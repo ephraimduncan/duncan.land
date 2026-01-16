@@ -10,11 +10,8 @@ import {
   type SetStateAction,
 } from "react";
 
+import { clamp } from "@/utils/math";
 import type { Point } from "./use-canvas-pan-state";
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
-}
 
 interface UseCanvasScaleControlsOptions {
   minScale: number;

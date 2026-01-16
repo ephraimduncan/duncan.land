@@ -25,13 +25,10 @@ export default function useCanvasViewport({
 
   const { canvasPan, setCanvasPan, canvasPanRef } = useCanvasPanState();
 
-  const computeCentredPan = useCallback((scale: number): Point => {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-
+  const computeCentredPan = useCallback((_scale: number): Point => {
     return {
-      x: viewportWidth / 2,
-      y: viewportHeight / 2,
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
     };
   }, []);
 
