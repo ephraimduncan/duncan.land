@@ -5,13 +5,13 @@ import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-type LoadMoreProps<T extends string | number = any> = {
+interface LoadMoreProps<T extends string | number> {
   initialOffset: T;
   loadMoreAction: (offset: T) => Promise<readonly [React.ReactNode, T | null]>;
   children: React.ReactNode;
-};
+}
 
-export function LoadMore<T extends string | number = any>({
+export function LoadMore<T extends string | number>({
   children,
   initialOffset,
   loadMoreAction,

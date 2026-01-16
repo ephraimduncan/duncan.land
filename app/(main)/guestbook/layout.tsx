@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth-server";
 import { SignDialog } from "./sign-dialog";
 import { SignInButton } from "./sign-in-button";
 import { SignOutButton } from "./sign-out-button";
+import { WallButton } from "./wall-button";
 
 interface GuestLayoutProps {
   children: React.ReactNode;
@@ -24,7 +25,10 @@ async function AuthContent() {
           <SignOutButton />
         </div>
       ) : (
-        <SignInButton />
+        <div className="flex gap-2">
+          <SignInButton />
+          <WallButton />
+        </div>
       )}
     </div>
   );

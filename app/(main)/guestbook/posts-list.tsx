@@ -7,10 +7,6 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { PostCard } from "./post-card";
 
-/**
- * Infinite scroll posts list
- * Uses React Query's useInfiniteQuery
- */
 export function PostsList() {
   const {
     data,
@@ -22,20 +18,17 @@ export function PostsList() {
     error
   } = useGuestbookPosts();
 
-  // Trigger fetch 1000px before reaching the Load More button for seamless scrolling
   const { ref, inView } = useInView({
-    rootMargin: '1000px', // Start fetching when button is 1000px away
+    rootMargin: '1000px',
     threshold: 0,
   });
 
-  // Auto-fetch on scroll
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
@@ -44,7 +37,6 @@ export function PostsList() {
     );
   }
 
-  // Error state (with toast already shown)
   if (isError) {
     return (
       <div className="text-center py-8 text-grey-600 dark:text-grey-400">
@@ -73,7 +65,6 @@ export function PostsList() {
         ))}
       </ul>
 
-      {/* Infinite scroll trigger */}
       {hasNextPage && (
         <div ref={ref} className="flex justify-center mt-4">
           <Button disabled={isFetchingNextPage}>

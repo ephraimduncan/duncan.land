@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { auth } from "@/lib/auth-server";
 import { redirect } from "next/navigation";
-import { SignInButton } from "@/app/guestbook/sign-in-button";
+import { SignInButton } from "@/app/(main)/guestbook/sign-in-button";
 
 async function LoginContent() {
     const { user } = await auth();

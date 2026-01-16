@@ -8,10 +8,6 @@ interface PostCardProps {
   post: GuestbookPost;
 }
 
-/**
- * Individual post card component
- * Extracted for reusability and optimization
- */
 export function PostCard({ post }: PostCardProps) {
   return (
     <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
