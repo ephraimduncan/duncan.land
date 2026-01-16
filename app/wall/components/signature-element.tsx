@@ -39,10 +39,7 @@ export function SignatureElement({
           src={signature.signature}
           alt={`Signature by ${signature.name || signature.username}`}
           fill
-          className="object-contain opacity-80 dark:opacity-70"
-          style={{
-            filter: "brightness(0.3) dark:brightness(0.8)",
-          }}
+          className="object-contain opacity-80 dark:opacity-90 [.dark_&]:invert"
           unoptimized
         />
       </div>

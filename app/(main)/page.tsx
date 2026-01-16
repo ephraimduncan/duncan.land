@@ -26,7 +26,7 @@ export default function Home() {
       </FadeIn.Item>
 
       <FadeIn.Item>
-        <p>
+        <p className="mb-2">
           Building polished software experiences with magical, unique and
           delightful details, for the web. I aim to create beautiful and
           functional software that is both intuitive and enjoyable for users.
@@ -39,8 +39,8 @@ export default function Home() {
             <span className="inline-link">writing</span>
           </Link>
           . I&apos;m interested in
-          <em> TypeScript</em> and <em> Go</em>, and at the same time, I&apos;m also
-          experimenting with native apps with <em> Swift</em>.
+          <em> TypeScript</em> and <em> Go</em>, and at the same time, I&apos;m
+          also experimenting with native apps with <em> Swift</em>.
         </p>
       </FadeIn.Item>
       <FadeIn.Item>

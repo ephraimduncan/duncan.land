@@ -33,7 +33,7 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
               src={signature.signature}
               alt={`Signature by ${displayName}`}
               fill
-              className="object-contain p-4"
+              className="object-contain p-4 [.dark_&]:invert"
               unoptimized
             />
           </div>

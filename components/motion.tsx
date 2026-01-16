@@ -39,10 +39,10 @@ interface ContainerProps {
 
 function Container({ children, className }: ContainerProps) {
   return (
-    <motion.div 
-      variants={container} 
-      initial="hidden" 
-      animate="show" 
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
       {...(className ? { className } : {})}
     >
       {children}
