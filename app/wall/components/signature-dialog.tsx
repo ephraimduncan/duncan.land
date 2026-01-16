@@ -10,11 +10,38 @@ import type { WallSignature } from "@/lib/data/wall";
 import { formatter } from "@/lib/utils";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 
 interface SignatureDialogProps {
   signature: WallSignature | null;
   onClose: () => void;
 }
+
+export interface SignatureDialogHandle {
+  open: (signature: WallSignature) => void;
+  close: () => void;
+}
+
+export const SignatureDialogController = forwardRef<SignatureDialogHandle>(
+  function SignatureDialogController(_props, ref) {
+    const [signature, setSignature] = useState<WallSignature | null>(null);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        open: (nextSignature) => {
+          setSignature(nextSignature);
+        },
+        close: () => {
+          setSignature(null);
+        },
+      }),
+      []
+    );
+
+    return <SignatureDialog signature={signature} onClose={() => setSignature(null)} />;
+  }
+);
 
 export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
   if (!signature) return null;

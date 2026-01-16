@@ -16,7 +16,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <footer className="fixed bottom-0 w-full bg-grey-50 dark:bg-grey-950 z-1000 py-2 border-t border-solid border-grey-100 dark:border-grey-700">
         <div className="mx-auto max-w-[712px] px-4 md:px-0 flex justify-between">
           <div className="flex items-center gap-8">
-            <a href="https://twitter.com/EphraimDuncan_">
+            <a href="https://twitter.com/ephraimduncan">
               <svg
                 width="15"
                 height="15"

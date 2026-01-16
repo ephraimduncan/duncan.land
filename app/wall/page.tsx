@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllSignatures } from "@/lib/data/wall";
 import { WallCanvas } from "./components/wall-canvas";
+import { computeSignatureLayout } from "./lib/signature-layout";
 import "./wall.css";
 
 export const metadata: Metadata = {
@@ -10,10 +11,11 @@ export const metadata: Metadata = {
 
 export default async function WallPage() {
   const signatures = await getAllSignatures();
+  const layout = computeSignatureLayout(signatures);
 
   return (
     <div className="wall-root">
-      <WallCanvas signatures={signatures} />
+      <WallCanvas positions={layout.positions} revealOrder={layout.revealOrder} />
     </div>
   );
 }

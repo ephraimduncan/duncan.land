@@ -60,7 +60,7 @@ export default function Home() {
 
         <ExternalLink
           text="follow me on x"
-          href="https://twitter.com/EphraimDuncan_"
+          href="https://twitter.com/ephraimduncan"
         />
 
         <ExternalLink

@@ -1,34 +1,32 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { WallSignature } from "@/lib/data/wall";
 import useCanvasViewport from "../hooks/use-canvas-viewport";
-import { useSignatureLayout } from "../hooks/use-signature-layout";
 import { useViewportCulling } from "../hooks/use-viewport-culling";
-import { SignatureElement, ELEMENT_WIDTH, ELEMENT_HEIGHT } from "./signature-element";
-import { SignatureDialog } from "./signature-dialog";
+import type { SignaturePosition } from "../lib/signature-layout";
+import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
+import { SignatureElement } from "./signature-element";
+import { SignatureDialogController, type SignatureDialogHandle } from "./signature-dialog";
 import { CanvasControls } from "./canvas-controls";
 import { GuestbookCTA } from "./guestbook-cta";
 
 interface WallCanvasProps {
-  signatures: WallSignature[];
+  positions: SignaturePosition[];
+  revealOrder: string[];
 }
 
 const BASE_DELAY_MS = 100;
 const STAGGER_MS = 150;
 const RING_SIZE = 5;
 
-export function WallCanvas({ signatures }: WallCanvasProps) {
-  const [selectedSignature, setSelectedSignature] = useState<WallSignature | null>(null);
+export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
-  const timeoutsRef = useRef<number[]>([]);
+  const dialogRef = useRef<SignatureDialogHandle | null>(null);
 
   const {
     canvas: { ref, pan, onPointerDown, onPointerMove },
     zoom: { scale, percent, zoomIn, zoomOut, zoomToFit, zoomTo100 },
   } = useCanvasViewport({ initialScale: 0.8 });
-
-  const positions = useSignatureLayout({ signatures });
 
   const visiblePositions = useViewportCulling({
     positions,
@@ -39,36 +37,43 @@ export function WallCanvas({ signatures }: WallCanvasProps) {
   });
 
   useEffect(() => {
-    timeoutsRef.current.forEach((t) => clearTimeout(t));
-    timeoutsRef.current = [];
+    let currentIndex = 0;
+    let startTime: number | null = null;
+    let frameId: number;
 
-    const sortedByDistance = [...positions].sort((a, b) => {
-      const distA = Math.hypot(a.x, a.y);
-      const distB = Math.hypot(b.x, b.y);
-      return distA - distB;
-    });
+    const reveal = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
 
-    sortedByDistance.forEach((pos, index) => {
-      const ringIndex = Math.floor(index / RING_SIZE);
-      const timeoutId = window.setTimeout(
-        () => {
-          setRevealedIds((prev) => {
-            const next = new Set(prev);
-            next.add(pos.id);
-            return next;
-          });
-        },
-        BASE_DELAY_MS + ringIndex * STAGGER_MS
-      );
+      const toReveal: string[] = [];
+      while (currentIndex < revealOrder.length) {
+        const ringIndex = Math.floor(currentIndex / RING_SIZE);
+        const revealTime = BASE_DELAY_MS + ringIndex * STAGGER_MS;
 
-      timeoutsRef.current.push(timeoutId);
-    });
+        if (elapsed >= revealTime) {
+          toReveal.push(revealOrder[currentIndex]);
+          currentIndex++;
+        } else {
+          break;
+        }
+      }
 
-    return () => {
-      timeoutsRef.current.forEach((t) => clearTimeout(t));
-      timeoutsRef.current = [];
+      if (toReveal.length > 0) {
+        setRevealedIds((prev) => {
+          const next = new Set(prev);
+          toReveal.forEach((id) => next.add(id));
+          return next;
+        });
+      }
+
+      if (currentIndex < revealOrder.length) {
+        frameId = requestAnimationFrame(reveal);
+      }
     };
-  }, [positions]);
+
+    frameId = requestAnimationFrame(reveal);
+    return () => cancelAnimationFrame(frameId);
+  }, [revealOrder]);
 
   return (
     <>
@@ -95,7 +100,7 @@ export function WallCanvas({ signatures }: WallCanvasProps) {
               x={pos.x}
               y={pos.y}
               isRevealed={revealedIds.has(pos.id)}
-              onClick={() => setSelectedSignature(pos.signature)}
+              onClick={() => dialogRef.current?.open(pos.signature)}
             />
           ))}
         </div>
@@ -109,10 +114,7 @@ export function WallCanvas({ signatures }: WallCanvasProps) {
         onZoomTo100={zoomTo100}
       />
 
-      <SignatureDialog
-        signature={selectedSignature}
-        onClose={() => setSelectedSignature(null)}
-      />
+      <SignatureDialogController ref={dialogRef} />
     </>
   );
 }

@@ -59,6 +59,26 @@ export function useCanvasGestures({
   const activePointersRef = useRef<Map<number, PointerState>>(new Map());
   const panningRef = useRef<PanDragState | null>(null);
   const pinchRef = useRef<PinchGestureState | null>(null);
+  const panRafRef = useRef<number | null>(null);
+  const pendingPanRef = useRef<Point | null>(null);
+
+  const schedulePanUpdate = useCallback(
+    (nextPan: Point) => {
+      canvasPanRef.current = nextPan;
+      pendingPanRef.current = nextPan;
+
+      if (panRafRef.current === null) {
+        panRafRef.current = requestAnimationFrame(() => {
+          panRafRef.current = null;
+          const pending = pendingPanRef.current;
+          if (pending) {
+            setCanvasPan(pending);
+          }
+        });
+      }
+    },
+    [canvasPanRef, setCanvasPan]
+  );
 
   const isElementTarget = useCallback((eventTarget: EventTarget | null) => {
     return !!(
@@ -156,10 +176,10 @@ export function useCanvasGestures({
       } else {
         event.preventDefault();
 
-        setCanvasPan((previousPan) => ({
-          x: previousPan.x - event.deltaX,
-          y: previousPan.y - event.deltaY,
-        }));
+        schedulePanUpdate({
+          x: canvasPanRef.current.x - event.deltaX,
+          y: canvasPanRef.current.y - event.deltaY,
+        });
       }
     };
 
@@ -170,7 +190,7 @@ export function useCanvasGestures({
         const deltaX = event.clientX - activePanDrag.startClientX;
         const deltaY = event.clientY - activePanDrag.startClientY;
 
-        setCanvasPan({
+        schedulePanUpdate({
           x: activePanDrag.startPanX + deltaX,
           y: activePanDrag.startPanY + deltaY,
         });
@@ -231,6 +251,10 @@ export function useCanvasGestures({
 
     return () => {
       controller.abort();
+      if (panRafRef.current !== null) {
+        cancelAnimationFrame(panRafRef.current);
+        panRafRef.current = null;
+      }
     };
   }, [
     canvasRef,
@@ -238,6 +262,8 @@ export function useCanvasGestures({
     scaleByAtPoint,
     setCanvasPan,
     setScaleAtPoint,
+    canvasPanRef,
+    schedulePanUpdate,
   ]);
 
   return {

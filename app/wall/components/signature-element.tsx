@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { WallSignature } from "@/lib/data/wall";
+import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
 
 interface SignatureElementProps {
   signature: WallSignature;
@@ -10,9 +11,6 @@ interface SignatureElementProps {
   isRevealed: boolean;
   onClick: () => void;
 }
-
-const ELEMENT_WIDTH = 220;
-const ELEMENT_HEIGHT = 140;
 
 export function SignatureElement({
   signature,
@@ -46,5 +44,3 @@ export function SignatureElement({
     </button>
   );
 }
-
-export { ELEMENT_WIDTH, ELEMENT_HEIGHT };
