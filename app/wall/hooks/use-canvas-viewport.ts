@@ -54,7 +54,7 @@ export default function useCanvasViewport({
     computeCentredPan,
   });
 
-  const { onPointerDown, onPointerMove } = useCanvasGestures({
+  const { onPointerDown, onPointerMove, wasDragging } = useCanvasGestures({
     canvasRef,
     canvasPanRef,
     canvasScaleRef,
@@ -74,6 +74,7 @@ export default function useCanvasViewport({
       pan: canvasPan,
       onPointerDown,
       onPointerMove,
+      wasDragging,
     },
     zoom: {
       scale: canvasScale,

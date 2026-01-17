@@ -16,6 +16,8 @@ interface PointerState {
   x: number;
   y: number;
   isElement: boolean;
+  startX: number;
+  startY: number;
 }
 
 interface PanDragState {
@@ -47,6 +49,8 @@ interface UseCanvasGesturesOptions {
   wheelZoomDamping: number;
 }
 
+const DRAG_THRESHOLD = 8;
+
 export function useCanvasGestures({
   canvasRef,
   canvasPanRef,
@@ -61,6 +65,7 @@ export function useCanvasGestures({
   const pinchRef = useRef<PinchGestureState | null>(null);
   const panRafRef = useRef<number | null>(null);
   const pendingPanRef = useRef<Point | null>(null);
+  const lastDragEndRef = useRef<number>(0);
 
   const schedulePanUpdate = useCallback(
     (nextPan: Point) => {
@@ -89,24 +94,27 @@ export function useCanvasGestures({
 
   const handleCanvasPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
-      if (isElementTarget(event.target)) return;
-
-      panningRef.current = {
-        pointerId: event.pointerId,
-        startClientX: event.clientX,
-        startClientY: event.clientY,
-        startPanX: canvasPanRef.current.x,
-        startPanY: canvasPanRef.current.y,
-      };
+      const onElement = isElementTarget(event.target);
 
       activePointersRef.current.set(event.pointerId, {
         x: event.clientX,
         y: event.clientY,
-        isElement: false,
+        isElement: onElement,
+        startX: event.clientX,
+        startY: event.clientY,
       });
 
-      event.currentTarget.setPointerCapture(event.pointerId);
-      event.preventDefault();
+      if (!onElement) {
+        panningRef.current = {
+          pointerId: event.pointerId,
+          startClientX: event.clientX,
+          startClientY: event.clientY,
+          startPanX: canvasPanRef.current.x,
+          startPanY: canvasPanRef.current.y,
+        };
+        event.preventDefault();
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }
     },
     [canvasPanRef, isElementTarget]
   );
@@ -118,6 +126,24 @@ export function useCanvasGestures({
       if (pointerState) {
         pointerState.x = event.clientX;
         pointerState.y = event.clientY;
+
+        if (pointerState.isElement && !panningRef.current) {
+          const dx = event.clientX - pointerState.startX;
+          const dy = event.clientY - pointerState.startY;
+          const distance = Math.hypot(dx, dy);
+
+          if (distance > DRAG_THRESHOLD) {
+            pointerState.isElement = false;
+            panningRef.current = {
+              pointerId: event.pointerId,
+              startClientX: pointerState.startX,
+              startClientY: pointerState.startY,
+              startPanX: canvasPanRef.current.x,
+              startPanY: canvasPanRef.current.y,
+            };
+            event.currentTarget.setPointerCapture(event.pointerId);
+          }
+        }
       }
 
       if (!pinchRef.current && activePointersRef.current.size === 2) {
@@ -146,7 +172,7 @@ export function useCanvasGestures({
         }
       }
     },
-    [canvasScaleRef]
+    [canvasPanRef, canvasScaleRef]
   );
 
   useEffect(() => {
@@ -227,6 +253,7 @@ export function useCanvasGestures({
         panningRef.current && event.pointerId === panningRef.current.pointerId;
 
       if (isPanningPointerReleased) {
+        lastDragEndRef.current = Date.now();
         panningRef.current = null;
       }
 
@@ -238,6 +265,7 @@ export function useCanvasGestures({
           event.pointerId === pinchRef.current.secondaryPointerId);
 
       if (isPinchPointerReleased) {
+        lastDragEndRef.current = Date.now();
         pinchRef.current = null;
       }
     };
@@ -266,8 +294,13 @@ export function useCanvasGestures({
     schedulePanUpdate,
   ]);
 
+  const wasDragging = useCallback(() => {
+    return Date.now() - lastDragEndRef.current < 100;
+  }, []);
+
   return {
     onPointerDown: handleCanvasPointerDown,
     onPointerMove: handleCanvasPointerMove,
+    wasDragging,
   };
 }
