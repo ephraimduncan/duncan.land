@@ -10,3 +10,54 @@
   --fade-backdrop-filter: none;
   --fade-mask: none;
 }
+
+.signature-element {
+  opacity: 0;
+  animation: signature-reveal 200ms ease-out both;
+  will-change: opacity;
+  content-visibility: auto;
+  contain-intrinsic-size: 220px 140px;
+}
+
+.signature-hit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60%;
+  height: 60%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  touch-action: none;
+}
+
+@media (pointer: coarse) {
+  .signature-hit {
+    width: 40%;
+    height: 40%;
+  }
+}
+
+.signature-hit:focus-visible {
+  outline: 2px solid var(--color-grey-400);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signature-element {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@keyframes signature-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
