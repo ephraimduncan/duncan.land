@@ -32,7 +32,7 @@ const kaisei = localFont({
 export const metadata = {
   metadataBase: new URL("https://ephraimduncan.com"),
   title: {
-    default: "Ephraim Duncan — Software Engineer",
+    default: "Ephraim Duncan — Software Engineer & Open Source Developer",
     template: "%s | Ephraim Duncan",
   },
   description:
@@ -55,7 +55,7 @@ export const metadata = {
     locale: "en_US",
     url: "https://ephraimduncan.com",
     siteName: "Ephraim Duncan",
-    title: "Ephraim Duncan — Software Engineer",
+    title: "Ephraim Duncan — Software Engineer & Open Source Developer",
     description:
       "Software engineer and open-source developer building polished web experiences. Passionate about TypeScript, Go, and creating beautiful, functional software.",
     images: [
@@ -63,13 +63,13 @@ export const metadata = {
         url: "/static/images/card.png",
         width: 1200,
         height: 630,
-        alt: "Ephraim Duncan — Software Engineer",
+        alt: "Ephraim Duncan — Software Engineer & Open Source Developer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ephraim Duncan — Software Engineer",
+    title: "Ephraim Duncan — Software Engineer & Open Source Developer",
     description:
       "Software engineer and open-source developer building polished web experiences.",
     creator: "@ephraimduncan",
