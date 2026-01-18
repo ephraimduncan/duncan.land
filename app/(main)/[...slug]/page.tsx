@@ -31,9 +31,25 @@ export async function generateMetadata({
     return {};
   }
 
+  const url = `https://ephraimduncan.com${page.slug}`;
+
   return {
     title: page.title,
     description: page.description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: page.title,
+      description: page.description,
+      type: "website",
+      url,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.title,
+      description: page.description,
+    },
   };
 }
 

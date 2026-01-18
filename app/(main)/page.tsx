@@ -27,9 +27,10 @@ export default function Home() {
 
       <FadeIn.Item>
         <p className="mb-2">
-          Building polished software experiences with magical, unique and
-          delightful details, for the web. I aim to create beautiful and
-          functional software that is both intuitive and enjoyable for users.
+          I&apos;m a software engineer and open-source developer building
+          polished web experiences with magical, unique, and delightful details.
+          As a full-stack developer, I aim to create beautiful and functional
+          software that is both intuitive and enjoyable for users.
         </p>
         <p>
           I have a passion for learning, and I am constantly seeking to improve
