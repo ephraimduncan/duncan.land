@@ -1,7 +1,49 @@
 import { AppThemeSwitcher } from "@/components/mode-toggle";
 import * as FadeIn from "@/components/motion";
+import { Arrow } from "@/components/ui/Arrow";
 import { ExternalLink } from "@/components/ui/ExternalLink";
 import Link from "next/link";
+
+const PROJECTS = [
+  {
+    name: "Blocks",
+    description: "Clean, modern shadcn/ui blocks you can copy and paste.",
+    href: "https://blocks.so?ref=duncan.land",
+    external: true,
+  },
+  {
+    name: "Formbase",
+    description:
+      "Backend for HTML forms with uploads, alerts, and integrations.",
+    href: "https://formbase.dev?ref=duncan.land",
+    external: true,
+  },
+  {
+    name: "Minimal",
+    description: "Simple, fast bookmark manager with private collections.",
+    href: "https://minimal.so?ref=duncan.land",
+    external: true,
+  },
+  {
+    name: "Refine",
+    description: "AI humanizer that rewrites drafts into natural writing.",
+    href: "https://refine.so?ref=duncan.land",
+    external: true,
+  },
+  {
+    name: "Weekday",
+    description: "Open-source, privacy-first calendar with AI scheduling.",
+    href: "https://weekday.so?ref=duncan.land",
+    external: true,
+  },
+  {
+    name: "Writer",
+    description:
+      "All-in-one AI writing workspace for research, drafting, and edits.",
+    href: "https://writer.so?ref=duncan.land",
+    external: true,
+  },
+];
 
 export default function Home() {
   return (
@@ -43,6 +85,37 @@ export default function Home() {
           <em> TypeScript</em> and <em> Go</em>, and at the same time, I&apos;m
           also experimenting with native apps with <em> Swift</em>.
         </p>
+      </FadeIn.Item>
+      <FadeIn.Item>
+        <section className="mt-10">
+          <h2 className="text-sm text-grey-400 text-balance">Projects</h2>
+          <ul className="mt-3 flex flex-col gap-3">
+            {PROJECTS.map((project) => (
+              <li key={project.name}>
+                <Link
+                  href={project.href}
+                  className="group flex w-full min-w-0 flex-row items-center gap-3"
+                  target={project.external ? "_blank" : undefined}
+                  rel={project.external ? "noopener noreferrer" : undefined}
+                >
+                  <div className="flex min-w-0 items-center gap-0.5">
+                    <span className="truncate text-base font-medium text-grey-900 dark:text-grey-100 group-hover:underline underline-offset-2">
+                      {project.name}
+                    </span>
+                    {project.external && (
+                      <span className="text-grey-400 dark:text-grey-500">
+                        <Arrow size={14} />
+                      </span>
+                    )}
+                  </div>
+                  <span className="truncate text-pretty text-sm text-grey-500 dark:text-grey-400 sm:flex-1">
+                    {project.description}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       </FadeIn.Item>
       <FadeIn.Item>
         <svg
