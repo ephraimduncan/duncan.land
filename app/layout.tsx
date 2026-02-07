@@ -8,6 +8,7 @@ import { Newsreader } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { Toaster } from "sonner";
+import { Agentation } from "agentation";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -108,42 +109,40 @@ export default function RootLayout({ children }: RootLayoutProps) {
             href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
             rel="stylesheet"
           />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@graph": [
-                  {
-                    "@type": "Person",
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Person",
+                  "@id": "https://ephraimduncan.com/#person",
+                  name: "Ephraim Duncan",
+                  url: "https://ephraimduncan.com",
+                  jobTitle: "Software Engineer",
+                  description:
+                    "Software engineer and open-source developer building polished web experiences.",
+                  sameAs: [
+                    "https://github.com/ephraimduncan",
+                    "https://www.linkedin.com/in/ephraimduncan1/",
+                    "https://twitter.com/ephraimduncan",
+                  ],
+                  image:
+                    "https://ephraimduncan.com/static/images/avatar.jpeg",
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://ephraimduncan.com/#website",
+                  url: "https://ephraimduncan.com",
+                  name: "Ephraim Duncan",
+                  description:
+                    "Software engineer and open-source developer building polished web experiences.",
+                  publisher: {
                     "@id": "https://ephraimduncan.com/#person",
-                    name: "Ephraim Duncan",
-                    url: "https://ephraimduncan.com",
-                    jobTitle: "Software Engineer",
-                    description:
-                      "Software engineer and open-source developer building polished web experiences.",
-                    sameAs: [
-                      "https://github.com/ephraimduncan",
-                      "https://www.linkedin.com/in/ephraimduncan1/",
-                      "https://twitter.com/ephraimduncan",
-                    ],
-                    image: "https://ephraimduncan.com/static/images/avatar.jpeg",
                   },
-                  {
-                    "@type": "WebSite",
-                    "@id": "https://ephraimduncan.com/#website",
-                    url: "https://ephraimduncan.com",
-                    name: "Ephraim Duncan",
-                    description:
-                      "Software engineer and open-source developer building polished web experiences.",
-                    publisher: {
-                      "@id": "https://ephraimduncan.com/#person",
-                    },
-                  },
-                ],
-              }),
-            }}
-          />
+                },
+              ],
+            })}
+          </script>
         </head>
         <body className="antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
           <Toaster richColors />
@@ -152,6 +151,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <AppThemeProvider>
               {children}
               <Analytics />
+              {process.env.NODE_ENV === "development" && (
+                <Agentation endpoint="http://localhost:4747" />
+              )}
             </AppThemeProvider>
           </QueryProvider>
         </body>

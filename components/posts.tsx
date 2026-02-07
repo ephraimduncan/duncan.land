@@ -37,7 +37,7 @@ export const Posts = ({ category }: PostProps) => {
         href={`/${category === "posts" ? "blog" : category}`}
         className="flex justify-between"
       >
-        <h2 className="py-2 dark:text-grey-100">
+        <h2 className="py-2 text-2xl font-medium tracking-tighter dark:text-grey-100">
           {category === "posts" ? "blog" : category}{" "}
           {/* {posts.length > 0 && `(${posts.length})`} */}
         </h2>

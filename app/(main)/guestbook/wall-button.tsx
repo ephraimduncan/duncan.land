@@ -22,7 +22,7 @@ function SignatureIcon() {
 
 export function WallButton() {
   return (
-    <Button href="/wall" color="light" className="gap-1!">
+    <Button href="/wall" color="light" className="gap-1! justify-start sm:justify-center">
       <SignatureIcon />
       See the Wall
     </Button>

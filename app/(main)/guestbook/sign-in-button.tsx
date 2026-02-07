@@ -13,6 +13,7 @@ export function SignInButton({ callbackURL = "/guestbook" }: SignInButtonProps) 
     <Button
       onClick={() => signIn.social({ provider: "github", callbackURL })}
       color="light"
+      className="justify-start sm:justify-center"
     >
       <GithubIcon />
       Sign in with GitHub

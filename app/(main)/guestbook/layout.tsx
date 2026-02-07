@@ -20,12 +20,12 @@ async function AuthContent() {
       </h1>
 
       {user ? (
-        <div className="flex w-full justify-between items-center">
+        <div className="flex flex-col sm:flex-row w-full sm:justify-between sm:items-center gap-2">
           <SignDialog user={user} />
           <SignOutButton />
         </div>
       ) : (
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <SignInButton />
           <WallButton />
         </div>

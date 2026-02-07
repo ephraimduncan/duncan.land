@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack & bunx react-scan@latest localhost:3000",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "preview": "next build && next start",
     "start": "next start",
@@ -26,6 +26,7 @@
     "@vercel/analytics": "^1.0.2",
     "@vercel/blob": "^2.0.0",
     "@vercel/postgres": "^0.8.0",
+    "agentation": "^2.2.0",
     "better-auth": "^1.4.10",
     "bright": "^0.8.2",
     "clsx": "^2.1.1",

@@ -49,21 +49,25 @@ export default function Home() {
   return (
     <FadeIn.Container>
       <FadeIn.Item>
-        <div className="flex items-center justify-between mb-4">
-          <div>
+        <div className="mb-4">
+          <div className="flex items-center justify-between">
             <h1 className="text-2xl">Ephraim Duncan</h1>
-            <h3 className="text-grey-400 text-lg mt-1">
-              Software Engineer at{" "}
-              <a
-                href="http://documenso.com/?ref=ephraimduncan.com"
-                className="hover:underline cursor-pointer"
-              >
-                Documenso
-              </a>
-            </h3>
+            <div className="hidden sm:block">
+              <AppThemeSwitcher />
+            </div>
           </div>
-
-          <AppThemeSwitcher />
+          <h3 className="text-grey-400 text-lg mt-1">
+            Software Engineer at{" "}
+            <a
+              href="http://documenso.com/?ref=ephraimduncan.com"
+              className="hover:underline cursor-pointer"
+            >
+              Documenso
+            </a>
+          </h3>
+          <div className="mt-3 sm:hidden">
+            <AppThemeSwitcher />
+          </div>
         </div>
       </FadeIn.Item>
 
@@ -94,7 +98,7 @@ export default function Home() {
               <li key={project.name}>
                 <Link
                   href={project.href}
-                  className="group flex w-full min-w-0 flex-row items-center gap-3"
+                  className="group flex w-full min-w-0 flex-col sm:flex-row sm:items-center gap-1 sm:gap-3"
                   target={project.external ? "_blank" : undefined}
                   rel={project.external ? "noopener noreferrer" : undefined}
                 >
@@ -108,7 +112,7 @@ export default function Home() {
                       </span>
                     )}
                   </div>
-                  <span className="truncate text-pretty text-sm text-grey-500 dark:text-grey-400 sm:flex-1">
+                  <span className="text-pretty text-sm text-grey-500 dark:text-grey-400 sm:truncate sm:flex-1">
                     {project.description}
                   </span>
                 </Link>
