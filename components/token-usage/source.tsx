@@ -4,9 +4,7 @@ import * as React from "react";
 import type { MotionValue, TargetAndTransition } from "motion/react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import clsx from "clsx";
-import type { Activity } from "./data";
-import { data } from "./data";
-import * as Icons from "./icons";
+import type { UsageDay } from "./data";
 import { useScrollEnd } from "@/lib/hooks/use-scroll-end";
 import { useSound } from "@/lib/hooks/use-sound";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -16,7 +14,7 @@ export const CURSOR_SIZE = 44;
 export const CURSOR_CENTER = CURSOR_SIZE / 2;
 export const CURSOR_WIDTH = 2;
 export const CURSOR_LARGE_HEIGHT = 400;
-export const LINE_GAP = 6;
+export const LINE_GAP = 10;
 export const LINE_WIDTH = 1;
 export const LINE_STEP = LINE_GAP + LINE_WIDTH;
 export const POINTER_SPRING = { stiffness: 500, damping: 40 };
@@ -35,6 +33,7 @@ export interface GraphContext {
   y: MotionValue<number>;
   pressed: boolean;
   isTouch: boolean;
+  data: UsageDay[];
 }
 
 const GraphContext = React.createContext<GraphContext>({} as GraphContext);
@@ -42,7 +41,7 @@ export const useGraph = () => React.useContext(GraphContext);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default function LineGraph() {
+export default function LineGraph({ data }: { data: UsageDay[] }) {
   const isTouch = useMediaQuery("(hover: none)");
 
   const rootRef = React.useRef<HTMLDivElement | null>(null);
@@ -53,8 +52,8 @@ export default function LineGraph() {
   const [pressed, setPressed] = React.useState(false);
 
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-  const activities = data.filter((a) => a.index === activeIndex);
-  const activeDate = getFormattedDateByIndex(activeIndex);
+  const activeDay = activeIndex !== null ? data[activeIndex] ?? null : null;
+  const activeDate = activeDay ? formatDate(activeDay.date) : formatDate(null);
 
   const { scrollX } = useScroll({ container: rootRef });
   const x = useSpring(0, POINTER_SPRING);
@@ -65,10 +64,11 @@ export default function LineGraph() {
   const tick = useSound("/sounds/tick.mp3", SOUND_OPTIONS);
   const popClick = useSound("/sounds/pop-click.wav", SOUND_OPTIONS);
 
+  const maxCost = React.useMemo(() => Math.max(...data.map((d) => d.cost), 1), [data]);
+
   function getIndexFromX(x: number) {
     const scrollLeft = rootRef.current?.scrollLeft ?? 0;
     const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
-    // Account for possible padding, and ignore (subtract) the scroll position
     const offset = offsetLeft - scrollLeft - LINE_WIDTH;
     const index = Math.floor((x - offset) / LINE_STEP);
     return index;
@@ -122,7 +122,6 @@ export default function LineGraph() {
 
     const { left, top } = e.currentTarget.getBoundingClientRect();
 
-    // Take into account any margins or padding on the parent element
     const relativeClientX = e.clientX - left + e.currentTarget.offsetLeft;
     const relativeClientY = e.clientY - top + e.currentTarget.offsetTop;
 
@@ -179,9 +178,10 @@ export default function LineGraph() {
       y,
       isTouch,
       pressed,
+      data,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeIndex, x, y, morph, idle, pressed],
+    [activeIndex, x, y, morph, idle, pressed, data],
   );
 
   return (
@@ -192,22 +192,20 @@ export default function LineGraph() {
       onPointerUp={() => setPressed(false)}
       value={context}
     >
-      {/* Lines */}
-      <Lines ref={boundsRef} />
-      {/* Cursor */}
+      <Lines ref={boundsRef} maxCost={maxCost} />
       <Cursor>
         <AnimatePresence mode="sync">
           <Label key={String(morph) + "date"} position="bottom">
             {activeDate}
           </Label>
-          {(activities.length > 0 || morph) && (
+          {(activeDay !== null || morph) && activeDay && (
             <motion.div
               key="meta"
               {...blur}
               className="absolute bottom-full left-[50%] mb-4 flex translate-x-[-50%] flex-col"
             >
-              {activities.map((activity, index) => (
-                <Meta key={`activity-${index}`} activity={activity} />
+              {activeDay.clients.map((client, index) => (
+                <Meta key={`client-${index}`} modelId={client.modelId} cost={client.cost} />
               ))}
             </motion.div>
           )}
@@ -241,7 +239,7 @@ export function Provider({
         }
       }}
       className={clsx(
-        "flex min-h-screen items-center overflow-y-hidden px-48 max",
+        "flex min-h-screen items-center justify-center overflow-y-hidden px-48 max mx-auto",
         className,
       )}
       {...props}
@@ -258,15 +256,17 @@ export function Lines({
   className,
   style,
   ref,
+  maxCost,
   ...props
 }: {
   children?: React.ReactNode;
   ref: React.RefObject<HTMLDivElement | null>;
+  maxCost: number;
 } & React.HTMLProps<HTMLDivElement>) {
   const popSnapIn = useSound("/sounds/pop-1.mp3", SOUND_OPTIONS);
   const popSnapOut = useSound("/sounds/pop-2.wav", SOUND_OPTIONS);
 
-  const { setActiveIndex, setMorph, y } = useGraph();
+  const { setActiveIndex, setMorph, y, data } = useGraph();
   const rubberband = React.useRef(false);
 
   function onPointerEnter(e: React.PointerEvent<HTMLDivElement>) {
@@ -320,44 +320,24 @@ export function Lines({
       onPointerLeave={onPointerLeave}
       {...props}
     >
-      {Array.from({ length: 365 }).map((_, i) => {
-        const activities = Array.from(data)
-          .toSorted((a, b) => b.moving_time - a.moving_time)
-          .filter((a) => a.index === i);
-
-        let isNewMonth = false;
-        let totalDaysPassed = 0;
-
-        for (let month = 0; month < daysInMonth.length; month++) {
-          const days = daysInMonth[month] ?? 0;
-          if (totalDaysPassed + days > i) {
-            isNewMonth = totalDaysPassed === i;
-            break;
-          }
-          totalDaysPassed += days;
-        }
+      {data.map((day, i) => {
+        const height = getHeightFromCost(day.cost, maxCost);
+        const isFirstOfMonth = i === 0 || getMonth(day.date) !== getMonth(data[i - 1]!.date);
 
         return (
           <div
-            key={`day-${i}`}
+            key={day.date}
             className="relative flex flex-col gap-1 select-none [&>*[data-highlight=true]]:bg-[#ff4d00]"
-            style={{
-              width: LINE_WIDTH,
-            }}
+            style={{ width: LINE_WIDTH }}
           >
-            {activities.length === 0 ? (
-              <div data-highlight={isNewMonth} className="bg-grey-300 dark:bg-grey-600 h-8 w-full" />
+            {day.cost === 0 ? (
+              <div data-highlight={isFirstOfMonth} className="bg-grey-300 dark:bg-grey-600 h-1 w-full" />
             ) : (
-              activities.map((activity) => {
-                return (
-                  <div
-                    key={activity.id}
-                    data-highlight={isNewMonth}
-                    className="bg-grey-950 dark:bg-grey-100 w-full"
-                    style={{ height: getHeightFromMovingTime(activity) }}
-                  />
-                );
-              })
+              <div
+                data-highlight={isFirstOfMonth}
+                className="bg-grey-950 dark:bg-grey-100 w-full"
+                style={{ height }}
+              />
             )}
           </div>
         );
@@ -435,59 +415,12 @@ export function Label({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Meta({ activity }: { activity: Activity }) {
-  const isYoga = activity?.type === "Yoga";
-  const isRun = activity?.type === "Run";
-  const isWalk = activity?.type === "Walk";
-  const isRow = activity?.type === "Rowing";
-  const isGym = activity?.type === "Workout" || activity?.type === "WeightTraining";
-  const isRide = activity?.type === "Ride" || activity?.type === "VirtualRide";
-
-  const title = React.useMemo(() => {
-    if (isRun || isWalk || isRow || isRide) {
-      return convertDistanceToKm(activity?.distance);
-    }
-    if (isYoga || isGym) {
-      return activity?.average_heartrate.toFixed(0) + "bpm";
-    }
-    return "Rest";
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activity]);
-
-  const subtitle = React.useMemo(() => {
-    if (isRide) {
-      return getAvgSpeedKmh(activity).toFixed(1) + "km/h";
-    }
-    if (isRun || isRow) {
-      return convertToPace(activity?.distance, activity?.moving_time);
-    }
-    if (isWalk) {
-      return formatTime(activity?.moving_time);
-    }
-    if (isYoga || isGym) {
-      return formatTime(activity?.moving_time);
-    }
-    return null;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activity]);
-
-  const icon = React.useMemo(() => {
-    if (isRun) return <Icons.RunIcon />;
-    if (isRide) return <Icons.RideIcon />;
-    if (isWalk) return <Icons.WalkIcon />;
-    if (isYoga) return <Icons.YogaIcon />;
-    if (isRow) return <Icons.RunIcon />;
-    if (isGym) return <Icons.GymIcon />;
-    return <Icons.RestIcon />;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activity]);
-
+export function Meta({ modelId, cost }: { modelId: string; cost: number }) {
   return (
     <div className="text-grey-950 dark:text-grey-100 flex items-center justify-center gap-2">
-      {icon}
-      <div className="font-mono text-sm whitespace-nowrap select-none">{title}</div>
-      {subtitle && <div className="bg-grey-300 dark:bg-grey-600 h-.5 w-.5 rounded-full" />}
-      <div className="font-mono text-sm whitespace-nowrap select-none">{subtitle}</div>
+      <div className="font-mono text-[13px] whitespace-nowrap select-none">{modelId}</div>
+      <div className="bg-grey-300 dark:bg-grey-600 h-.5 w-.5 rounded-full" />
+      <div className="font-mono text-[13px] whitespace-nowrap select-none">{formatCost(cost)}</div>
     </div>
   );
 }
@@ -513,85 +446,33 @@ export const blur = {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Time() {
-  const [time, setTime] = React.useState("");
-
-  React.useEffect(() => {
-    setTime(getTime());
-
-    const id = setInterval(() => {
-      setTime(getTime());
-    }, 1000);
-
-    return () => clearInterval(id);
-  }, []);
-
-  return time;
-}
-
-export function getTime(): string {
-  const date = new Date().toLocaleTimeString([], {
-    timeZone: "Europe/Tallinn",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-  });
-  const [, time] = date.split(", ");
-  return time ?? date;
-}
-
 function clamp(val: number, [min, max]: [number, number]): number {
   return Math.min(Math.max(val, min), max);
 }
 
-export function getHeightFromMovingTime(activity: Activity) {
-  return clamp((activity?.moving_time ?? 0) / 50, [30, 300]);
+function getHeightFromCost(cost: number, maxCost: number) {
+  if (cost === 0) return 0;
+  return clamp((cost / maxCost) * 300, [1, 300]);
 }
 
-export function isLeapYear(year: number) {
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+function getMonth(dateStr: string) {
+  return dateStr.slice(0, 7);
 }
 
-export function formatTime(totalSeconds: number) {
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  return formattedTime;
-}
-
-export function convertDistanceToKm(distance: number) {
-  if (!distance) {
-    return null;
+function formatDate(dateStr: string | null) {
+  if (!dateStr) {
+    const now = new Date();
+    return formatDateObj(now);
   }
-  return (distance / 1000).toFixed(2) + "km";
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const date = new Date(year!, month! - 1, day);
+  return formatDateObj(date);
 }
 
-export const daysInMonth = Array.from({ length: 12 }, (_, month) => {
-  if (month === 1) {
-    return isLeapYear(new Date().getFullYear()) ? 29 : 28;
-  }
-  return new Date(new Date().getFullYear(), month + 1, 0).getDate();
-});
-
-export function getFormattedDateByIndex(index: number | null) {
-  let currentDate = new Date();
-
-  if (index !== null) {
-    const startDate = new Date(new Date().getFullYear(), 0, 1);
-    currentDate = new Date(startDate.getTime() + index * 24 * 60 * 60 * 1000);
-  }
-
-  const month = currentDate.toLocaleString("default", { month: "short" });
-  const day = currentDate.getDate();
-
-  let suffix;
+function formatDateObj(date: Date) {
+  const month = date.toLocaleString("default", { month: "short" });
+  const day = date.getDate();
+  let suffix: string;
   if (day === 1 || day === 21 || day === 31) {
     suffix = "st";
   } else if (day === 2 || day === 22) {
@@ -601,29 +482,9 @@ export function getFormattedDateByIndex(index: number | null) {
   } else {
     suffix = "th";
   }
-
   return `${month} ${day}${suffix}`;
 }
 
-function convertToPace(distance: number, movingTime: number) {
-  // Calculate the pace in minutes per kilometer
-  let paceInMinutesPerKm = ((movingTime / distance) * 1000) / 60;
-  // Convert the pace to minutes and seconds
-  let minutes = Math.floor(paceInMinutesPerKm);
-  let seconds = Math.floor((paceInMinutesPerKm - minutes) * 60);
-  // Cap the seconds at 59
-  if (seconds >= 60) {
-    seconds = 59;
-  }
-  // Keep leading zero for seconds if necessary
-  let secondsFormatted = seconds.toString().padStart(2, "0");
-  // Format the pace as {x}:{xx} min/km
-  let formattedPace = minutes.toString() + ":" + secondsFormatted + "m/km";
-  // Return the formatted pace
-  return formattedPace;
-}
-
-function getAvgSpeedKmh(activity: Activity) {
-  const KMH_MULTIPLIER = 3.6;
-  return Math.round(activity.average_speed * KMH_MULTIPLIER);
+function formatCost(cost: number) {
+  return `$${cost.toFixed(2)}`;
 }
