@@ -7,19 +7,24 @@ export interface GuestbookPost {
   name: string | null;
 }
 
+export interface GuestbookOptimisticUser {
+  username: string;
+  name: string | null;
+}
+
 export interface GuestbookPostsResponse {
   posts: GuestbookPost[];
   nextCursor: number | null;
   hasMore: boolean;
 }
 
-export interface SignGuestbookInput {
+export interface SignGuestbookRequest {
   message: string;
-  signature: string;
-  optimisticUser?: {
-    username: string;
-    name: string | null;
-  };
+  signature: string | null;
+}
+
+export interface SignGuestbookInput extends SignGuestbookRequest {
+  optimisticUser?: GuestbookOptimisticUser;
 }
 
 export interface SignGuestbookResponse {
@@ -27,12 +32,29 @@ export interface SignGuestbookResponse {
   message: string;
 }
 
-export interface EligibilityResponse {
-  eligible: boolean;
-  reason?: string;
+export type EligibilityReason = 'ALREADY_SIGNED' | 'NOT_AUTHENTICATED';
+
+export type EligibilityResponse =
+  | { eligible: true }
+  | { eligible: false; reason: EligibilityReason };
+
+export interface UploadSignatureRequest {
+  signature: string;
 }
 
-export interface ApiError {
-  error: string;
+export interface UploadSignatureResponse {
+  url: string;
+}
+
+export type ApiErrorCode =
+  | 'ALREADY_SIGNED'
+  | 'INVALID_CURSOR'
+  | 'INVALID_INPUT'
+  | 'INTERNAL_ERROR'
+  | 'UNAUTHORIZED'
+  | 'UPLOAD_FAILED';
+
+export interface ApiError<Code extends ApiErrorCode = ApiErrorCode> {
+  error: Code;
   message: string;
 }

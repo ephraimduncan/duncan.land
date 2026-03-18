@@ -1,5 +1,6 @@
 import type {
   GuestbookPostsResponse,
+  SignGuestbookRequest,
   SignGuestbookInput,
   SignGuestbookResponse,
   EligibilityResponse,
@@ -54,7 +55,11 @@ export const guestbookApi = {
   },
 
   async sign(input: SignGuestbookInput): Promise<SignGuestbookResponse> {
-    const { optimisticUser, ...apiInput } = input;
+    const apiInput: SignGuestbookRequest = {
+      message: input.message,
+      signature: input.signature,
+    };
+
     return fetchApi<SignGuestbookResponse>('/sign', {
       method: 'POST',
       body: JSON.stringify(apiInput),

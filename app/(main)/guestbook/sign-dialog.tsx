@@ -15,6 +15,7 @@ import type { User } from "@/lib/auth";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
+import type { UploadSignatureResponse } from "@/types/guestbook";
 
 interface SignDialogProps {
   user: User;
@@ -54,7 +55,7 @@ export function SignDialog({ user }: SignDialogProps) {
           return;
         }
 
-        const { url } = await uploadRes.json();
+        const { url } = (await uploadRes.json()) as UploadSignatureResponse;
         signatureUrl = url;
       } catch {
         toast.error("Failed to upload signature");
@@ -65,7 +66,7 @@ export function SignDialog({ user }: SignDialogProps) {
     signMutation.mutate(
       {
         message: message.trim(),
-        signature: signatureUrl ?? "",
+        signature: signatureUrl,
         optimisticUser: {
           username: user.username,
           name: user.name ?? null,

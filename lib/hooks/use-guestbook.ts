@@ -76,7 +76,7 @@ export function useSignGuestbook() {
       queryClient.invalidateQueries({ queryKey: guestbookKeys.all });
       queryClient.setQueryData<EligibilityResponse>(
         guestbookKeys.eligibility,
-        { eligible: false, reason: 'Already signed' }
+        { eligible: false, reason: 'ALREADY_SIGNED' }
       );
     },
 
