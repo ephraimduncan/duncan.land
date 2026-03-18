@@ -1,268 +1,227 @@
 "use client";
 
-import { unsafe_useEffectOnce } from "@/lib/hooks/use-effect-once";
 import { cn } from "@/lib/utils";
 import type { StrokeOptions } from "perfect-freehand";
 import { getStroke } from "perfect-freehand";
-import type {
-  HTMLAttributes,
-  MouseEvent,
-  PointerEvent,
-  TouchEvent,
-} from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSvgPathFromStroke } from "./helper";
 import { Point } from "./point";
 
 const DPI = 2;
+const MIN_POINT_DISTANCE = 5;
 
-export type SignaturePadProps = Omit<
-  HTMLAttributes<HTMLCanvasElement>,
-  "onChange"
-> & {
-  onChange?: (_signatureDataUrl: string | null) => void;
-  containerClassName?: string;
-  disabled?: boolean;
+type Line = Point[];
+
+const getCanvasContext = (canvas: HTMLCanvasElement) => {
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    throw new Error("Signature pad canvas context is not available.");
+  }
+
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
+
+  return context;
 };
+
+const getStrokeOptions = (canvas: HTMLCanvasElement) => {
+  const size = Math.min(canvas.height, canvas.width) * 0.03;
+
+  return {
+    size,
+    thinning: 0.25,
+    streamline: 0.5,
+    smoothing: 0.5,
+    end: {
+      taper: size * 2,
+    },
+  } satisfies StrokeOptions;
+};
+
+const drawLine = (
+  context: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  line: Line,
+) => {
+  const path = new Path2D(
+    getSvgPathFromStroke(getStroke(line, getStrokeOptions(canvas))),
+  );
+
+  context.fill(path);
+};
+
+export interface SignaturePadProps {
+  className?: string;
+  onChange: (_signatureDataUrl: string | null) => void;
+}
 
 export const SignaturePad = ({
   className,
-  containerClassName,
-  defaultValue,
   onChange,
-  disabled = false,
-  ...props
 }: SignaturePadProps) => {
-  const $el = useRef<HTMLCanvasElement>(null);
-  const $imageData = useRef<ImageData | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const linesRef = useRef<Line[]>([]);
+  const currentLineRef = useRef<Line>([]);
+  const isDrawingRef = useRef(false);
+  const [lineCount, setLineCount] = useState(0);
 
-  const [isPressed, setIsPressed] = useState(false);
-  const [lines, setLines] = useState<Point[][]>([]);
-  const [currentLine, setCurrentLine] = useState<Point[]>([]);
+  const redraw = (previewLine?: Line) => {
+    const canvas = canvasRef.current;
 
-  const perfectFreehandOptions = useMemo(() => {
-    const size = $el.current
-      ? Math.min($el.current.height, $el.current.width) * 0.03
-      : 10;
-
-    return {
-      size,
-      thinning: 0.25,
-      streamline: 0.5,
-      smoothing: 0.5,
-      end: {
-        taper: size * 2,
-      },
-    } satisfies StrokeOptions;
-  }, []);
-
-  const onMouseDown = (event: MouseEvent | PointerEvent | TouchEvent) => {
-    if (event.cancelable) {
-      event.preventDefault();
-    }
-
-    setIsPressed(true);
-
-    const point = Point.fromEvent(event, DPI, $el.current);
-
-    setCurrentLine([point]);
-  };
-
-  const onMouseMove = (event: MouseEvent | PointerEvent | TouchEvent) => {
-    if (event.cancelable) {
-      event.preventDefault();
-    }
-
-    if (!isPressed) {
+    if (!canvas) {
       return;
     }
 
-    const point = Point.fromEvent(event, DPI, $el.current);
+    const context = getCanvasContext(canvas);
 
-    if (point.distanceTo(currentLine[currentLine.length - 1]) > 5) {
-      setCurrentLine([...currentLine, point]);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Update the canvas here to draw the lines
-      if ($el.current) {
-        const ctx = $el.current.getContext("2d");
+    for (const line of linesRef.current) {
+      drawLine(context, canvas, line);
+    }
 
-        if (ctx) {
-          ctx.restore();
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
-
-          lines.forEach((line) => {
-            const pathData = new Path2D(
-              getSvgPathFromStroke(getStroke(line, perfectFreehandOptions)),
-            );
-
-            ctx.fill(pathData);
-          });
-
-          const pathData = new Path2D(
-            getSvgPathFromStroke(
-              getStroke([...currentLine, point], perfectFreehandOptions),
-            ),
-          );
-          ctx.fill(pathData);
-        }
-      }
+    if (previewLine) {
+      drawLine(context, canvas, previewLine);
     }
   };
 
-  const onMouseUp = (
-    event: MouseEvent | PointerEvent | TouchEvent,
-    addLine = true,
+  const publishChange = () => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    onChange(linesRef.current.length === 0 ? null : canvas.toDataURL());
+  };
+
+  const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
+    isDrawingRef.current = true;
+    currentLineRef.current = [Point.fromPointerEvent(event, DPI)];
+  };
+
+  const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
+    if (!isDrawingRef.current) {
+      return;
+    }
+
+    const currentLine = currentLineRef.current;
+    const lastPoint = currentLine.at(-1);
+
+    if (!lastPoint) {
+      throw new Error("Signature pad move received without an active line.");
+    }
+
+    const point = Point.fromPointerEvent(event, DPI);
+
+    if (point.distanceTo(lastPoint) <= MIN_POINT_DISTANCE) {
+      return;
+    }
+
+    const nextLine = [...currentLine, point];
+    currentLineRef.current = nextLine;
+    redraw(nextLine);
+  };
+
+  const onPointerUp = (
+    event: PointerEvent<HTMLCanvasElement>,
+    shouldCommit = true,
   ) => {
     if (event.cancelable) {
       event.preventDefault();
     }
 
-    setIsPressed(false);
-
-    const point = Point.fromEvent(event, DPI, $el.current);
-
-    const newLines = [...lines];
-
-    if (addLine && currentLine.length > 0) {
-      newLines.push([...currentLine, point]);
-      setCurrentLine([]);
+    if (!isDrawingRef.current) {
+      return;
     }
 
-    setLines(newLines);
+    isDrawingRef.current = false;
 
-    if ($el.current && newLines.length > 0) {
-      const ctx = $el.current.getContext("2d");
+    const currentLine = currentLineRef.current;
+    currentLineRef.current = [];
 
-      if (ctx) {
-        ctx.restore();
-
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
-
-        newLines.forEach((line) => {
-          const pathData = new Path2D(
-            getSvgPathFromStroke(getStroke(line, perfectFreehandOptions)),
-          );
-          ctx.fill(pathData);
-        });
-
-        onChange?.($el.current.toDataURL());
-        ctx.save();
-      }
+    if (!shouldCommit || currentLine.length === 0) {
+      redraw();
+      return;
     }
+
+    const nextLines = [
+      ...linesRef.current,
+      [...currentLine, Point.fromPointerEvent(event, DPI)],
+    ];
+
+    linesRef.current = nextLines;
+    setLineCount(nextLines.length);
+    redraw();
+    publishChange();
   };
 
-  const onMouseEnter = (event: MouseEvent | PointerEvent | TouchEvent) => {
+  const onPointerEnter = (event: PointerEvent<HTMLCanvasElement>) => {
     if (event.cancelable) {
       event.preventDefault();
     }
 
     if ("buttons" in event && event.buttons === 1) {
-      onMouseDown(event);
+      onPointerDown(event);
     }
   };
 
-  const onMouseLeave = (event: MouseEvent | PointerEvent | TouchEvent) => {
+  const onPointerLeave = (event: PointerEvent<HTMLCanvasElement>) => {
     if (event.cancelable) {
       event.preventDefault();
     }
 
-    onMouseUp(event, false);
+    onPointerUp(event, false);
   };
 
   const onClearClick = () => {
-    if ($el.current) {
-      const ctx = $el.current.getContext("2d");
-
-      ctx?.clearRect(0, 0, $el.current.width, $el.current.height);
-      $imageData.current = null;
-    }
-
-    onChange?.(null);
-
-    setLines([]);
-    setCurrentLine([]);
+    linesRef.current = [];
+    currentLineRef.current = [];
+    isDrawingRef.current = false;
+    setLineCount(0);
+    redraw();
+    onChange(null);
   };
 
   const onUndoClick = () => {
-    if (lines.length === 0) {
+    if (linesRef.current.length === 0) {
       return;
     }
 
-    const newLines = lines.slice(0, -1);
-    setLines(newLines);
-
-    // Clear the canvas
-    if ($el.current) {
-      const ctx = $el.current.getContext("2d");
-      const { width, height } = $el.current;
-      ctx?.clearRect(0, 0, width, height);
-
-      if (typeof defaultValue === "string" && $imageData.current) {
-        ctx?.putImageData($imageData.current, 0, 0);
-      }
-
-      newLines.forEach((line) => {
-        const pathData = new Path2D(
-          getSvgPathFromStroke(getStroke(line, perfectFreehandOptions)),
-        );
-        ctx?.fill(pathData);
-      });
-
-      onChange?.($el.current.toDataURL());
-    }
+    linesRef.current = linesRef.current.slice(0, -1);
+    setLineCount(linesRef.current.length);
+    redraw();
+    publishChange();
   };
 
   useEffect(() => {
-    if ($el.current) {
-      $el.current.width = $el.current.clientWidth * DPI;
-      $el.current.height = $el.current.clientHeight * DPI;
+    if (canvasRef.current) {
+      canvasRef.current.width = canvasRef.current.clientWidth * DPI;
+      canvasRef.current.height = canvasRef.current.clientHeight * DPI;
     }
   }, []);
 
-  unsafe_useEffectOnce(() => {
-    if ($el.current && typeof defaultValue === "string") {
-      const ctx = $el.current.getContext("2d");
-
-      const { width, height } = $el.current;
-
-      const img = new Image();
-
-      img.onload = () => {
-        ctx?.drawImage(
-          img,
-          0,
-          0,
-          Math.min(width, img.width),
-          Math.min(height, img.height),
-        );
-
-        const defaultImageData = ctx?.getImageData(0, 0, width, height) || null;
-
-        $imageData.current = defaultImageData;
-      };
-
-      img.src = defaultValue;
-    }
-  });
-
   return (
-    <div
-      className={cn("relative block", containerClassName, {
-        "pointer-events-none opacity-50": disabled,
-      })}
-    >
+    <div className="relative block">
       <canvas
-        ref={$el}
+        ref={canvasRef}
         className={cn("relative block dark:invert", className)}
         style={{ touchAction: "none" }}
-        onPointerMove={(event) => onMouseMove(event)}
-        onPointerDown={(event) => onMouseDown(event)}
-        onPointerUp={(event) => onMouseUp(event)}
-        onPointerLeave={(event) => onMouseLeave(event)}
-        onPointerEnter={(event) => onMouseEnter(event)}
-        {...props}
+        onPointerMove={onPointerMove}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerLeave={onPointerLeave}
+        onPointerEnter={onPointerEnter}
       />
 
       <div className="absolute bottom-4 right-4 flex gap-2">
@@ -275,7 +234,7 @@ export const SignaturePad = ({
         </button>
       </div>
 
-      {lines.length > 0 && (
+      {lineCount > 0 && (
         <div className="absolute bottom-4 left-4 flex gap-2">
           <button
             type="button"

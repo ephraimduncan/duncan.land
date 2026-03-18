@@ -32,7 +32,7 @@ interface SignDialogProps {
 export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [signature, setSignature] = useState("");
+  const [signature, setSignature] = useState<string | null>(null);
   const [showMessageError, setShowMessageError] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
 
@@ -47,7 +47,7 @@ export function SignDialog({ user }: SignDialogProps) {
 
   function resetForm() {
     setMessage("");
-    setSignature("");
+    setSignature(null);
     setShowMessageError(false);
   }
 
@@ -145,7 +145,7 @@ export function SignDialog({ user }: SignDialogProps) {
               <Label>Sign Here</Label>
               <SignaturePad
                 className="aspect-video h-40 mt-2 w-full rounded-lg border border-grey-950/10 bg-transparent shadow-xs dark:border-black/10 dark:bg-black/5 dark:shadow-none"
-                onChange={(value) => setSignature(value ?? "")}
+                onChange={setSignature}
               />
             </Field>
           </DialogBody>
