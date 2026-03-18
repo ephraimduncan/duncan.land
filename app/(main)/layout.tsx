@@ -34,6 +34,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 />
               </svg>
             </a>
+            <Link href="/token-usage" className="text-sm">
+              /token-usage
+            </Link>
             <Link href="/uses" className="text-sm">
               /uses
             </Link>
