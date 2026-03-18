@@ -6,19 +6,18 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } fr
 import clsx from "clsx";
 import type { UsageDay } from "./data";
 import { useScrollEnd } from "@/lib/hooks/use-scroll-end";
-import { useSound } from "@/lib/hooks/use-sound";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useIsHydrated } from "@/lib/hooks/use-is-hydrated";
+import { sounds } from "@/lib/sounds";
 
 export const CURSOR_SIZE = 44;
 export const CURSOR_CENTER = CURSOR_SIZE / 2;
 export const CURSOR_WIDTH = 2;
-export const CURSOR_LARGE_HEIGHT = 400;
+export const CURSOR_LARGE_HEIGHT = 380;
 export const LINE_GAP = 10;
 export const LINE_WIDTH = 1;
 export const LINE_STEP = LINE_GAP + LINE_WIDTH;
 export const POINTER_SPRING = { stiffness: 500, damping: 40 };
-const SOUND_OPTIONS = { volume: 0.3 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -47,7 +46,13 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const boundsRef = React.useRef<HTMLDivElement | null>(null);
 
-  const [morph, setMorph] = React.useState(isTouch);
+  const [morph, setMorph_] = React.useState(isTouch);
+  const morphRef = React.useRef(isTouch);
+  const setMorph = React.useCallback((v: React.SetStateAction<boolean>) => {
+    const next = typeof v === "function" ? v(morphRef.current) : v;
+    morphRef.current = next;
+    setMorph_(next);
+  }, []);
   const [idle, setIdle] = React.useState(!isTouch);
   const [pressed, setPressed] = React.useState(false);
 
@@ -61,46 +66,54 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
 
   const lastClientX = React.useRef(0);
 
-  const tick = useSound("/sounds/tick.mp3", SOUND_OPTIONS);
-  const popClick = useSound("/sounds/pop-click.wav", SOUND_OPTIONS);
+  const isTouchDevice = useMediaQuery("(hover: none)");
+  const isTinyDevice = useMediaQuery("(max-width: 480px)");
+  const soundEnabled = !isTouchDevice && !isTinyDevice;
 
   const maxCost = React.useMemo(() => Math.max(...data.map((d) => d.cost), 1), [data]);
+
+  function clampIndex(index: number) {
+    return Math.max(0, Math.min(data.length - 1, index));
+  }
 
   function getIndexFromX(x: number) {
     const scrollLeft = rootRef.current?.scrollLeft ?? 0;
     const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
     const offset = offsetLeft - scrollLeft - LINE_WIDTH;
-    const index = Math.floor((x - offset) / LINE_STEP);
-    return index;
+    return Math.floor((x - offset) / LINE_STEP);
   }
 
-  function getSnappedX(clientX: number) {
+  function getIndexFromClientX(clientX: number) {
     const scrollLeft = rootRef.current?.scrollLeft ?? 0;
     const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
-    const offset = scrollLeft - offsetLeft;
 
     const rootEl = rootRef.current;
     if (!rootEl) return 0;
     const rootRect = rootEl.getBoundingClientRect();
-    const relativeX = clientX - rootRect.left + offset;
+    const relativeX = clientX - rootRect.left + scrollLeft - offsetLeft;
 
-    const snappedX = Math.floor(relativeX / LINE_STEP) * LINE_STEP + offsetLeft - scrollLeft;
+    return Math.floor(relativeX / LINE_STEP);
+  }
 
-    return snappedX;
+  function getSnappedX(index: number) {
+    const scrollLeft = rootRef.current?.scrollLeft ?? 0;
+    const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
+
+    return index * LINE_STEP + offsetLeft - scrollLeft;
   }
 
   function setIndexWithSound(index: number) {
     setActiveIndex((prevIndex) => {
       const hasStopped = y.get() === y.getPrevious();
-      if (prevIndex !== index && hasStopped && index !== null) {
-        tick();
+      if (prevIndex !== index && hasStopped && index !== null && soundEnabled) {
+        sounds.tick();
       }
       return index;
     });
   }
 
   function onPointerDown() {
-    popClick();
+    if (soundEnabled) sounds.click();
     setPressed(true);
   }
 
@@ -111,38 +124,27 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
 
     lastClientX.current = e.clientX;
 
-    if (morph) {
-      const snappedX = getSnappedX(e.clientX);
-      const index = getIndexFromX(snappedX);
-      if (index < 0) return;
-      x.set(snappedX);
+    if (morphRef.current) {
+      const rawIndex = getIndexFromClientX(e.clientX);
+      if (rawIndex < 0) return;
+      const index = clampIndex(rawIndex);
+      x.set(getSnappedX(index));
       setIndexWithSound(index);
       return;
     }
 
-    const { left, top } = e.currentTarget.getBoundingClientRect();
-
-    const relativeClientX = e.clientX - left + e.currentTarget.offsetLeft;
-    const relativeClientY = e.clientY - top + e.currentTarget.offsetTop;
-
-    const x_ = relativeClientX - CURSOR_CENTER;
-    const y_ = relativeClientY - CURSOR_CENTER;
-
     if (idle) {
       setIdle(false);
-      x.jump(x_);
-      y.jump(y_);
-    } else {
-      x.set(x_);
-      y.set(y_);
     }
   }
 
   useScrollEnd(
     () => {
       if (morph && !isTouch) {
-        const snappedX = getSnappedX(lastClientX.current);
-        x.set(snappedX);
+        const rawIndex = getIndexFromClientX(lastClientX.current);
+        if (rawIndex < 0) return;
+        const index = clampIndex(rawIndex);
+        x.set(getSnappedX(index));
       }
     },
     rootRef,
@@ -161,7 +163,9 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
       return;
     }
     if (morph) {
-      const index = getIndexFromX(latest);
+      const rawIndex = getIndexFromX(x.get());
+      if (rawIndex < 0) return;
+      const index = clampIndex(rawIndex);
       setIndexWithSound(index);
     }
   });
@@ -263,11 +267,11 @@ export function Lines({
   ref: React.RefObject<HTMLDivElement | null>;
   maxCost: number;
 } & React.HTMLProps<HTMLDivElement>) {
-  const popSnapIn = useSound("/sounds/pop-1.mp3", SOUND_OPTIONS);
-  const popSnapOut = useSound("/sounds/pop-2.wav", SOUND_OPTIONS);
+  const isTouch = useMediaQuery("(hover: none)");
+  const popSnapIn = isTouch ? null : sounds.popIn;
+  const popSnapOut = isTouch ? null : sounds.popOut;
 
   const { setActiveIndex, setMorph, y, data } = useGraph();
-  const rubberband = React.useRef(false);
 
   function onPointerEnter(e: React.PointerEvent<HTMLDivElement>) {
     if (e.pointerType === "touch") return;
@@ -277,37 +281,17 @@ export function Lines({
     const el = ref.current;
     if (!el) return;
     const bounds = el.getBoundingClientRect();
-    const yCenter = bounds.y + (bounds.height / 2 - CURSOR_LARGE_HEIGHT / 2);
-
-    const unsubscribe = y.on("change", (latest) => {
-      if (latest === yCenter) {
-        unsubscribe();
-        rubberband.current = true;
-      }
-    });
-
-    setTimeout(() => {
-      y.set(yCenter);
-    });
+    const yTop = bounds.top - CURSOR_LARGE_HEIGHT + bounds.height;
+    y.jump(yTop);
   }
 
   function onPointerLeave(e: React.PointerEvent<HTMLDivElement>) {
     if (e.pointerType === "touch") return;
     popSnapOut?.();
-    rubberband.current = false;
     setMorph(false);
     setTimeout(() => {
       setActiveIndex(null);
     });
-  }
-
-  function onPointerMove({ movementY, pointerType }: React.PointerEvent<HTMLDivElement>) {
-    if (pointerType === "touch") return;
-    if (rubberband.current) {
-      movementY = movementY / 4;
-      let newY = y.get() + movementY;
-      y.jump(newY);
-    }
   }
 
   return (
@@ -316,7 +300,6 @@ export function Lines({
       className={clsx("relative flex items-end", className)}
       style={{ gap: LINE_GAP, ...style }}
       onPointerEnter={onPointerEnter}
-      onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       {...props}
     >
@@ -327,7 +310,7 @@ export function Lines({
         return (
           <div
             key={day.date}
-            className="relative flex flex-col gap-1 select-none [&>*[data-highlight=true]]:bg-[#ff4d00]"
+            className="relative flex flex-col gap-1 select-none [&>*[data-highlight=true]]:bg-grey-600 dark:[&>*[data-highlight=true]]:bg-grey-300"
             style={{ width: LINE_WIDTH }}
           >
             {day.cost === 0 ? (
@@ -342,6 +325,8 @@ export function Lines({
           </div>
         );
       })}
+      <div aria-hidden className="absolute top-0 left-full" style={{ width: LINE_GAP, height: "100%" }} />
+      <div aria-hidden className="absolute top-full left-0" style={{ width: "100%", height: 25 }} />
       {children}
     </div>
   );
@@ -367,7 +352,7 @@ export function Cursor({
     <motion.div
       initial={false}
       className={clsx(
-        "bg-[#ff4d00] pointer-events-none fixed rounded-full [--label-offset:-36px]",
+        "bg-grey-400 dark:bg-grey-500 pointer-events-none fixed rounded-full [--label-offset:-36px]",
         className,
       )}
       style={{ x, y, ...style }}
@@ -378,7 +363,7 @@ export function Cursor({
         scale: 1,
         top: isTouch ? "unset" : 0,
         left: isTouch ? "unset" : 0,
-        transition: { duration: 0 },
+        transition: { opacity: { duration: 0.15, ease: "easeOut" }, duration: 0 },
       }}
     >
       {children}
