@@ -11,6 +11,7 @@ interface SignInButtonProps {
 export function SignInButton({ callbackURL = "/guestbook" }: SignInButtonProps) {
   return (
     <Button
+      type="button"
       onClick={() => signIn.social({ provider: "github", callbackURL })}
       className="justify-start sm:justify-center"
     >

@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { Link } from "./link";
+import { Link, type LinkProps } from "./link";
 
 export function Text({ className, ...props }: React.ComponentPropsWithoutRef<"p">) {
     return (
@@ -11,7 +11,7 @@ export function Text({ className, ...props }: React.ComponentPropsWithoutRef<"p"
     );
 }
 
-export function TextLink({ className, ...props }: React.ComponentPropsWithoutRef<typeof Link>) {
+export function TextLink({ className, ...props }: LinkProps) {
     return (
         <Link
             {...props}

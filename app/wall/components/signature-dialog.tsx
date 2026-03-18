@@ -80,7 +80,7 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
         </div>
 
         <div className="mt-6 flex justify-end">
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={onClose} type="button">Close</Button>
         </div>
       </DialogBody>
     </Dialog>

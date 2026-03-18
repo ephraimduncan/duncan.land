@@ -15,7 +15,6 @@ export function PostsList() {
     isFetchingNextPage,
     isLoading,
     isError,
-    error
   } = useGuestbookPosts();
 
   const { ref, inView } = useInView({
@@ -67,7 +66,7 @@ export function PostsList() {
 
       {hasNextPage && (
         <div ref={ref} className="flex justify-center mt-4">
-          <Button disabled={isFetchingNextPage}>
+          <Button disabled={isFetchingNextPage} type="button">
             {isFetchingNextPage ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />

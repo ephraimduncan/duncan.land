@@ -11,9 +11,15 @@ import {
     type LegendProps as HeadlessLegendProps,
 } from "@headlessui/react";
 import clsx from "clsx";
-import type React from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
-export function Fieldset({ className, ...props }: HeadlessFieldsetProps) {
+type FieldsetProps = Omit<HeadlessFieldsetProps, "as">;
+type FieldProps = Omit<HeadlessFieldProps, "as">;
+type LabelProps = Omit<HeadlessLabelProps, "as">;
+type LegendProps = Omit<HeadlessLegendProps, "as">;
+type DescriptionProps = Omit<HeadlessDescriptionProps, "as">;
+
+export function Fieldset({ className, ...props }: FieldsetProps) {
     return (
         <HeadlessFieldset
             {...props}
@@ -22,24 +28,24 @@ export function Fieldset({ className, ...props }: HeadlessFieldsetProps) {
     );
 }
 
-export function Legend({ ...props }: HeadlessLegendProps) {
+export function Legend({ className, ...props }: LegendProps) {
     return (
         <HeadlessLegend
             {...props}
             data-slot="legend"
             className={clsx(
-                props.className,
+                className,
                 "text-base/6 font-semibold text-grey-950 data-disabled:opacity-50 sm:text-sm/6 dark:text-white"
             )}
         />
     );
 }
 
-export function FieldGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+export function FieldGroup({ className, ...props }: ComponentPropsWithoutRef<"div">) {
     return <div {...props} data-slot="control" className={clsx(className, "space-y-8")} />;
 }
 
-export function Field({ className, ...props }: HeadlessFieldProps) {
+export function Field({ className, ...props }: FieldProps) {
     return (
         <HeadlessField
             className={clsx(
@@ -56,7 +62,7 @@ export function Field({ className, ...props }: HeadlessFieldProps) {
     );
 }
 
-export function Label({ className, ...props }: HeadlessLabelProps) {
+export function Label({ className, ...props }: LabelProps) {
     return (
         <HeadlessLabel
             {...props}
@@ -72,7 +78,7 @@ export function Label({ className, ...props }: HeadlessLabelProps) {
 export function Description({
     className,
     ...props
-}: HeadlessDescriptionProps) {
+}: DescriptionProps) {
     return (
         <HeadlessDescription
             {...props}
@@ -88,7 +94,7 @@ export function Description({
 export function ErrorMessage({
     className,
     ...props
-}: HeadlessDescriptionProps) {
+}: DescriptionProps) {
     return (
         <HeadlessDescription
             {...props}

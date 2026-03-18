@@ -2,7 +2,11 @@ import { Textarea as HeadlessTextarea, type TextareaProps as HeadlessTextareaPro
 import { clsx } from "clsx";
 import { forwardRef } from "react";
 
-export const Textarea = forwardRef<HTMLTextAreaElement, HeadlessTextareaProps>(function Textarea(
+type TextareaProps = Omit<HeadlessTextareaProps, "as" | "className"> & {
+    className?: string;
+};
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
     { className, ...props },
     ref
 ) {
@@ -59,5 +63,4 @@ export const Textarea = forwardRef<HTMLTextAreaElement, HeadlessTextareaProps>(f
             />
         </span>
     );
-    }
-);
+});
