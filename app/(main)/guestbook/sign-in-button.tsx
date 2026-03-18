@@ -4,15 +4,17 @@ import { Button } from "@/components/button";
 import { GithubIcon } from "@/components/ui/GithubIcon";
 import { signIn } from "@/lib/auth-client";
 
+type AuthRedirect = "/" | "/guestbook";
+
 interface SignInButtonProps {
-  callbackURL?: string;
+  redirectTo: AuthRedirect;
 }
 
-export function SignInButton({ callbackURL = "/guestbook" }: SignInButtonProps) {
+export function SignInButton({ redirectTo }: SignInButtonProps) {
   return (
     <Button
       type="button"
-      onClick={() => signIn.social({ provider: "github", callbackURL })}
+      onClick={() => signIn.social({ provider: "github", callbackURL: redirectTo })}
       className="justify-start sm:justify-center"
     >
       <GithubIcon />

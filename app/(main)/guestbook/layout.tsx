@@ -21,7 +21,7 @@ async function AuthContent() {
         </h1>
 
         <div className="flex flex-col gap-2 sm:flex-row">
-          <SignInButton />
+          <SignInButton redirectTo="/guestbook" />
           <WallButton />
         </div>
       </div>

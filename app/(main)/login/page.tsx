@@ -7,12 +7,13 @@ async function LoginContent() {
     const { user } = await auth();
 
     if (user) {
-        return redirect("/");
+        redirect("/");
     }
+
     return (
         <>
             <h1>Sign in</h1>
-            <SignInButton callbackURL="/" />
+            <SignInButton redirectTo="/" />
         </>
     );
 }
