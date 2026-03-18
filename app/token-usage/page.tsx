@@ -1,4 +1,3 @@
-import "@/components/token-usage/styles.css";
 import LineGraph from "@/components/token-usage/source";
 import { fetchUsageData } from "@/components/token-usage/data";
 import { Metadata } from "next";

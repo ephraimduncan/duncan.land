@@ -51,8 +51,7 @@
     "server-only": "^0.0.1",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss": "^4.1.12",
-    "use-sound": "^5.0.0"
+    "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
     "@content-collections/core": "^0.11.1",
