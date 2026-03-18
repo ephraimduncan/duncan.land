@@ -9,6 +9,8 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const createdAt = new Date(post.created_at);
+
   return (
     <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
       <p className="leading-6 text-grey-900 dark:text-grey-50">
@@ -23,7 +25,7 @@ export function PostCard({ post }: PostCardProps) {
             <p className="font-bold">@{post.username}</p>
           )}
           <p>
-            {post.created_at.toLocaleString("en-US", {
+            {createdAt.toLocaleString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",

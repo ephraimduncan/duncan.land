@@ -7,6 +7,20 @@ import type { GuestbookPost, GuestbookPostsResponse } from '@/types/guestbook';
 
 const PAGE_SIZE = 30;
 
+function serializeGuestbookPost(post: {
+  id: string;
+  message: string;
+  created_at: Date;
+  signature: string | null;
+  username: string;
+  name: string | null;
+}): GuestbookPost {
+  return {
+    ...post,
+    created_at: post.created_at.toISOString(),
+  };
+}
+
 export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPostsResponse> {
   if (cursor < 0 || !Number.isFinite(cursor)) {
     throw new Error('Invalid cursor parameter');
@@ -28,9 +42,10 @@ export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPo
     .offset(cursor);
 
   const hasMore = posts.length > PAGE_SIZE;
+  const paginatedPosts = hasMore ? posts.slice(0, PAGE_SIZE) : posts;
 
   return {
-    posts: hasMore ? posts.slice(0, PAGE_SIZE) : posts,
+    posts: paginatedPosts.map(serializeGuestbookPost),
     nextCursor: hasMore ? cursor + PAGE_SIZE : null,
     hasMore,
   };
@@ -92,5 +107,5 @@ export async function getPostWithUser(postId: string): Promise<GuestbookPost> {
     throw new Error('Post not found');
   }
 
-  return row;
+  return serializeGuestbookPost(row);
 }

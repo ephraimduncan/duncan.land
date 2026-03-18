@@ -10,7 +10,7 @@ type GuestbookPostsQuery = InfiniteData<GuestbookPostsResponse, number>;
 
 export function useGuestbookPosts() {
   return useInfiniteQuery({
-    queryKey: guestbookKeys.postsList,
+    queryKey: guestbookKeys.posts,
     queryFn: ({ pageParam }) => guestbookApi.getPosts(pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextCursor : undefined,
@@ -34,17 +34,17 @@ export function useSignGuestbook() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: SignGuestbookInput) => guestbookApi.sign(input),
+    mutationFn: ({ author: _author, ...input }: SignGuestbookInput) => guestbookApi.sign(input),
 
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: guestbookKeys.all });
 
       const previousPosts = queryClient.getQueryData<GuestbookPostsQuery>(
-        guestbookKeys.postsList,
+        guestbookKeys.posts,
       );
 
       queryClient.setQueryData<GuestbookPostsQuery>(
-        guestbookKeys.postsList,
+        guestbookKeys.posts,
         (old) => {
           if (!old) return old;
 
@@ -52,9 +52,9 @@ export function useSignGuestbook() {
             id: `temp-${Date.now()}`,
             message: variables.message,
             signature: variables.signature,
-            created_at: new Date(),
-            username: variables.optimisticUser?.username || 'You',
-            name: variables.optimisticUser?.name || null,
+            created_at: new Date().toISOString(),
+            username: variables.author.username,
+            name: variables.author.name,
           };
 
           return {
@@ -73,7 +73,6 @@ export function useSignGuestbook() {
 
     onSuccess: () => {
       toast.success('Successfully signed the guestbook!');
-      queryClient.invalidateQueries({ queryKey: guestbookKeys.all });
       queryClient.setQueryData<EligibilityResponse>(
         guestbookKeys.eligibility,
         { eligible: false, reason: 'ALREADY_SIGNED' }
@@ -82,7 +81,7 @@ export function useSignGuestbook() {
 
     onError: (error, _variables, context) => {
       if (context?.previousPosts) {
-        queryClient.setQueryData(guestbookKeys.postsList, context.previousPosts);
+        queryClient.setQueryData(guestbookKeys.posts, context.previousPosts);
       }
 
       const message = error instanceof Error ? error.message : 'Failed to sign guestbook';

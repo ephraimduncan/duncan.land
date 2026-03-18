@@ -1,15 +1,13 @@
-export interface GuestbookPost {
-  id: string;
-  message: string;
-  created_at: Date;
-  signature: string | null;
+export interface GuestbookAuthor {
   username: string;
   name: string | null;
 }
 
-export interface GuestbookOptimisticUser {
-  username: string;
-  name: string | null;
+export interface GuestbookPost extends GuestbookAuthor {
+  id: string;
+  message: string;
+  created_at: string;
+  signature: string | null;
 }
 
 export interface GuestbookPostsResponse {
@@ -24,7 +22,7 @@ export interface SignGuestbookRequest {
 }
 
 export interface SignGuestbookInput extends SignGuestbookRequest {
-  optimisticUser?: GuestbookOptimisticUser;
+  author: GuestbookAuthor;
 }
 
 export interface SignGuestbookResponse {

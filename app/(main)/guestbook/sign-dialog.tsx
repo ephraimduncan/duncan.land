@@ -67,7 +67,7 @@ export function SignDialog({ user }: SignDialogProps) {
       {
         message: message.trim(),
         signature: signatureUrl,
-        optimisticUser: {
+        author: {
           username: user.username,
           name: user.name ?? null,
         },
