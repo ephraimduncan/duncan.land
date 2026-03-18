@@ -1,8 +1,8 @@
 "use client";
 
-import { Button as HeadlessButton, type ButtonProps as HeadlessButtonProps } from "@headlessui/react";
+import { Button as HeadlessButton } from "@headlessui/react";
 import { clsx } from "clsx";
-import { forwardRef, type ForwardedRef, type ReactNode } from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode } from "react";
 import { Link, type LinkProps } from "./link";
 
 const styles = {
@@ -81,7 +81,10 @@ type ButtonOwnProps = {
 };
 
 type ButtonLinkProps = ButtonOwnProps & Omit<LinkProps, "children" | "className">;
-type ButtonActionProps = ButtonOwnProps & Omit<HeadlessButtonProps, "as" | "children" | "className">;
+type ButtonActionProps = ButtonOwnProps &
+    Pick<ComponentPropsWithoutRef<"button">, "disabled" | "onClick"> & {
+        type: "button" | "submit" | "reset";
+    };
 
 export type ButtonProps = ButtonLinkProps | ButtonActionProps;
 

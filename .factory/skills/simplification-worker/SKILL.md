@@ -25,7 +25,8 @@ Use this skill for features that simplify shared UI primitives, helpers, provide
 5. Update all direct consumers in the same feature when you tighten a shared contract.
 6. Do not add new tests for this mission. Instead, verify by reading the changed flows carefully and then running the required validators.
 7. Run `bun run typecheck` and `bun run lint` before ending the feature. If the feature touches app-wide contracts, layouts, or route integration, also run `bun run build`.
-8. Record exact commands, outputs, and observations in the handoff. If something is incomplete or suspicious, say so explicitly.
+8. Commit completed work on the existing branch `mission/whole-repo-simplification`. Do not create a new branch for the feature.
+9. Record exact commands, outputs, and observations in the handoff. If something is incomplete or suspicious, say so explicitly.
 
 ## Example Handoff
 

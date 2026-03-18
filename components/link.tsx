@@ -1,7 +1,8 @@
 import { DataInteractive as HeadlessDataInteractive } from "@headlessui/react";
-import { forwardRef, type ComponentPropsWithoutRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 
-export type LinkProps = ComponentPropsWithoutRef<"a"> & {
+export type LinkProps = Omit<ComponentPropsWithoutRef<"a">, "children" | "href"> & {
+    children: ReactNode;
     href: string;
 };
 

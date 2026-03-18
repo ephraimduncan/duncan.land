@@ -1,49 +1,21 @@
 import {
-    Description as HeadlessDescription,
     Field as HeadlessField,
-    Fieldset as HeadlessFieldset,
     Label as HeadlessLabel,
-    Legend as HeadlessLegend,
-    type DescriptionProps as HeadlessDescriptionProps,
     type FieldProps as HeadlessFieldProps,
-    type FieldsetProps as HeadlessFieldsetProps,
     type LabelProps as HeadlessLabelProps,
-    type LegendProps as HeadlessLegendProps,
 } from "@headlessui/react";
 import clsx from "clsx";
-import type { ComponentPropsWithoutRef } from "react";
+import type { ReactNode } from "react";
 
-type FieldsetProps = Omit<HeadlessFieldsetProps, "as">;
-type FieldProps = Omit<HeadlessFieldProps, "as">;
-type LabelProps = Omit<HeadlessLabelProps, "as">;
-type LegendProps = Omit<HeadlessLegendProps, "as">;
-type DescriptionProps = Omit<HeadlessDescriptionProps, "as">;
+type FieldProps = Omit<HeadlessFieldProps, "as" | "children" | "className"> & {
+    children: ReactNode;
+    className?: string;
+};
 
-export function Fieldset({ className, ...props }: FieldsetProps) {
-    return (
-        <HeadlessFieldset
-            {...props}
-            className={clsx(className, "[&>*+[data-slot=control]]:mt-6 *:data-[slot=text]:mt-1")}
-        />
-    );
-}
-
-export function Legend({ className, ...props }: LegendProps) {
-    return (
-        <HeadlessLegend
-            {...props}
-            data-slot="legend"
-            className={clsx(
-                className,
-                "text-base/6 font-semibold text-grey-950 data-disabled:opacity-50 sm:text-sm/6 dark:text-white"
-            )}
-        />
-    );
-}
-
-export function FieldGroup({ className, ...props }: ComponentPropsWithoutRef<"div">) {
-    return <div {...props} data-slot="control" className={clsx(className, "space-y-8")} />;
-}
+type LabelProps = Omit<HeadlessLabelProps, "as" | "children" | "className"> & {
+    children: ReactNode;
+    className?: string;
+};
 
 export function Field({ className, ...props }: FieldProps) {
     return (
@@ -70,38 +42,6 @@ export function Label({ className, ...props }: LabelProps) {
             className={clsx(
                 className,
                 "select-none text-base/6 text-grey-950 data-disabled:opacity-50 sm:text-sm/6 dark:text-white"
-            )}
-        />
-    );
-}
-
-export function Description({
-    className,
-    ...props
-}: DescriptionProps) {
-    return (
-        <HeadlessDescription
-            {...props}
-            data-slot="description"
-            className={clsx(
-                className,
-                "text-base/6 text-grey-500 data-disabled:opacity-50 sm:text-sm/6 dark:text-grey-400"
-            )}
-        />
-    );
-}
-
-export function ErrorMessage({
-    className,
-    ...props
-}: DescriptionProps) {
-    return (
-        <HeadlessDescription
-            {...props}
-            data-slot="error"
-            className={clsx(
-                className,
-                "text-base/6 text-red-600 data-disabled:opacity-50 sm:text-sm/6 dark:text-red-500"
             )}
         />
     );

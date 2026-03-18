@@ -24,7 +24,8 @@ Use this skill for features touching `components/signature-pad/*`, `app/wall/hoo
 5. Keep code local and readable. Do not split logic into many helper functions unless doing so clearly reduces confusion.
 6. Because browser validation is out of scope, do a manual code-path review after editing: trace pointer/drawing/dialog flows end to end and confirm every branch is still explained by a real interaction.
 7. Run `bun run typecheck` and `bun run lint`. Run `bun run build` when the feature touches route integration or app-wide interactive contracts.
-8. In the handoff, name the exact interaction paths you reviewed and any risks that remain.
+8. Commit completed work on the existing branch `mission/whole-repo-simplification`. Do not create a new branch for the feature.
+9. In the handoff, name the exact interaction paths you reviewed and any risks that remain.
 
 ## Example Handoff
 
