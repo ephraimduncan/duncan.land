@@ -15,7 +15,7 @@ export function SignOutButton() {
   };
 
   return (
-    <Button plain type="button" onClick={handleSignOut}>
+    <Button variant="plain" type="button" onClick={handleSignOut}>
       <SignOutIcon />
       Sign out
     </Button>

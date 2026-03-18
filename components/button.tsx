@@ -77,7 +77,7 @@ const styles = {
 type ButtonOwnProps = {
     children: ReactNode;
     className?: string;
-    plain?: boolean;
+    variant?: "plain" | "solid";
 };
 
 type ButtonLinkProps = ButtonOwnProps & Omit<LinkProps, "children" | "className">;
@@ -89,10 +89,10 @@ type ButtonActionProps = ButtonOwnProps &
 export type ButtonProps = ButtonLinkProps | ButtonActionProps;
 
 export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
-    { plain, className, children, ...props }: ButtonProps,
+    { variant = "solid", className, children, ...props }: ButtonProps,
     ref: ForwardedRef<HTMLElement>
 ) {
-    const classes = clsx(className, styles.base, plain ? styles.plain : styles.solid);
+    const classes = clsx(className, styles.base, styles[variant]);
 
     return "href" in props ? (
         <Link {...props} className={classes} ref={ref as ForwardedRef<HTMLAnchorElement>}>

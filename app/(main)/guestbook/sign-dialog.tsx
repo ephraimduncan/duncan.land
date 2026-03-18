@@ -87,7 +87,7 @@ export function SignDialog({ user }: SignDialogProps) {
         Sign guestbook
       </Button>
 
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)} size="lg">
         <form onSubmit={handleSubmit}>
           <DialogTitle>Sign my guestbook</DialogTitle>
 
@@ -113,7 +113,7 @@ export function SignDialog({ user }: SignDialogProps) {
           </DialogBody>
 
           <DialogActions>
-            <Button plain onClick={() => setIsOpen(false)} type="button">
+            <Button variant="plain" onClick={() => setIsOpen(false)} type="button">
               Cancel
             </Button>
             <Button disabled={signMutation.isPending} type="submit">
