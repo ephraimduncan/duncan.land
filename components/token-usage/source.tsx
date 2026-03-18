@@ -97,10 +97,9 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
   }
 
   function getSnappedX(index: number) {
-    const scrollLeft = rootRef.current?.scrollLeft ?? 0;
-    const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
-
-    return index * LINE_STEP + offsetLeft - scrollLeft;
+    const boundsEl = boundsRef.current;
+    if (!boundsEl) return 0;
+    return boundsEl.getBoundingClientRect().left + index * LINE_STEP;
   }
 
   function setIndexWithSound(index: number) {
