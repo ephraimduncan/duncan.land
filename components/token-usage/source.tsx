@@ -304,23 +304,33 @@ export function Lines({
       {...props}
     >
       {data.map((day, i) => {
-        const height = getHeightFromCost(day.cost, maxCost);
         const isFirstOfMonth = i === 0 || getMonth(day.date) !== getMonth(data[i - 1]!.date);
+        const clients = [...day.clients].sort((a, b) => b.cost - a.cost);
+        const height = getHeightFromCost(day.cost, maxCost);
 
         return (
           <div
             key={day.date}
-            className="relative flex flex-col gap-1 select-none [&>*[data-highlight=true]]:bg-grey-600 dark:[&>*[data-highlight=true]]:bg-grey-300"
+            className="relative flex flex-col gap-0.5 select-none [&>*[data-highlight=true]]:bg-grey-600 dark:[&>*[data-highlight=true]]:bg-grey-300"
             style={{ width: LINE_WIDTH }}
           >
             {day.cost === 0 ? (
-              <div data-highlight={isFirstOfMonth} className="bg-grey-300 dark:bg-grey-600 h-1 w-full" />
-            ) : (
+              <div data-highlight={isFirstOfMonth} className="bg-grey-300 dark:bg-grey-600 h-1 w-full rounded-none" />
+            ) : clients.length === 0 ? (
               <div
                 data-highlight={isFirstOfMonth}
-                className="bg-grey-950 dark:bg-grey-100 w-full"
+                className="bg-grey-950 dark:bg-grey-100 w-full rounded-none"
                 style={{ height }}
               />
+            ) : (
+              clients.map((client, index) => (
+                <div
+                  key={`${day.date}-${client.modelId}-${index}`}
+                  data-highlight={isFirstOfMonth}
+                  className="bg-grey-950 dark:bg-grey-100 w-full rounded-none"
+                  style={{ height: getHeightFromCost(client.cost, maxCost) }}
+                />
+              ))
             )}
           </div>
         );
