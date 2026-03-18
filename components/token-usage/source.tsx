@@ -67,9 +67,8 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
 
   const lastClientX = React.useRef(0);
 
-  const isTouchDevice = useMediaQuery("(hover: none)");
   const isTinyDevice = useMediaQuery("(max-width: 480px)");
-  const soundEnabled = !isTouchDevice && !isTinyDevice;
+  const soundEnabled = !isTouch && !isTinyDevice;
 
   const maxCost = React.useMemo(() => Math.max(...data.map((d) => d.cost), 1), [data]);
 
@@ -77,23 +76,10 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
     return Math.max(0, Math.min(data.length - 1, index));
   }
 
-  function getIndexFromX(x: number) {
-    const scrollLeft = rootRef.current?.scrollLeft ?? 0;
-    const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
-    const offset = offsetLeft - scrollLeft - LINE_WIDTH;
-    return Math.floor((x - offset) / LINE_STEP);
-  }
-
   function getIndexFromClientX(clientX: number) {
-    const scrollLeft = rootRef.current?.scrollLeft ?? 0;
-    const offsetLeft = boundsRef.current?.offsetLeft ?? 0;
-
-    const rootEl = rootRef.current;
-    if (!rootEl) return 0;
-    const rootRect = rootEl.getBoundingClientRect();
-    const relativeX = clientX - rootRect.left + scrollLeft - offsetLeft;
-
-    return Math.floor(relativeX / LINE_STEP);
+    const boundsEl = boundsRef.current;
+    if (!boundsEl) return 0;
+    return Math.floor((clientX - boundsEl.getBoundingClientRect().left) / LINE_STEP);
   }
 
   function getSnappedX(index: number) {
@@ -163,7 +149,7 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
       return;
     }
     if (morph) {
-      const rawIndex = getIndexFromX(x.get());
+      const rawIndex = getIndexFromClientX(x.get());
       if (rawIndex < 0) return;
       const index = clampIndex(rawIndex);
       setIndexWithSound(index);
