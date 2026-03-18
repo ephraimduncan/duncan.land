@@ -1,45 +1,42 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
 import type { SignaturePosition } from "../lib/signature-layout";
+
+const VIEWPORT_BUFFER = 500;
 
 interface UseViewportCullingOptions {
   positions: SignaturePosition[];
   pan: { x: number; y: number };
   scale: number;
-  buffer?: number;
-  elementWidth?: number;
-  elementHeight?: number;
 }
 
 export function useViewportCulling({
   positions,
   pan,
   scale,
-  buffer = 200,
-  elementWidth = 150,
-  elementHeight = 100,
 }: UseViewportCullingOptions): SignaturePosition[] {
-  const [hasMounted, setHasMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
+    setIsMounted(true);
   }, []);
 
   return useMemo(() => {
-    if (!hasMounted) return [];
+    if (!isMounted || positions.length === 0) return [];
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
-    const worldLeft = -pan.x / scale - buffer;
-    const worldRight = (viewportWidth - pan.x) / scale + buffer;
-    const worldTop = -pan.y / scale - buffer;
-    const worldBottom = (viewportHeight - pan.y) / scale + buffer;
+    const worldLeft = -pan.x / scale - VIEWPORT_BUFFER;
+    const worldRight = (viewportWidth - pan.x) / scale + VIEWPORT_BUFFER;
+    const worldTop = -pan.y / scale - VIEWPORT_BUFFER;
+    const worldBottom = (viewportHeight - pan.y) / scale + VIEWPORT_BUFFER;
 
     return positions.filter((pos) => {
-      const right = pos.x + elementWidth;
-      const bottom = pos.y + elementHeight;
+      const right = pos.x + ELEMENT_WIDTH;
+      const bottom = pos.y + ELEMENT_HEIGHT;
 
       return (
         right >= worldLeft &&
@@ -48,5 +45,5 @@ export function useViewportCulling({
         pos.y <= worldBottom
       );
     });
-  }, [positions, pan.x, pan.y, scale, buffer, elementWidth, elementHeight, hasMounted]);
+  }, [isMounted, pan.x, pan.y, positions, scale]);
 }

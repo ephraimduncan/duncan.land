@@ -8,7 +8,6 @@ interface CanvasControlsProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomToFit: () => void;
-  onZoomTo100: () => void;
 }
 
 export function CanvasControls({
@@ -16,7 +15,6 @@ export function CanvasControls({
   onZoomIn,
   onZoomOut,
   onZoomToFit,
-  onZoomTo100,
 }: CanvasControlsProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 

@@ -12,15 +12,18 @@ import {
 
 import type { Point } from "./use-canvas-pan-state";
 
+type PointerTarget = "canvas" | "element";
+
 interface PointerState {
   x: number;
   y: number;
-  isElement: boolean;
+  target: PointerTarget;
   startX: number;
   startY: number;
 }
 
 interface PanDragState {
+  type: "pan";
   pointerId: number;
   startClientX: number;
   startClientY: number;
@@ -29,94 +32,106 @@ interface PanDragState {
 }
 
 interface PinchGestureState {
+  type: "pinch";
   primaryPointerId: number;
   secondaryPointerId: number;
   startDist: number;
   startScale: number;
 }
 
+type GestureState = PanDragState | PinchGestureState;
+
 interface UseCanvasGesturesOptions {
   canvasRef: RefObject<HTMLDivElement | null>;
-  canvasPanRef: { current: Point };
-  canvasScaleRef: { current: number };
-  setCanvasPan: Dispatch<SetStateAction<Point>>;
+  panRef: { current: Point };
+  scaleRef: { current: number };
+  setPan: Dispatch<SetStateAction<Point>>;
   scaleByAtPoint: (clientX: number, clientY: number, factor: number) => void;
   setScaleAtPoint: (
     clientX: number,
     clientY: number,
     targetScale: number
   ) => void;
-  wheelZoomDamping: number;
 }
 
 const DRAG_THRESHOLD = 8;
+const WHEEL_ZOOM_DAMPING = 0.009;
+const RECENT_DRAG_WINDOW_MS = 100;
+
+function assertUnknownGesture(gesture: never): never {
+  throw new Error(`Unknown canvas gesture: ${JSON.stringify(gesture)}`);
+}
 
 export function useCanvasGestures({
   canvasRef,
-  canvasPanRef,
-  canvasScaleRef,
-  setCanvasPan,
+  panRef,
+  scaleRef,
+  setPan,
   scaleByAtPoint,
   setScaleAtPoint,
-  wheelZoomDamping,
 }: UseCanvasGesturesOptions) {
   const activePointersRef = useRef<Map<number, PointerState>>(new Map());
-  const panningRef = useRef<PanDragState | null>(null);
-  const pinchRef = useRef<PinchGestureState | null>(null);
+  const gestureRef = useRef<GestureState | null>(null);
   const panRafRef = useRef<number | null>(null);
   const pendingPanRef = useRef<Point | null>(null);
   const lastDragEndRef = useRef<number>(0);
 
   const schedulePanUpdate = useCallback(
     (nextPan: Point) => {
-      canvasPanRef.current = nextPan;
+      panRef.current = nextPan;
       pendingPanRef.current = nextPan;
 
       if (panRafRef.current === null) {
         panRafRef.current = requestAnimationFrame(() => {
           panRafRef.current = null;
           const pending = pendingPanRef.current;
-          if (pending) {
-            setCanvasPan(pending);
-          }
+          if (!pending) return;
+
+          pendingPanRef.current = null;
+          setPan(pending);
         });
       }
     },
-    [canvasPanRef, setCanvasPan]
+    [panRef, setPan]
   );
 
   const isElementTarget = useCallback((eventTarget: EventTarget | null) => {
-    return !!(
-      eventTarget instanceof Element &&
-      eventTarget.closest('[data-element="true"]')
-    );
+    return !!(eventTarget instanceof Element && eventTarget.closest('[data-element="true"]'));
   }, []);
+
+  const startPanGesture = useCallback(
+    (pointerId: number, startClientX: number, startClientY: number) => {
+      gestureRef.current = {
+        type: "pan",
+        pointerId,
+        startClientX,
+        startClientY,
+        startPanX: panRef.current.x,
+        startPanY: panRef.current.y,
+      };
+    },
+    [panRef]
+  );
 
   const handleCanvasPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
-      const onElement = isElementTarget(event.target);
+      const target: PointerTarget = isElementTarget(event.target) ? "element" : "canvas";
 
       activePointersRef.current.set(event.pointerId, {
         x: event.clientX,
         y: event.clientY,
-        isElement: onElement,
+        target,
         startX: event.clientX,
         startY: event.clientY,
       });
 
-      if (!onElement) {
-        panningRef.current = {
-          pointerId: event.pointerId,
-          startClientX: event.clientX,
-          startClientY: event.clientY,
-          startPanX: canvasPanRef.current.x,
-          startPanY: canvasPanRef.current.y,
-        };
+      if (target === "canvas") {
+        startPanGesture(event.pointerId, event.clientX, event.clientY);
         event.preventDefault();
         event.currentTarget.setPointerCapture(event.pointerId);
       }
     },
-    [canvasPanRef, isElementTarget]
+    [isElementTarget, startPanGesture]
   );
 
   const handleCanvasPointerMove = useCallback(
@@ -127,52 +142,48 @@ export function useCanvasGestures({
         pointerState.x = event.clientX;
         pointerState.y = event.clientY;
 
-        if (pointerState.isElement && !panningRef.current) {
+        if (pointerState.target === "element" && gestureRef.current === null) {
           const dx = event.clientX - pointerState.startX;
           const dy = event.clientY - pointerState.startY;
           const distance = Math.hypot(dx, dy);
 
           if (distance > DRAG_THRESHOLD) {
-            pointerState.isElement = false;
-            panningRef.current = {
-              pointerId: event.pointerId,
-              startClientX: pointerState.startX,
-              startClientY: pointerState.startY,
-              startPanX: canvasPanRef.current.x,
-              startPanY: canvasPanRef.current.y,
-            };
+            pointerState.target = "canvas";
+            startPanGesture(event.pointerId, pointerState.startX, pointerState.startY);
             event.currentTarget.setPointerCapture(event.pointerId);
           }
         }
       }
 
-      if (!pinchRef.current && activePointersRef.current.size === 2) {
-        const pointerIds = Array.from(activePointersRef.current.keys());
-        const primaryPointer = activePointersRef.current.get(pointerIds[0]);
-        const secondaryPointer = activePointersRef.current.get(pointerIds[1]);
-
-        if (
-          primaryPointer &&
-          secondaryPointer &&
-          !primaryPointer.isElement &&
-          !secondaryPointer.isElement
-        ) {
-          const deltaX = secondaryPointer.x - primaryPointer.x;
-          const deltaY = secondaryPointer.y - primaryPointer.y;
-          const distance = Math.hypot(deltaX, deltaY) || 1;
-
-          pinchRef.current = {
-            primaryPointerId: pointerIds[0],
-            secondaryPointerId: pointerIds[1],
-            startDist: distance,
-            startScale: canvasScaleRef.current,
-          };
-
-          panningRef.current = null;
-        }
+      if (
+        activePointersRef.current.size !== 2 ||
+        gestureRef.current?.type === "pinch"
+      ) {
+        return;
       }
+
+      const [firstPointer, secondPointer] = Array.from(activePointersRef.current.entries());
+      if (!firstPointer || !secondPointer) return;
+
+      const [primaryPointerId, primaryPointer] = firstPointer;
+      const [secondaryPointerId, secondaryPointer] = secondPointer;
+
+      if (primaryPointer.target === "element" || secondaryPointer.target === "element") {
+        return;
+      }
+
+      const deltaX = secondaryPointer.x - primaryPointer.x;
+      const deltaY = secondaryPointer.y - primaryPointer.y;
+
+      gestureRef.current = {
+        type: "pinch",
+        primaryPointerId,
+        secondaryPointerId,
+        startDist: Math.hypot(deltaX, deltaY) || 1,
+        startScale: scaleRef.current,
+      };
     },
-    [canvasPanRef, canvasScaleRef]
+    [scaleRef, startPanGesture]
   );
 
   useEffect(() => {
@@ -195,79 +206,80 @@ export function useCanvasGestures({
       if (isZoomGesture) {
         event.preventDefault();
 
-        const delta = event.deltaY;
-        const factor = Math.exp(-delta * wheelZoomDamping);
+        const factor = Math.exp(-event.deltaY * WHEEL_ZOOM_DAMPING);
 
         scaleByAtPoint(event.clientX, event.clientY, factor);
       } else {
         event.preventDefault();
 
         schedulePanUpdate({
-          x: canvasPanRef.current.x - event.deltaX,
-          y: canvasPanRef.current.y - event.deltaY,
+          x: panRef.current.x - event.deltaX,
+          y: panRef.current.y - event.deltaY,
         });
       }
     };
 
     const handlePointerMove = (event: PointerEvent) => {
-      const activePanDrag = panningRef.current;
+      const gesture = gestureRef.current;
+      if (!gesture) return;
 
-      if (activePanDrag) {
-        const deltaX = event.clientX - activePanDrag.startClientX;
-        const deltaY = event.clientY - activePanDrag.startClientY;
+      if (gesture.type === "pan") {
+        const deltaX = event.clientX - gesture.startClientX;
+        const deltaY = event.clientY - gesture.startClientY;
 
         schedulePanUpdate({
-          x: activePanDrag.startPanX + deltaX,
-          y: activePanDrag.startPanY + deltaY,
+          x: gesture.startPanX + deltaX,
+          y: gesture.startPanY + deltaY,
         });
+        return;
       }
 
-      if (pinchRef.current) {
-        const pinchGesture = pinchRef.current;
+      if (gesture.type === "pinch") {
+        const primaryPointer = activePointersRef.current.get(gesture.primaryPointerId);
+        const secondaryPointer = activePointersRef.current.get(gesture.secondaryPointerId);
+        if (!primaryPointer || !secondaryPointer) return;
 
-        const primaryPointer = activePointersRef.current.get(
-          pinchGesture.primaryPointerId
-        );
-        const secondaryPointer = activePointersRef.current.get(
-          pinchGesture.secondaryPointerId
-        );
+        const deltaX = secondaryPointer.x - primaryPointer.x;
+        const deltaY = secondaryPointer.y - primaryPointer.y;
+        const distance = Math.hypot(deltaX, deltaY) || 1;
+        const midpointX = (primaryPointer.x + secondaryPointer.x) / 2;
+        const midpointY = (primaryPointer.y + secondaryPointer.y) / 2;
+        const rawScale = (gesture.startScale * distance) / gesture.startDist;
 
-        if (primaryPointer && secondaryPointer) {
-          const deltaX = secondaryPointer.x - primaryPointer.x;
-          const deltaY = secondaryPointer.y - primaryPointer.y;
-          const distance = Math.hypot(deltaX, deltaY) || 1;
-
-          const midpointX = (primaryPointer.x + secondaryPointer.x) / 2;
-          const midpointY = (primaryPointer.y + secondaryPointer.y) / 2;
-
-          const rawScale =
-            (pinchGesture.startScale * distance) / pinchGesture.startDist;
-
-          setScaleAtPoint(midpointX, midpointY, rawScale);
-        }
+        setScaleAtPoint(midpointX, midpointY, rawScale);
+        return;
       }
+
+      assertUnknownGesture(gesture);
     };
 
     const handlePointerUp = (event: PointerEvent) => {
-      const isPanningPointerReleased =
-        panningRef.current && event.pointerId === panningRef.current.pointerId;
-
-      if (isPanningPointerReleased) {
-        lastDragEndRef.current = Date.now();
-        panningRef.current = null;
-      }
-
       activePointersRef.current.delete(event.pointerId);
 
-      const isPinchPointerReleased =
-        pinchRef.current &&
-        (event.pointerId === pinchRef.current.primaryPointerId ||
-          event.pointerId === pinchRef.current.secondaryPointerId);
+      const gesture = gestureRef.current;
+      if (!gesture) return;
 
-      if (isPinchPointerReleased) {
+      if (gesture.type === "pan") {
+        if (event.pointerId !== gesture.pointerId) return;
+
         lastDragEndRef.current = Date.now();
-        pinchRef.current = null;
+        gestureRef.current = null;
+        return;
       }
+
+      if (gesture.type === "pinch") {
+        const releasedPinchPointer =
+          event.pointerId === gesture.primaryPointerId ||
+          event.pointerId === gesture.secondaryPointerId;
+
+        if (!releasedPinchPointer) return;
+
+        lastDragEndRef.current = Date.now();
+        gestureRef.current = null;
+        return;
+      }
+
+      assertUnknownGesture(gesture);
     };
 
     const controller = new AbortController();
@@ -276,6 +288,7 @@ export function useCanvasGestures({
     window.addEventListener("wheel", handleWheel, { passive: false, signal });
     window.addEventListener("pointermove", handlePointerMove, { signal });
     window.addEventListener("pointerup", handlePointerUp, { signal });
+    window.addEventListener("pointercancel", handlePointerUp, { signal });
 
     return () => {
       controller.abort();
@@ -283,19 +296,19 @@ export function useCanvasGestures({
         cancelAnimationFrame(panRafRef.current);
         panRafRef.current = null;
       }
+
+      pendingPanRef.current = null;
     };
   }, [
     canvasRef,
-    wheelZoomDamping,
+    panRef,
     scaleByAtPoint,
-    setCanvasPan,
     setScaleAtPoint,
-    canvasPanRef,
     schedulePanUpdate,
   ]);
 
   const wasDragging = useCallback(() => {
-    return Date.now() - lastDragEndRef.current < 100;
+    return Date.now() - lastDragEndRef.current < RECENT_DRAG_WINDOW_MS;
   }, []);
 
   return {

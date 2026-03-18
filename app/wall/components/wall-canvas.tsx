@@ -4,7 +4,6 @@ import { useCallback, useMemo, useRef } from "react";
 import useCanvasViewport from "../hooks/use-canvas-viewport";
 import { useViewportCulling } from "../hooks/use-viewport-culling";
 import type { SignaturePosition } from "../lib/signature-layout";
-import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
 import { SignatureElement } from "./signature-element";
 import { SignatureDialogController, type SignatureDialogHandle } from "./signature-dialog";
 import { CanvasControls } from "./canvas-controls";
@@ -24,16 +23,13 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
 
   const {
     canvas: { ref, pan, onPointerDown, onPointerMove, wasDragging },
-    zoom: { scale, percent, zoomIn, zoomOut, zoomToFit, zoomTo100 },
+    zoom: { scale, percent, zoomIn, zoomOut, zoomToFit },
   } = useCanvasViewport({ initialScale: 0.8 });
 
   const visiblePositions = useViewportCulling({
     positions,
     pan,
     scale,
-    elementWidth: ELEMENT_WIDTH,
-    elementHeight: ELEMENT_HEIGHT,
-    buffer: 500,
   });
 
   const revealIndexById = useMemo(() => {
@@ -95,7 +91,6 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
         onZoomToFit={zoomToFit}
-        onZoomTo100={zoomTo100}
       />
 
       <SignatureDialogController ref={dialogRef} />

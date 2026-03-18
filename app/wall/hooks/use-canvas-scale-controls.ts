@@ -13,83 +13,79 @@ import {
 import { clamp } from "@/utils/math";
 import type { Point } from "./use-canvas-pan-state";
 
+const MIN_SCALE = 0.25;
+const MAX_SCALE = 3;
+const ZOOM_STEP = 0.06;
+
 interface UseCanvasScaleControlsOptions {
-  minScale: number;
-  maxScale: number;
-  zoomStep: number;
   initialScale: number;
   canvasRef: RefObject<HTMLDivElement | null>;
-  canvasPanRef: { current: Point };
-  setCanvasPan: Dispatch<SetStateAction<Point>>;
-  computeCentredPan: (scale: number) => Point;
+  panRef: { current: Point };
+  setPan: Dispatch<SetStateAction<Point>>;
 }
 
 export function useCanvasScaleControls({
-  minScale,
-  maxScale,
-  zoomStep,
   initialScale,
   canvasRef,
-  canvasPanRef,
-  setCanvasPan,
-  computeCentredPan,
+  panRef,
+  setPan,
 }: UseCanvasScaleControlsOptions) {
-  const initial = useMemo(
-    () => clamp(initialScale, minScale, maxScale),
-    [initialScale, minScale, maxScale]
-  );
+  const initial = useMemo(() => clamp(initialScale, MIN_SCALE, MAX_SCALE), [initialScale]);
 
-  const [canvasScale, setCanvasScaleState] = useState(initial);
-  const canvasScaleRef = useRef(initial);
+  const [scale, setScaleState] = useState(initial);
+  const scaleRef = useRef(initial);
 
-  const setCanvasScale = useCallback(
+  const setScale = useCallback(
     (value: SetStateAction<number>) => {
-      setCanvasScaleState((previousScale) => {
-        const nextScale =
-          typeof value === "function" ? value(previousScale) : value;
+      setScaleState((previousScale) => {
+        const nextScale = typeof value === "function" ? value(previousScale) : value;
 
-        canvasScaleRef.current = nextScale;
+        scaleRef.current = nextScale;
         return nextScale;
       });
     },
-    [setCanvasScaleState]
+    [setScaleState]
   );
 
-  const clampScale = useCallback(
-    (value: number) => clamp(value, minScale, maxScale),
-    [minScale, maxScale]
-  );
+  const clampScale = useCallback((value: number) => clamp(value, MIN_SCALE, MAX_SCALE), []);
+
+  const getViewportCenter = useCallback((): Point => {
+    return {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+    };
+  }, []);
 
   const setScaleKeepingPoint = useCallback(
     (clientX: number, clientY: number, targetScale: number) => {
       const canvasElement = canvasRef.current;
+      const nextScale = clampScale(targetScale);
 
       if (!canvasElement) {
-        setCanvasScale(clampScale(targetScale));
+        setScale(nextScale);
         return;
       }
 
-      const previousScale = canvasScaleRef.current;
-      const nextScale = clampScale(targetScale);
+      const previousScale = scaleRef.current;
 
       const canvasBounds = canvasElement.getBoundingClientRect();
       const worldX =
-        (clientX - canvasBounds.left - canvasPanRef.current.x) / previousScale;
+        (clientX - canvasBounds.left - panRef.current.x) / previousScale;
       const worldY =
-        (clientY - canvasBounds.top - canvasPanRef.current.y) / previousScale;
+        (clientY - canvasBounds.top - panRef.current.y) / previousScale;
 
       const newPanX = clientX - canvasBounds.left - worldX * nextScale;
       const newPanY = clientY - canvasBounds.top - worldY * nextScale;
 
-      setCanvasPan({ x: newPanX, y: newPanY });
-      setCanvasScale(nextScale);
+      setPan({ x: newPanX, y: newPanY });
+      setScale(nextScale);
     },
-    [canvasPanRef, canvasRef, clampScale, setCanvasPan, setCanvasScale]
+    [canvasRef, clampScale, panRef, setPan, setScale]
   );
 
   const scaleByAtPoint = useCallback(
     (clientX: number, clientY: number, factor: number) => {
-      const previousScale = canvasScaleRef.current;
+      const previousScale = scaleRef.current;
       const nextScale = parseFloat((previousScale * factor).toFixed(3));
 
       setScaleKeepingPoint(clientX, clientY, nextScale);
@@ -105,61 +101,45 @@ export function useCanvasScaleControls({
   );
 
   const zoomIn = useCallback(() => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    const factor = 1 + zoomStep;
-    scaleByAtPoint(centerX, centerY, factor);
-  }, [scaleByAtPoint, zoomStep]);
+    const { x, y } = getViewportCenter();
+    const factor = 1 + ZOOM_STEP;
+    scaleByAtPoint(x, y, factor);
+  }, [getViewportCenter, scaleByAtPoint]);
 
   const zoomOut = useCallback(() => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    const factor = 1 / (1 + zoomStep);
-    scaleByAtPoint(centerX, centerY, factor);
-  }, [scaleByAtPoint, zoomStep]);
-
-  const zoomTo100 = useCallback(() => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    setScaleAtPoint(centerX, centerY, 1);
-  }, [setScaleAtPoint]);
+    const { x, y } = getViewportCenter();
+    const factor = 1 / (1 + ZOOM_STEP);
+    scaleByAtPoint(x, y, factor);
+  }, [getViewportCenter, scaleByAtPoint]);
 
   const zoomToFit = useCallback(() => {
-    const targetScaleClamped = clampScale(initial);
-    const nextPan = computeCentredPan(targetScaleClamped);
+    const nextPan = getViewportCenter();
 
-    setCanvasScale(targetScaleClamped);
-    setCanvasPan(nextPan);
-  }, [clampScale, computeCentredPan, initial, setCanvasPan, setCanvasScale]);
+    setScale(initial);
+    setPan(nextPan);
+  }, [getViewportCenter, initial, setPan, setScale]);
 
-  const centerToContentBounds = useCallback(() => {
-    const nextPan = computeCentredPan(canvasScaleRef.current);
+  const centerPan = useCallback(() => {
+    const nextPan = getViewportCenter();
 
-    setCanvasPan((previousPan) =>
+    setPan((previousPan) =>
       previousPan.x === nextPan.x && previousPan.y === nextPan.y
         ? previousPan
         : nextPan
     );
-  }, [computeCentredPan, setCanvasPan]);
+  }, [getViewportCenter, setPan]);
 
-  const zoomPercent = useMemo(
-    () => Math.round(canvasScale * 100),
-    [canvasScale]
-  );
+  const zoomPercent = useMemo(() => Math.round(scale * 100), [scale]);
 
   return {
-    canvasScale,
-    canvasScaleRef,
+    scale,
+    scaleRef,
     zoomPercent,
     scaleByAtPoint,
     setScaleAtPoint,
     zoomIn,
     zoomOut,
-    zoomTo100,
     zoomToFit,
-    centerToContentBounds,
+    centerPan,
   } as const;
 }

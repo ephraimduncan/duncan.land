@@ -1,89 +1,64 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { useCanvasGestures } from "./use-canvas-gestures";
-import { useCanvasPanState, type Point } from "./use-canvas-pan-state";
+import { useCanvasPanState } from "./use-canvas-pan-state";
 import { useCanvasScaleControls } from "./use-canvas-scale-controls";
 
 interface UseCanvasViewportOptions {
-  minScale?: number;
-  maxScale?: number;
-  zoomStep?: number;
-  wheelZoomDamping?: number;
   initialScale?: number;
 }
 
-export default function useCanvasViewport({
-  minScale = 0.25,
-  maxScale = 3,
-  zoomStep = 0.06,
-  wheelZoomDamping = 0.009,
-  initialScale = 1,
-}: UseCanvasViewportOptions = {}) {
+export default function useCanvasViewport({ initialScale = 1 }: UseCanvasViewportOptions = {}) {
   const canvasRef = useRef<HTMLDivElement | null>(null);
 
-  const { canvasPan, setCanvasPan, canvasPanRef } = useCanvasPanState();
-
-  const computeCentredPan = useCallback((_scale: number): Point => {
-    return {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    };
-  }, []);
+  const { pan, panRef, setPan } = useCanvasPanState();
 
   const {
-    canvasScale,
-    canvasScaleRef,
+    scale,
+    scaleRef,
     zoomPercent,
     scaleByAtPoint,
     setScaleAtPoint,
     zoomIn,
     zoomOut,
-    zoomTo100,
     zoomToFit,
-    centerToContentBounds,
+    centerPan,
   } = useCanvasScaleControls({
-    minScale,
-    maxScale,
-    zoomStep,
     initialScale,
     canvasRef,
-    canvasPanRef,
-    setCanvasPan,
-    computeCentredPan,
+    panRef,
+    setPan,
   });
 
   const { onPointerDown, onPointerMove, wasDragging } = useCanvasGestures({
     canvasRef,
-    canvasPanRef,
-    canvasScaleRef,
-    setCanvasPan,
+    panRef,
+    scaleRef,
+    setPan,
     scaleByAtPoint,
     setScaleAtPoint,
-    wheelZoomDamping,
   });
 
   useEffect(() => {
-    centerToContentBounds();
-  }, [centerToContentBounds]);
+    centerPan();
+  }, [centerPan]);
 
   return {
     canvas: {
       ref: canvasRef,
-      pan: canvasPan,
+      pan,
       onPointerDown,
       onPointerMove,
       wasDragging,
     },
     zoom: {
-      scale: canvasScale,
+      scale,
       percent: zoomPercent,
       zoomIn,
       zoomOut,
-      zoomTo100,
       zoomToFit,
-      getScale: () => canvasScaleRef.current,
     },
   };
 }
