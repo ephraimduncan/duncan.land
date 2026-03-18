@@ -4,6 +4,7 @@ import * as React from "react";
 import type { MotionValue, TargetAndTransition } from "motion/react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import clsx from "clsx";
+import * as Icons from "./icons";
 import type { UsageDay } from "./data";
 import { useScrollEnd } from "@/lib/hooks/use-scroll-end";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
@@ -411,11 +412,18 @@ export function Label({
 ////////////////////////////////////////////////////////////////////////////////
 
 export function Meta({ modelId, cost }: { modelId: string; cost: number }) {
+  const Icon = getModelIcon(modelId);
+
   return (
     <div className="text-grey-950 dark:text-grey-100 flex items-center justify-center gap-2">
-      <div className="font-mono text-[13px] whitespace-nowrap select-none">{modelId}</div>
-      <div className="bg-grey-300 dark:bg-grey-600 h-.5 w-.5 rounded-full" />
-      <div className="font-mono text-[13px] whitespace-nowrap select-none">{formatCost(cost)}</div>
+      {Icon && (
+        <div className="flex size-3 shrink-0 items-center justify-center">
+          <Icon size={12} />
+        </div>
+      )}
+      <div className="font-mono text-sm whitespace-nowrap select-none">{getModelDisplayName(modelId)}</div>
+      <div aria-hidden className="bg-grey-300 dark:bg-grey-600 h-1 w-1 shrink-0 rounded-full" />
+      <div className="font-mono text-sm whitespace-nowrap select-none">{formatCost(cost)}</div>
     </div>
   );
 }
@@ -482,4 +490,57 @@ function formatDateObj(date: Date) {
 
 function formatCost(cost: number) {
   return `$${cost.toFixed(2)}`;
+}
+
+const MODEL_DISPLAY_NAMES: Record<string, string> = {
+  "claude-opus-4-6": "Opus 4.6",
+  "claude-opus-4-5": "Opus 4.5",
+  "claude-sonnet-4-6": "Sonnet 4.6",
+  "claude-sonnet-4-5": "Sonnet 4.5",
+  "claude-haiku-4-5": "Haiku 4.5",
+  "claude-3.5-haiku": "Haiku 3.5",
+  "gpt-5.4": "GPT-5.4",
+  "gpt-5.3-codex": "GPT-5.3 Codex",
+  "gpt-5.3-codex-spark": "GPT-5.3 Codex Spark",
+  "gpt-5.2": "GPT-5.2",
+  "gpt-5.2-codex": "GPT-5.2 Codex",
+  "gpt-5.1-codex": "GPT-5.1 Codex",
+  "gpt-5.1-codex-max": "GPT-5.1 Codex Max",
+  "gpt-5-codex": "GPT-5 Codex",
+  "gemini-3-flash-preview": "Gemini 3 Flash",
+  "gemini-3-pro-preview": "Gemini 3 Pro",
+  "gemini-3.1-pro-preview-customtools": "Gemini 3.1 Pro",
+  "antigravity-gemini-3.1-pro": "Antigravity Gemini 3.1 Pro",
+  "glm-4.7": "GLM 4.7",
+  "glm-4.7-free": "GLM 4.7",
+  "kimi-k2.5-free": "Kimi K2.5",
+};
+
+type ModelIconComponent = ({ size }: { size?: number }) => React.JSX.Element;
+
+function getModelDisplayName(modelId: string) {
+  return MODEL_DISPLAY_NAMES[modelId] ?? formatFallbackModelName(modelId);
+}
+
+function getModelIcon(modelId: string): ModelIconComponent | null {
+  if (modelId.startsWith("claude-")) return Icons.ClaudeIcon;
+  if (modelId.startsWith("gpt-")) return Icons.OpenAIIcon;
+  if (modelId.startsWith("antigravity-")) return Icons.AntigravityIcon;
+  if (modelId.startsWith("gemini-")) return Icons.GeminiIcon;
+  if (modelId.startsWith("kimi-")) return Icons.KimiIcon;
+  if (modelId.startsWith("glm-")) return Icons.GLMIcon;
+  return null;
+}
+
+function formatFallbackModelName(modelId: string) {
+  return modelId
+    .split("-")
+    .map((part) => {
+      if (part === "gpt" || part === "glm") return part.toUpperCase();
+      if (part === "claude") return "Claude";
+      if (part === "gemini") return "Gemini";
+      if (part === "kimi") return "Kimi";
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    })
+    .join(" ");
 }
