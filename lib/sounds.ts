@@ -29,7 +29,7 @@ export const sounds = {
       filter.frequency.value = 3500;
 
       const gain = ctx.createGain();
-      gain.gain.value = 0.25;
+      gain.gain.value = 0.2;
 
       noise.connect(filter);
       filter.connect(gain);
@@ -57,7 +57,7 @@ export const sounds = {
       filter.Q.value = 2.5;
 
       const gain = ctx.createGain();
-      gain.gain.value = 0.4;
+      gain.gain.value = 0.32;
 
       noise.connect(filter);
       filter.connect(gain);
@@ -78,7 +78,7 @@ export const sounds = {
       osc.frequency.setValueAtTime(350, t);
       osc.frequency.exponentialRampToValueAtTime(120, t + 0.035);
 
-      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.setValueAtTime(0.24, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
 
       osc.connect(gain);
@@ -100,7 +100,7 @@ export const sounds = {
       osc.frequency.setValueAtTime(120, t);
       osc.frequency.exponentialRampToValueAtTime(300, t + 0.03);
 
-      gain.gain.setValueAtTime(0.25, t);
+      gain.gain.setValueAtTime(0.2, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
 
       osc.connect(gain);

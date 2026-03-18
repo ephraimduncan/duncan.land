@@ -1,4 +1,5 @@
 import { fetchUsageData } from "@/components/token-usage/data";
+import Link from "next/link";
 
 interface TokenUsageLayoutProps {
   children: React.ReactNode;
@@ -11,9 +12,12 @@ export default async function TokenUsageLayout({ children }: TokenUsageLayoutPro
 
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-[30px] pb-3">
+      <header className="fixed inset-x-0 top-0 z-50 pt-[30px] pb-3">
         <div className="flex justify-center">
-          <div className="flex justify-end" style={{ width: chartWidth }}>
+          <div className="flex items-center justify-between" style={{ width: chartWidth }}>
+            <Link href="/" className="pointer-events-auto font-mono text-xs text-grey-800 dark:text-grey-100">
+              ←
+            </Link>
             <div className="font-mono text-xs text-grey-800 dark:text-grey-100">
               ${formatCost(totalCost)}
             </div>
