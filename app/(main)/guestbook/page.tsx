@@ -24,7 +24,7 @@ export default async function GuestbookPage() {
 
   try {
     await queryClient.prefetchInfiniteQuery({
-      queryKey: guestbookKeys.postsList(),
+      queryKey: guestbookKeys.postsList,
       queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
       initialPageParam: 0,
       getNextPageParam: (lastPage: GuestbookPostsResponse) =>

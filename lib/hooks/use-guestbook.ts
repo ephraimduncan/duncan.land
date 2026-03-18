@@ -1,14 +1,16 @@
 'use client';
 
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { guestbookApi } from '@/lib/api/guestbook';
 import { guestbookKeys } from '@/lib/query/query-keys';
-import type { SignGuestbookInput, GuestbookPost } from '@/types/guestbook';
+import type { EligibilityResponse, GuestbookPost, GuestbookPostsResponse, SignGuestbookInput } from '@/types/guestbook';
 import { toast } from 'sonner';
+
+type GuestbookPostsQuery = InfiniteData<GuestbookPostsResponse, number>;
 
 export function useGuestbookPosts() {
   return useInfiniteQuery({
-    queryKey: guestbookKeys.postsList(),
+    queryKey: guestbookKeys.postsList,
     queryFn: ({ pageParam }) => guestbookApi.getPosts(pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextCursor : undefined,
@@ -22,7 +24,7 @@ export function useGuestbookPosts() {
 
 export function useGuestbookEligibility() {
   return useQuery({
-    queryKey: guestbookKeys.eligibility(),
+    queryKey: guestbookKeys.eligibility,
     queryFn: () => guestbookApi.checkEligibility(),
     staleTime: 5 * 60 * 1000,
   });
@@ -37,11 +39,13 @@ export function useSignGuestbook() {
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: guestbookKeys.all });
 
-      const previousPosts = queryClient.getQueryData(guestbookKeys.postsList());
+      const previousPosts = queryClient.getQueryData<GuestbookPostsQuery>(
+        guestbookKeys.postsList,
+      );
 
-      queryClient.setQueryData(
-        guestbookKeys.postsList(),
-        (old: unknown) => {
+      queryClient.setQueryData<GuestbookPostsQuery>(
+        guestbookKeys.postsList,
+        (old) => {
           if (!old) return old;
 
           const optimisticPost: GuestbookPost = {
@@ -53,10 +57,9 @@ export function useSignGuestbook() {
             name: variables.optimisticUser?.name || null,
           };
 
-          const oldData = old as { pages: Array<{ posts: GuestbookPost[] }> };
           return {
-            ...oldData,
-            pages: oldData.pages.map((page, index) =>
+            ...old,
+            pages: old.pages.map((page, index) =>
               index === 0
                 ? { ...page, posts: [optimisticPost, ...page.posts] }
                 : page
@@ -71,15 +74,15 @@ export function useSignGuestbook() {
     onSuccess: () => {
       toast.success('Successfully signed the guestbook!');
       queryClient.invalidateQueries({ queryKey: guestbookKeys.all });
-      queryClient.setQueryData(
-        guestbookKeys.eligibility(),
+      queryClient.setQueryData<EligibilityResponse>(
+        guestbookKeys.eligibility,
         { eligible: false, reason: 'Already signed' }
       );
     },
 
     onError: (error, _variables, context) => {
       if (context?.previousPosts) {
-        queryClient.setQueryData(guestbookKeys.postsList(), context.previousPosts);
+        queryClient.setQueryData(guestbookKeys.postsList, context.previousPosts);
       }
 
       const message = error instanceof Error ? error.message : 'Failed to sign guestbook';
