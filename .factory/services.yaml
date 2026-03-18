@@ -1,0 +1,8 @@
+commands:
+  install: bun install --frozen-lockfile
+  typecheck: bun run typecheck
+  lint: bun run lint
+  build: bun run build
+  test: bun run build
+
+services: {}

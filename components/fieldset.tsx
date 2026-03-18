@@ -13,7 +13,7 @@ import {
 import clsx from "clsx";
 import type React from "react";
 
-export function Fieldset({ className, ...props }: { disabled?: boolean } & HeadlessFieldsetProps) {
+export function Fieldset({ className, ...props }: HeadlessFieldsetProps) {
     return (
         <HeadlessFieldset
             {...props}
@@ -56,7 +56,7 @@ export function Field({ className, ...props }: HeadlessFieldProps) {
     );
 }
 
-export function Label({ className, ...props }: { className?: string } & HeadlessLabelProps) {
+export function Label({ className, ...props }: HeadlessLabelProps) {
     return (
         <HeadlessLabel
             {...props}
@@ -71,9 +71,8 @@ export function Label({ className, ...props }: { className?: string } & Headless
 
 export function Description({
     className,
-    disabled,
     ...props
-}: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+}: HeadlessDescriptionProps) {
     return (
         <HeadlessDescription
             {...props}
@@ -88,9 +87,8 @@ export function Description({
 
 export function ErrorMessage({
     className,
-    disabled,
     ...props
-}: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+}: HeadlessDescriptionProps) {
     return (
         <HeadlessDescription
             {...props}

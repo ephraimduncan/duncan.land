@@ -47,11 +47,11 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
   if (!signature) return null;
 
   const githubUrl = `https://github.com/${signature.username}`;
-  const displayName = signature.name || signature.username;
+  const displayName = signature.name ?? signature.username;
   const formattedDate = formatter.date(new Date(signature.created_at));
 
   return (
-    <Dialog open={!!signature} onClose={onClose} size="sm">
+    <Dialog open onClose={onClose} size="sm">
       <DialogTitle>{displayName}</DialogTitle>
       <DialogBody>
         <div className="space-y-4">

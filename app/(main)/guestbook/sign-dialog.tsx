@@ -87,7 +87,7 @@ export function SignDialog({ user }: SignDialogProps) {
         Sign guestbook
       </Button>
 
-      <Dialog open={isOpen} onClose={setIsOpen}>
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <form onSubmit={handleSubmit}>
           <DialogTitle>Sign my guestbook</DialogTitle>
 

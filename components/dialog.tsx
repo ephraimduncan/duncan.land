@@ -5,7 +5,6 @@ import {
     DialogTitle as HeadlessDialogTitle,
     Transition as HeadlessTransition,
     TransitionChild as HeadlessTransitionChild,
-    type DialogProps as HeadlessDialogProps,
 } from "@headlessui/react";
 import clsx from "clsx";
 import type React from "react";
@@ -13,28 +12,26 @@ import { Fragment } from "react";
 import { Text } from "./text";
 
 const sizes = {
-    xs: "sm:max-w-xs",
-    sm: "sm:max-w-sm",
-    md: "sm:max-w-md",
     lg: "sm:max-w-lg",
-    xl: "sm:max-w-xl",
-    "2xl": "sm:max-w-2xl",
-    "3xl": "sm:max-w-3xl",
-    "4xl": "sm:max-w-4xl",
-    "5xl": "sm:max-w-5xl",
+    sm: "sm:max-w-sm",
+};
+
+type DialogProps = {
+    children: React.ReactNode;
+    open: boolean;
+    onClose: () => void;
+    size?: keyof typeof sizes;
 };
 
 export function Dialog({
     open,
     onClose,
     size = "lg",
-    className,
     children,
-    ...props
-}: { size?: keyof typeof sizes; children: React.ReactNode } & HeadlessDialogProps) {
+}: DialogProps) {
     return (
-        <HeadlessTransition appear as={Fragment} show={open} {...props}>
-            <HeadlessDialog onClose={onClose}>
+        <HeadlessTransition appear as={Fragment} show={open}>
+            <HeadlessDialog onClose={() => onClose()}>
                 <HeadlessTransitionChild
                     as={Fragment}
                     enter="ease-out duration-100"
@@ -60,7 +57,6 @@ export function Dialog({
                         >
                             <HeadlessDialogPanel
                                 className={clsx(
-                                    className,
                                     sizes[size],
                                     "row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-(--gutter) shadow-lg ring-1 ring-grey-950/10 [--gutter:--spacing(8)] sm:mb-auto sm:rounded-2xl dark:bg-grey-950 dark:ring-white/10 forced-colors:outline-solid"
                                 )}
