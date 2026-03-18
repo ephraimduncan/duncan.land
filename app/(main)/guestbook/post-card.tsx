@@ -9,7 +9,14 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
-  const createdAt = new Date(post.created_at);
+  const authorName = post.name ?? `@${post.username}`;
+  const signedAt = new Date(post.created_at).toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
 
   return (
     <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
@@ -19,20 +26,8 @@ export function PostCard({ post }: PostCardProps) {
 
       <div className="mt-auto flex items-center justify-between">
         <div className="flex flex-col justify-end h-full text-sm">
-          {post.name ? (
-            <p className="font-bold">{post.name}</p>
-          ) : (
-            <p className="font-bold">@{post.username}</p>
-          )}
-          <p>
-            {createdAt.toLocaleString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </p>
+          <p className="font-bold">{authorName}</p>
+          <p>{signedAt}</p>
         </div>
 
         {post.signature && (
