@@ -12,12 +12,12 @@ interface PostProps {
   }>;
 }
 
-async function getPostFromParams(params: { slug: string[] }) {
-  const slug = params?.slug?.join("/");
+function getPostFromParams(params: { slug: string[] }) {
+  const slug = params.slug.join("/");
   const post = allPosts.find((post) => post.slugAsParams === slug);
 
   if (!post) {
-    return null;
+    notFound();
   }
 
   return post;
@@ -26,11 +26,7 @@ async function getPostFromParams(params: { slug: string[] }) {
 export async function generateMetadata({
   params,
 }: PostProps): Promise<Metadata> {
-  const post = await getPostFromParams(await params);
-
-  if (!post) {
-    return {};
-  }
+  const post = getPostFromParams(await params);
 
   const url = `https://ephraimduncan.com${post.slug}`;
 
@@ -69,11 +65,7 @@ export async function generateStaticParams() {
 }
 
 export default async function PostPage({ params }: PostProps) {
-  const post = await getPostFromParams(await params);
-
-  if (!post) {
-    notFound();
-  }
+  const post = getPostFromParams(await params);
 
   return (
     <FadeIn.Container>

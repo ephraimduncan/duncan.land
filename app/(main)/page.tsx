@@ -9,41 +9,35 @@ const PROJECTS = [
     name: "Blocks",
     description: "Clean, modern shadcn/ui blocks you can copy and paste.",
     href: "https://blocks.so?ref=duncan.land",
-    external: true,
   },
   {
     name: "Formbase",
     description:
       "Backend for HTML forms with uploads, alerts, and integrations.",
     href: "https://formbase.dev?ref=duncan.land",
-    external: true,
   },
   {
     name: "Minimal",
     description: "Simple, fast bookmark manager with private collections.",
     href: "https://minimal.so?ref=duncan.land",
-    external: true,
   },
   {
     name: "Refine",
     description: "AI humanizer that rewrites drafts into natural writing.",
     href: "https://refine.so?ref=duncan.land",
-    external: true,
   },
   {
     name: "Weekday",
     description: "Open-source, privacy-first calendar with AI scheduling.",
     href: "https://weekday.so?ref=duncan.land",
-    external: true,
   },
   {
     name: "Writer",
     description:
       "All-in-one AI writing workspace for research, drafting, and edits.",
     href: "https://writer.so?ref=duncan.land",
-    external: true,
   },
-];
+] as const;
 
 export default function Home() {
   return (
@@ -96,26 +90,24 @@ export default function Home() {
           <ul className="mt-3 flex flex-col gap-3">
             {PROJECTS.map((project) => (
               <li key={project.name}>
-                <Link
+                <a
                   href={project.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex w-full min-w-0 flex-col sm:flex-row sm:items-center gap-1 sm:gap-3"
-                  target={project.external ? "_blank" : undefined}
-                  rel={project.external ? "noopener noreferrer" : undefined}
                 >
                   <div className="flex min-w-0 items-center gap-0.5">
                     <span className="truncate text-base font-medium text-grey-900 dark:text-grey-100 group-hover:underline underline-offset-2">
                       {project.name}
                     </span>
-                    {project.external && (
-                      <span className="text-grey-400 dark:text-grey-500">
-                        <Arrow size={14} />
-                      </span>
-                    )}
+                    <span className="text-grey-400 dark:text-grey-500">
+                      <Arrow size={14} />
+                    </span>
                   </div>
                   <span className="text-pretty text-sm text-grey-500 dark:text-grey-400 sm:truncate sm:flex-1">
                     {project.description}
                   </span>
-                </Link>
+                </a>
               </li>
             ))}
           </ul>

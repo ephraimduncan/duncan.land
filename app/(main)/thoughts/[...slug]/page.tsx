@@ -11,12 +11,12 @@ interface ThoughtsProps {
   }>;
 }
 
-async function getThoughtsFromParams(params: { slug: string[] }) {
-  const slug = params?.slug?.join("/");
+function getThoughtsFromParams(params: { slug: string[] }) {
+  const slug = params.slug.join("/");
   const thought = allThoughts.find((thought) => thought.slugAsParams === slug);
 
   if (!thought) {
-    return null;
+    notFound();
   }
 
   return thought;
@@ -25,11 +25,7 @@ async function getThoughtsFromParams(params: { slug: string[] }) {
 export async function generateMetadata({
   params,
 }: ThoughtsProps): Promise<Metadata> {
-  const thought = await getThoughtsFromParams(await params);
-
-  if (!thought) {
-    return {};
-  }
+  const thought = getThoughtsFromParams(await params);
 
   const url = `https://ephraimduncan.com${thought.slug}`;
 
@@ -59,11 +55,7 @@ export async function generateStaticParams() {
 }
 
 export default async function ThoughtPage({ params }: ThoughtsProps) {
-  const thought = await getThoughtsFromParams(await params);
-
-  if (!thought) {
-    notFound();
-  }
+  const thought = getThoughtsFromParams(await params);
 
   return (
     <FadeIn.Container>

@@ -11,12 +11,12 @@ interface PageProps {
   }>;
 }
 
-async function getPageFromParams(params: { slug: string[] }) {
-  const slug = params?.slug?.join("/");
+function getPageFromParams(params: { slug: string[] }) {
+  const slug = params.slug.join("/");
   const page = allPages.find((page) => page.slugAsParams === slug);
 
   if (!page) {
-    return null;
+    notFound();
   }
 
   return page;
@@ -25,11 +25,7 @@ async function getPageFromParams(params: { slug: string[] }) {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const page = await getPageFromParams(await params);
-
-  if (!page) {
-    return {};
-  }
+  const page = getPageFromParams(await params);
 
   const url = `https://ephraimduncan.com${page.slug}`;
 
@@ -60,11 +56,7 @@ export async function generateStaticParams() {
 }
 
 export default async function PagePage({ params }: PageProps) {
-  const page = await getPageFromParams(await params);
-
-  if (!page) {
-    notFound();
-  }
+  const page = getPageFromParams(await params);
 
   return (
     <FadeIn.Container>
