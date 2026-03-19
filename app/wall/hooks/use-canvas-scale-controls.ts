@@ -2,7 +2,6 @@
 
 import {
   useCallback,
-  useMemo,
   useRef,
   useState,
   type Dispatch,
@@ -17,6 +16,16 @@ const MIN_SCALE = 0.25;
 const MAX_SCALE = 3;
 const ZOOM_STEP = 0.06;
 
+function getCanvasElement(canvasRef: RefObject<HTMLDivElement | null>) {
+  const canvasElement = canvasRef.current;
+
+  if (!canvasElement) {
+    throw new Error("Canvas viewport is missing while applying scale.");
+  }
+
+  return canvasElement;
+}
+
 interface UseCanvasScaleControlsOptions {
   initialScale: number;
   canvasRef: RefObject<HTMLDivElement | null>;
@@ -30,7 +39,7 @@ export function useCanvasScaleControls({
   panRef,
   setPan,
 }: UseCanvasScaleControlsOptions) {
-  const initial = useMemo(() => clamp(initialScale, MIN_SCALE, MAX_SCALE), [initialScale]);
+  const initial = clamp(initialScale, MIN_SCALE, MAX_SCALE);
 
   const [scale, setScaleState] = useState(initial);
   const scaleRef = useRef(initial);
@@ -58,13 +67,8 @@ export function useCanvasScaleControls({
 
   const setScaleKeepingPoint = useCallback(
     (clientX: number, clientY: number, targetScale: number) => {
-      const canvasElement = canvasRef.current;
       const nextScale = clampScale(targetScale);
-
-      if (!canvasElement) {
-        setScale(nextScale);
-        return;
-      }
+      const canvasElement = getCanvasElement(canvasRef);
 
       const previousScale = scaleRef.current;
 
@@ -129,13 +133,12 @@ export function useCanvasScaleControls({
     );
   }, [getViewportCenter, setPan]);
 
-  const zoomPercent = useMemo(() => Math.round(scale * 100), [scale]);
+  const zoomPercent = Math.round(scale * 100);
 
   return {
     scale,
     scaleRef,
     zoomPercent,
-    scaleByAtPoint,
     setScaleAtPoint,
     zoomIn,
     zoomOut,

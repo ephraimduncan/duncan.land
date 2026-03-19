@@ -22,9 +22,17 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
   const dialogRef = useRef<SignatureDialogHandle | null>(null);
 
   const {
-    canvas: { ref, pan, onPointerDown, onPointerMove, wasDragging },
-    zoom: { scale, percent, zoomIn, zoomOut, zoomToFit },
-  } = useCanvasViewport({ initialScale: 0.8 });
+    canvasRef,
+    pan,
+    scale,
+    zoomPercent,
+    onPointerDown,
+    onPointerMove,
+    wasDragging,
+    zoomIn,
+    zoomOut,
+    zoomToFit,
+  } = useCanvasViewport();
 
   const visiblePositions = useViewportCulling({
     positions,
@@ -52,7 +60,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
       <GuestbookCTA />
 
       <div
-        ref={ref}
+        ref={canvasRef}
         className="absolute inset-0 touch-none select-none will-change-transform"
         style={{ transformOrigin: "0 0" }}
         onPointerDown={onPointerDown}
@@ -87,7 +95,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
       </div>
 
       <CanvasControls
-        zoomPercent={percent}
+        zoomPercent={zoomPercent}
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
         onZoomToFit={zoomToFit}

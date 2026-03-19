@@ -6,11 +6,9 @@ import { useCanvasGestures } from "./use-canvas-gestures";
 import { useCanvasPanState } from "./use-canvas-pan-state";
 import { useCanvasScaleControls } from "./use-canvas-scale-controls";
 
-interface UseCanvasViewportOptions {
-  initialScale?: number;
-}
+const INITIAL_SCALE = 0.8;
 
-export default function useCanvasViewport({ initialScale = 1 }: UseCanvasViewportOptions = {}) {
+export default function useCanvasViewport() {
   const canvasRef = useRef<HTMLDivElement | null>(null);
 
   const { pan, panRef, setPan } = useCanvasPanState();
@@ -19,14 +17,13 @@ export default function useCanvasViewport({ initialScale = 1 }: UseCanvasViewpor
     scale,
     scaleRef,
     zoomPercent,
-    scaleByAtPoint,
     setScaleAtPoint,
     zoomIn,
     zoomOut,
     zoomToFit,
     centerPan,
   } = useCanvasScaleControls({
-    initialScale,
+    initialScale: INITIAL_SCALE,
     canvasRef,
     panRef,
     setPan,
@@ -37,7 +34,6 @@ export default function useCanvasViewport({ initialScale = 1 }: UseCanvasViewpor
     panRef,
     scaleRef,
     setPan,
-    scaleByAtPoint,
     setScaleAtPoint,
   });
 
@@ -46,19 +42,15 @@ export default function useCanvasViewport({ initialScale = 1 }: UseCanvasViewpor
   }, [centerPan]);
 
   return {
-    canvas: {
-      ref: canvasRef,
-      pan,
-      onPointerDown,
-      onPointerMove,
-      wasDragging,
-    },
-    zoom: {
-      scale,
-      percent: zoomPercent,
-      zoomIn,
-      zoomOut,
-      zoomToFit,
-    },
-  };
+    canvasRef,
+    pan,
+    scale,
+    zoomPercent,
+    onPointerDown,
+    onPointerMove,
+    wasDragging,
+    zoomIn,
+    zoomOut,
+    zoomToFit,
+  } as const;
 }

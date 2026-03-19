@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
 import type { SignaturePosition } from "../lib/signature-layout";
 
@@ -17,14 +17,8 @@ export function useViewportCulling({
   pan,
   scale,
 }: UseViewportCullingOptions): SignaturePosition[] {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   return useMemo(() => {
-    if (!isMounted || positions.length === 0) return [];
+    if (typeof window === "undefined" || positions.length === 0) return [];
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -45,5 +39,5 @@ export function useViewportCulling({
         pos.y <= worldBottom
       );
     });
-  }, [isMounted, pan.x, pan.y, positions, scale]);
+  }, [pan.x, pan.y, positions, scale]);
 }
