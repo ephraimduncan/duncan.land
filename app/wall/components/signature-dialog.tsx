@@ -1,51 +1,18 @@
 "use client";
 
-import {
-  Dialog,
-  DialogBody,
-  DialogTitle,
-} from "@/components/dialog";
+import { Dialog, DialogBody, DialogTitle } from "@/components/dialog";
 import { Button } from "@/components/button";
 import type { WallSignature } from "@/lib/data/wall";
 import { formatter } from "@/lib/utils";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
-import { forwardRef, useImperativeHandle, useState } from "react";
 
 interface SignatureDialogProps {
-  signature: WallSignature | null;
+  signature: WallSignature;
   onClose: () => void;
 }
 
-export interface SignatureDialogHandle {
-  open: (signature: WallSignature) => void;
-  close: () => void;
-}
-
-export const SignatureDialogController = forwardRef<SignatureDialogHandle>(
-  function SignatureDialogController(_props, ref) {
-    const [signature, setSignature] = useState<WallSignature | null>(null);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        open: (nextSignature) => {
-          setSignature(nextSignature);
-        },
-        close: () => {
-          setSignature(null);
-        },
-      }),
-      []
-    );
-
-    return <SignatureDialog signature={signature} onClose={() => setSignature(null)} />;
-  }
-);
-
 export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
-  if (!signature) return null;
-
   const githubUrl = `https://github.com/${signature.username}`;
   const displayName = signature.name ?? signature.username;
   const formattedDate = formatter.date(new Date(signature.created_at));
@@ -80,7 +47,9 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
         </div>
 
         <div className="mt-6 flex justify-end">
-          <Button onClick={onClose} type="button">Close</Button>
+          <Button onClick={onClose} type="button">
+            Close
+          </Button>
         </div>
       </DialogBody>
     </Dialog>

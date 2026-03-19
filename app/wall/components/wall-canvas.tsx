@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useCanvasViewport from "../hooks/use-canvas-viewport";
 import { useViewportCulling } from "../hooks/use-viewport-culling";
 import type { SignaturePosition } from "../lib/signature-layout";
 import { SignatureElement } from "./signature-element";
-import { SignatureDialogController, type SignatureDialogHandle } from "./signature-dialog";
+import { SignatureDialog } from "./signature-dialog";
 import { CanvasControls } from "./canvas-controls";
 import { GuestbookCTA } from "./guestbook-cta";
 
@@ -18,8 +18,19 @@ const BASE_DELAY_MS = 0;
 const STAGGER_MS = 30;
 const RING_SIZE = 5;
 
+function getRevealDelay(revealIndexById: Map<string, number>, id: string) {
+  const revealIndex = revealIndexById.get(id);
+
+  if (revealIndex === undefined) {
+    throw new Error(`Missing reveal order for signature ${id}`);
+  }
+
+  const ringIndex = Math.floor(revealIndex / RING_SIZE) % 10;
+  return BASE_DELAY_MS + ringIndex * STAGGER_MS;
+}
+
 export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
-  const dialogRef = useRef<SignatureDialogHandle | null>(null);
+  const [selectedSignature, setSelectedSignature] = useState<SignaturePosition["signature"] | null>(null);
 
   const {
     canvasRef,
@@ -50,10 +61,15 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
 
   const handleOpenSignature = useCallback(
     (signature: SignaturePosition["signature"]) => {
-      dialogRef.current?.open(signature);
+      if (wasDragging()) return;
+      setSelectedSignature(signature);
     },
-    [dialogRef]
+    [wasDragging]
   );
+
+  const closeSignature = useCallback(() => {
+    setSelectedSignature(null);
+  }, []);
 
   return (
     <>
@@ -74,20 +90,13 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
             contain: "layout style",
           }}
         >
-          {visiblePositions.map((pos) => {
-            const revealIndex = revealIndexById.get(pos.id) ?? 0;
-            const ringIndex = Math.floor(revealIndex / RING_SIZE) % 10;
-            const revealDelayMs = BASE_DELAY_MS + ringIndex * STAGGER_MS;
-
+          {visiblePositions.map((position) => {
             return (
               <SignatureElement
-                key={pos.id}
-                signature={pos.signature}
-                x={pos.x}
-                y={pos.y}
-                revealDelayMs={revealDelayMs}
+                key={position.id}
+                position={position}
+                revealDelayMs={getRevealDelay(revealIndexById, position.id)}
                 onOpenSignature={handleOpenSignature}
-                wasDragging={wasDragging}
               />
             );
           })}
@@ -101,7 +110,9 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
         onZoomToFit={zoomToFit}
       />
 
-      <SignatureDialogController ref={dialogRef} />
+      {selectedSignature ? (
+        <SignatureDialog signature={selectedSignature} onClose={closeSignature} />
+      ) : null}
     </>
   );
 }
