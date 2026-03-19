@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import type { MotionValue, TargetAndTransition } from "motion/react";
+import type { MotionValue } from "motion/react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import clsx from "clsx";
 import * as Icons from "./icons";
@@ -41,7 +41,7 @@ export const useGraph = () => React.useContext(GraphContext);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default function LineGraph({ data }: { data: UsageDay[] }) {
+export default function TokenUsageGraph({ data }: { data: UsageDay[] }) {
   const isTouch = useMediaQuery("(hover: none)");
 
   const rootRef = React.useRef<HTMLDivElement | null>(null);
@@ -58,8 +58,8 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
   const [pressed, setPressed] = React.useState(false);
 
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-  const activeDay = activeIndex !== null ? data[activeIndex] ?? null : null;
-  const activeDate = activeDay ? formatDate(activeDay.date) : formatDate(null);
+  const activeDay = activeIndex === null ? null : data[activeIndex] ?? null;
+  const activeDate = formatDate(activeDay?.date ?? null);
 
   const { scrollX } = useScroll({ container: rootRef });
   const x = useSpring(0, POINTER_SPRING);
@@ -88,10 +88,16 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
     return boundsEl.getBoundingClientRect().left + index * LINE_STEP;
   }
 
+  function getClampedIndex(clientX: number) {
+    const rawIndex = getIndexFromClientX(clientX);
+    if (rawIndex < 0) return null;
+    return clampIndex(rawIndex);
+  }
+
   function setIndexWithSound(index: number) {
     setActiveIndex((prevIndex) => {
       const hasStopped = y.get() === y.getPrevious();
-      if (prevIndex !== index && hasStopped && index !== null && soundEnabled) {
+      if (prevIndex !== index && hasStopped && soundEnabled) {
         sounds.tick();
       }
       return index;
@@ -111,9 +117,8 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
     lastClientX.current = e.clientX;
 
     if (morphRef.current) {
-      const rawIndex = getIndexFromClientX(e.clientX);
-      if (rawIndex < 0) return;
-      const index = clampIndex(rawIndex);
+      const index = getClampedIndex(e.clientX);
+      if (index === null) return;
       x.set(getSnappedX(index));
       setIndexWithSound(index);
       return;
@@ -127,9 +132,8 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
   useScrollEnd(
     () => {
       if (morph && !isTouch) {
-        const rawIndex = getIndexFromClientX(lastClientX.current);
-        if (rawIndex < 0) return;
-        const index = clampIndex(rawIndex);
+        const index = getClampedIndex(lastClientX.current);
+        if (index === null) return;
         x.set(getSnappedX(index));
       }
     },
@@ -144,14 +148,13 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
         return;
       }
 
-      const index = Math.floor(latest / (LINE_GAP + LINE_WIDTH));
+      const index = Math.floor(latest / LINE_STEP);
       setActiveIndex(index);
       return;
     }
     if (morph) {
-      const rawIndex = getIndexFromClientX(x.get());
-      if (rawIndex < 0) return;
-      const index = clampIndex(rawIndex);
+      const index = getClampedIndex(x.get());
+      if (index === null) return;
       setIndexWithSound(index);
     }
   });
@@ -188,7 +191,7 @@ export default function LineGraph({ data }: { data: UsageDay[] }) {
           <Label key={String(morph) + "date"} position="bottom">
             {activeDate}
           </Label>
-          {(activeDay !== null || morph) && activeDay && (
+          {activeDay && (
             <motion.div
               key="meta"
               {...blur}
@@ -225,7 +228,7 @@ export function Provider({
       ref={ref}
       onPointerLeave={(e) => {
         if (e.pointerType !== "touch") {
-          value.setIdle?.(true);
+          value.setIdle(true);
         }
       }}
       className={clsx(
@@ -254,15 +257,14 @@ export function Lines({
   maxCost: number;
 } & React.HTMLProps<HTMLDivElement>) {
   const isTouch = useMediaQuery("(hover: none)");
-  const popSnapIn = isTouch ? null : sounds.popIn;
-  const popSnapOut = isTouch ? null : sounds.popOut;
-
   const { setActiveIndex, setMorph, y, data } = useGraph();
 
   function onPointerEnter(e: React.PointerEvent<HTMLDivElement>) {
     if (e.pointerType === "touch") return;
 
-    popSnapIn?.();
+    if (!isTouch) {
+      sounds.popIn();
+    }
     setMorph(true);
     const el = ref.current;
     if (!el) return;
@@ -273,7 +275,9 @@ export function Lines({
 
   function onPointerLeave(e: React.PointerEvent<HTMLDivElement>) {
     if (e.pointerType === "touch") return;
-    popSnapOut?.();
+    if (!isTouch) {
+      sounds.popOut();
+    }
     setMorph(false);
     setTimeout(() => {
       setActiveIndex(null);
@@ -334,15 +338,13 @@ export function Cursor({
   children,
   className,
   style,
-  animate,
 }: {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  animate?: TargetAndTransition;
 }) {
   const isHydrated = useIsHydrated();
-  const { x, y, idle, morph, pressed, isTouch } = useGraph();
+  const { x, y, morph, isTouch } = useGraph();
   if (!isHydrated) return null;
   return (
     <motion.div
