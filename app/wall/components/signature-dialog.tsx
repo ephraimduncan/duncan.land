@@ -2,13 +2,13 @@
 
 import { Dialog, DialogBody, DialogTitle } from "@/components/dialog";
 import { Button } from "@/components/button";
-import type { WallSignature } from "@/lib/data/wall";
+import type { GuestbookSignature } from "@/types/guestbook";
 import { formatter } from "@/lib/utils";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 
 interface SignatureDialogProps {
-  signature: WallSignature;
+  signature: GuestbookSignature;
   onClose: () => void;
 }
 

@@ -10,6 +10,12 @@ export interface GuestbookPost extends GuestbookAuthor {
   signature: string | null;
 }
 
+export interface GuestbookSignature extends GuestbookAuthor {
+  id: string;
+  created_at: string;
+  signature: string;
+}
+
 export interface GuestbookPostsResponse {
   posts: GuestbookPost[];
   nextCursor: number | null;

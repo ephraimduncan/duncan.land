@@ -9,11 +9,7 @@ import type {
 } from '@/types/guestbook';
 
 class GuestbookApiError extends Error {
-  constructor(
-    public status: number,
-    public override message: string,
-    public data?: unknown
-  ) {
+  constructor(public status: number, public override message: string) {
     super(message);
     this.name = 'GuestbookApiError';
   }
@@ -151,11 +147,7 @@ async function fetchApi<T>(
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new GuestbookApiError(
-      response.status,
-      getApiErrorMessage(data),
-      data
-    );
+    throw new GuestbookApiError(response.status, getApiErrorMessage(data));
   }
 
   return parser(data);

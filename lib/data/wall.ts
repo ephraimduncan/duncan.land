@@ -2,14 +2,7 @@ import 'server-only';
 import { drizzleDb } from '@/lib/drizzle';
 import { post, user } from '@/lib/schema';
 import { and, asc, eq, isNotNull, ne } from 'drizzle-orm';
-
-export interface WallSignature {
-  id: string;
-  created_at: Date;
-  signature: string;
-  username: string;
-  name: string | null;
-}
+import type { GuestbookSignature } from '@/types/guestbook';
 
 function expectSignature(signature: string | null, postId: string) {
   if (signature !== null && signature !== '') {
@@ -19,7 +12,7 @@ function expectSignature(signature: string | null, postId: string) {
   throw new Error(`Missing signature image for wall post ${postId}`);
 }
 
-export async function getAllSignatures(): Promise<WallSignature[]> {
+export async function getAllSignatures(): Promise<GuestbookSignature[]> {
   const rows = await drizzleDb
     .select({
       id: post.id,
@@ -35,6 +28,7 @@ export async function getAllSignatures(): Promise<WallSignature[]> {
 
   return rows.map((row) => ({
     ...row,
+    created_at: row.created_at.toISOString(),
     signature: expectSignature(row.signature, row.id),
   }));
 }

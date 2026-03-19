@@ -1,4 +1,4 @@
-import type { WallSignature } from "@/lib/data/wall";
+import type { GuestbookSignature } from "@/types/guestbook";
 
 export const ELEMENT_WIDTH = 220;
 export const ELEMENT_HEIGHT = 140;
@@ -7,7 +7,7 @@ export interface SignaturePosition {
   id: string;
   x: number;
   y: number;
-  signature: WallSignature;
+  signature: GuestbookSignature;
 }
 
 export interface SignatureLayout {
@@ -98,7 +98,7 @@ function findPosition(id: string, placedRects: PlacedRect[], searchRadius: numbe
   throw new Error(`Could not place signature ${id}`);
 }
 
-export function computeSignatureLayout(signatures: WallSignature[]): SignatureLayout {
+export function computeSignatureLayout(signatures: GuestbookSignature[]): SignatureLayout {
   const placedRects: PlacedRect[] = [];
   const searchRadius = Math.min(MAX_RADIUS, computeTargetRadius(signatures.length) + RADIAL_STEP * 2);
 
