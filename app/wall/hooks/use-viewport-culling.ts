@@ -10,15 +10,19 @@ interface UseViewportCullingOptions {
   positions: SignaturePosition[];
   pan: { x: number; y: number };
   scale: number;
+  viewportReady: boolean;
 }
 
 export function useViewportCulling({
   positions,
   pan,
   scale,
+  viewportReady,
 }: UseViewportCullingOptions): SignaturePosition[] {
   return useMemo(() => {
-    if (typeof window === "undefined" || positions.length === 0) return [];
+    if (!viewportReady || typeof window === "undefined" || positions.length === 0) {
+      return [];
+    }
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -39,5 +43,5 @@ export function useViewportCulling({
         pos.y <= worldBottom
       );
     });
-  }, [pan.x, pan.y, positions, scale]);
+  }, [pan.x, pan.y, positions, scale, viewportReady]);
 }

@@ -2,6 +2,7 @@
 
 import { Card } from "@/components/card";
 import type { GuestbookPost } from "@/types/guestbook";
+import { formatter } from "@/lib/utils";
 import Image from "next/image";
 
 interface PostCardProps {
@@ -10,13 +11,7 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const authorName = post.name ?? `@${post.username}`;
-  const signedAt = new Date(post.created_at).toLocaleString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  });
+  const signedAt = formatter.dateTimeUtc(new Date(post.created_at));
 
   return (
     <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">

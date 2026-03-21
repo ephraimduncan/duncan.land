@@ -21,13 +21,26 @@ const relativeTimeFormatter = new Intl.RelativeTimeFormat("en", {
 
 interface Formatter {
   date(input: Date): string;
+  dateTimeUtc(input: Date): string;
   number(input: number): string;
   time(value: number, unit: Intl.RelativeTimeFormatUnit): string;
 }
 
+const dateTimeUtcFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+});
+
 export const formatter = {
   date(input) {
     return dateFormatter.format(input);
+  },
+  dateTimeUtc(input) {
+    return dateTimeUtcFormatter.format(input);
   },
   number(input) {
     return numberFormatter.format(input);

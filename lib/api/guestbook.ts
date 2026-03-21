@@ -47,12 +47,12 @@ function expectBoolean(value: unknown, label: string): boolean {
   return value;
 }
 
-function expectNullableNumber(value: unknown, label: string): number | null {
+function expectNullableNonNegativeInteger(value: unknown, label: string): number | null {
   if (value === null) {
     return null;
   }
 
-  if (typeof value !== 'number') {
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) {
     throw new Error(`Invalid ${label}`);
   }
 
@@ -85,7 +85,7 @@ function parseGuestbookPostsResponse(value: unknown): GuestbookPostsResponse {
 
   return {
     posts: expectArray(response.posts, 'guestbook posts').map(parseGuestbookPost),
-    nextCursor: expectNullableNumber(response.nextCursor, 'guestbook nextCursor'),
+    nextCursor: expectNullableNonNegativeInteger(response.nextCursor, 'guestbook nextCursor'),
     hasMore: expectBoolean(response.hasMore, 'guestbook hasMore'),
   };
 }

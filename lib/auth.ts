@@ -4,28 +4,20 @@ import { requiredEnv, requiredEnvList } from "./env";
 import { drizzleDb } from "./drizzle";
 import * as schema from "./schema";
 
-const baseURL = requiredEnv("BETTER_AUTH_URL", process.env.BETTER_AUTH_URL);
+const baseURL = process.env.BETTER_AUTH_URL;
 
 const trustedOrigins = process.env.BETTER_AUTH_TRUSTED_ORIGINS
   ? requiredEnvList(
       "BETTER_AUTH_TRUSTED_ORIGINS",
       process.env.BETTER_AUTH_TRUSTED_ORIGINS
     )
-  : [baseURL];
-
-const authConfig = {
-  baseURL,
-  trustedOrigins,
-  githubClientId: requiredEnv("GITHUB_CLIENT_ID", process.env.GITHUB_CLIENT_ID),
-  githubClientSecret: requiredEnv(
-    "GITHUB_CLIENT_SECRET",
-    process.env.GITHUB_CLIENT_SECRET
-  ),
-};
+  : baseURL
+    ? [baseURL]
+    : undefined;
 
 export const auth = betterAuth({
-  baseURL: authConfig.baseURL,
-  trustedOrigins: authConfig.trustedOrigins,
+  ...(baseURL ? { baseURL } : {}),
+  ...(trustedOrigins ? { trustedOrigins } : {}),
   database: drizzleAdapter(drizzleDb, {
     provider: "sqlite",
     schema,
@@ -38,8 +30,11 @@ export const auth = betterAuth({
   },
   socialProviders: {
     github: {
-      clientId: authConfig.githubClientId,
-      clientSecret: authConfig.githubClientSecret,
+      clientId: requiredEnv("GITHUB_CLIENT_ID", process.env.GITHUB_CLIENT_ID),
+      clientSecret: requiredEnv(
+        "GITHUB_CLIENT_SECRET",
+        process.env.GITHUB_CLIENT_SECRET
+      ),
       scope: ["read:user", "user:email"],
       mapProfileToUser: (profile) => ({
         github_id: profile.id,

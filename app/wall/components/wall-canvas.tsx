@@ -37,6 +37,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
     pan,
     scale,
     zoomPercent,
+    isViewportReady,
     onPointerDown,
     onPointerMove,
     wasDragging,
@@ -49,6 +50,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
     positions,
     pan,
     scale,
+    viewportReady: isViewportReady,
   });
 
   const revealIndexById = useMemo(() => {

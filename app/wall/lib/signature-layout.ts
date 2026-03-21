@@ -28,6 +28,8 @@ const RADIAL_STEP = 14;
 const ARC_STEP = 18;
 const PACKING_DENSITY = 0.88;
 const SEARCH_OVERSCAN = 1.4;
+const GRID_STEP_X = ELEMENT_WIDTH + MIN_GAP;
+const GRID_STEP_Y = ELEMENT_HEIGHT + MIN_GAP;
 
 function seededRandom(seed: string): () => number {
   let hash = 0;
@@ -70,6 +72,56 @@ function hasCollision(x: number, y: number, rects: PlacedRect[]) {
   return false;
 }
 
+function getGridPosition(column: number, row: number) {
+  return {
+    x: column * GRID_STEP_X - ELEMENT_WIDTH / 2,
+    y: row * GRID_STEP_Y - ELEMENT_HEIGHT / 2,
+  };
+}
+
+function findFallbackPosition(placedRects: PlacedRect[], searchRadius: number) {
+  const startLayer = Math.max(
+    0,
+    Math.ceil(searchRadius / Math.min(GRID_STEP_X, GRID_STEP_Y))
+  );
+
+  for (let layer = startLayer; ; layer++) {
+    if (layer === 0) {
+      const origin = getGridPosition(0, 0);
+
+      if (!hasCollision(origin.x, origin.y, placedRects)) {
+        return origin;
+      }
+
+      continue;
+    }
+
+    for (let column = -layer; column <= layer; column++) {
+      const top = getGridPosition(column, -layer);
+      if (!hasCollision(top.x, top.y, placedRects)) {
+        return top;
+      }
+
+      const bottom = getGridPosition(column, layer);
+      if (!hasCollision(bottom.x, bottom.y, placedRects)) {
+        return bottom;
+      }
+    }
+
+    for (let row = -layer + 1; row <= layer - 1; row++) {
+      const left = getGridPosition(-layer, row);
+      if (!hasCollision(left.x, left.y, placedRects)) {
+        return left;
+      }
+
+      const right = getGridPosition(layer, row);
+      if (!hasCollision(right.x, right.y, placedRects)) {
+        return right;
+      }
+    }
+  }
+}
+
 function findPosition(id: string, placedRects: PlacedRect[], searchRadius: number) {
   const random = seededRandom(id);
   const startAngle = random() * Math.PI * 2;
@@ -95,7 +147,9 @@ function findPosition(id: string, placedRects: PlacedRect[], searchRadius: numbe
     }
   }
 
-  throw new Error(`Could not place signature ${id}`);
+  // Keep rendering dense walls by falling back to a deterministic grid outside the
+  // radial search envelope instead of throwing during render.
+  return findFallbackPosition(placedRects, searchRadius);
 }
 
 export function computeSignatureLayout(signatures: GuestbookSignature[]): SignatureLayout {

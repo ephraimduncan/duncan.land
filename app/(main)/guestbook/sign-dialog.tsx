@@ -57,11 +57,17 @@ export function SignDialog({ user }: SignDialogProps) {
   }
 
   async function uploadSignature(signatureData: string): Promise<string> {
-    const response = await fetch("/api/signature/upload", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ signature: signatureData }),
-    });
+    let response: Response;
+
+    try {
+      response = await fetch("/api/signature/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ signature: signatureData }),
+      });
+    } catch {
+      throw new SignatureUploadError();
+    }
 
     if (!response.ok) {
       throw new SignatureUploadError();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useCanvasGestures } from "./use-canvas-gestures";
 import { useCanvasPanState } from "./use-canvas-pan-state";
@@ -10,6 +10,7 @@ const INITIAL_SCALE = 0.8;
 
 export default function useCanvasViewport() {
   const canvasRef = useRef<HTMLDivElement | null>(null);
+  const [isViewportReady, setIsViewportReady] = useState(false);
 
   const { pan, panRef, setPan } = useCanvasPanState();
 
@@ -39,6 +40,7 @@ export default function useCanvasViewport() {
 
   useEffect(() => {
     centerPan();
+    setIsViewportReady(true);
   }, [centerPan]);
 
   return {
@@ -46,6 +48,7 @@ export default function useCanvasViewport() {
     pan,
     scale,
     zoomPercent,
+    isViewportReady,
     onPointerDown,
     onPointerMove,
     wasDragging,
