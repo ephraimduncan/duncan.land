@@ -37,6 +37,7 @@
     "motion": "^11.11.12",
     "nanoid": "^5.1.6",
     "next-themes": "^0.2.1",
+    "nitro": "3.0.260311-beta",
     "perfect-freehand": "^1.2.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -52,13 +53,13 @@
     "@content-collections/core": "^0.11.1",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/vite": "^0.2.9",
-    "@typescript/native-preview": "latest",
     "@rolldown/plugin-babel": "^0.2.0",
+    "@typescript/native-preview": "latest",
     "@vitejs/plugin-react": "^6.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.3",
-    "zod": "^4.1.5",
-    "vite-plus": "latest"
+    "vite-plus": "latest",
+    "zod": "^4.1.5"
   },
   "trustedDependencies": [
     "@tailwindcss/oxide",

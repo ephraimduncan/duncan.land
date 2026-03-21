@@ -4,6 +4,7 @@ import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import contentCollections from "@content-collections/vite";
 import tailwindcss from "@tailwindcss/vite";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
   lint: {
@@ -125,6 +126,11 @@ export default defineConfig({
     contentCollections(),
     tailwindcss(),
     tanstackStart(),
+    nitro({
+      rollupConfig: {
+        external: [/^better-auth/, /^@better-auth/, "better-call"],
+      },
+    }),
     // React's Vite plugin must come after TanStack Start's plugin
     viteReact(),
     babel({ presets: [reactCompilerPreset()] }),
