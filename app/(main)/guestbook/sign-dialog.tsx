@@ -15,6 +15,15 @@ import type { User } from "@/lib/auth";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
+import type { UploadSignatureResponse } from "@/types/guestbook";
+
+type SubmitState = "idle" | "uploading-signature" | "signing";
+
+class SignatureUploadError extends Error {
+  constructor() {
+    super("Failed to upload signature");
+  }
+}
 
 interface SignDialogProps {
   user: User;
@@ -23,62 +32,97 @@ interface SignDialogProps {
 export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [signature, setSignature] = useState("");
-  const [messageInvalid, setMessageInvalid] = useState(false);
+  const [signature, setSignature] = useState<string | null>(null);
+  const [showMessageError, setShowMessageError] = useState(false);
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
 
   const signMutation = useSignGuestbook();
+  const isSubmitting = submitState !== "idle";
+  const submitLabel =
+    submitState === "uploading-signature"
+      ? "Uploading signature..."
+      : submitState === "signing"
+        ? "Signing..."
+        : "Sign";
+
+  function resetForm() {
+    setMessage("");
+    setSignature(null);
+    setShowMessageError(false);
+  }
+
+  function closeDialog() {
+    setIsOpen(false);
+    resetForm();
+  }
+
+  async function uploadSignature(signatureData: string): Promise<string> {
+    let response: Response;
+
+    try {
+      response = await fetch("/api/signature/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ signature: signatureData }),
+      });
+    } catch {
+      throw new SignatureUploadError();
+    }
+
+    if (!response.ok) {
+      throw new SignatureUploadError();
+    }
+
+    const { url } = (await response.json()) as UploadSignatureResponse;
+    return url;
+  }
+
+  function handleMessageChange(value: string) {
+    setMessage(value);
+
+    if (showMessageError && value.trim()) {
+      setShowMessageError(false);
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
-    if (!message.trim()) {
-      setMessageInvalid(true);
+    const trimmedMessage = message.trim();
+
+    if (!trimmedMessage) {
+      setShowMessageError(true);
       toast.error("Please enter a message");
       return;
     }
 
-    setMessageInvalid(false);
+    try {
+      let signatureUrl: string | null = null;
 
-    let signatureUrl: string | null = null;
-
-    if (signature) {
-      try {
-        const uploadRes = await fetch('/api/signature/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ signature }),
-        });
-
-        if (!uploadRes.ok) {
-          toast.error("Failed to upload signature");
-          return;
-        }
-
-        const { url } = await uploadRes.json();
-        signatureUrl = url;
-      } catch {
-        toast.error("Failed to upload signature");
-        return;
+      if (signature) {
+        setSubmitState("uploading-signature");
+        signatureUrl = await uploadSignature(signature);
       }
-    }
 
-    signMutation.mutate(
-      {
-        message: message.trim(),
-        signature: signatureUrl ?? "",
-        optimisticUser: {
+      setSubmitState("signing");
+
+      await signMutation.mutateAsync({
+        message: trimmedMessage,
+        signature: signatureUrl,
+        author: {
           username: user.username,
           name: user.name ?? null,
         },
-      },
-      {
-        onSuccess: () => {
-          setIsOpen(false);
-          setMessage("");
-          setSignature("");
-        },
+      });
+
+      closeDialog();
+    } catch (error) {
+      if (error instanceof SignatureUploadError) {
+        toast.error(error.message);
       }
-    );
+    } finally {
+      setSubmitState("idle");
+    }
   }
 
   return (
@@ -87,7 +131,7 @@ export function SignDialog({ user }: SignDialogProps) {
         Sign guestbook
       </Button>
 
-      <Dialog open={isOpen} onClose={setIsOpen}>
+      <Dialog open={isOpen} onClose={isSubmitting ? () => {} : closeDialog} size="lg">
         <form onSubmit={handleSubmit}>
           <DialogTitle>Sign my guestbook</DialogTitle>
 
@@ -95,10 +139,10 @@ export function SignDialog({ user }: SignDialogProps) {
             <Field>
               <Label>Leave a message</Label>
               <Textarea
-                invalid={messageInvalid}
+                invalid={showMessageError}
                 rows={3}
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => handleMessageChange(e.target.value)}
                 maxLength={500}
               />
             </Field>
@@ -107,17 +151,17 @@ export function SignDialog({ user }: SignDialogProps) {
               <Label>Sign Here</Label>
               <SignaturePad
                 className="aspect-video h-40 mt-2 w-full rounded-lg border border-grey-950/10 bg-transparent shadow-xs dark:border-black/10 dark:bg-black/5 dark:shadow-none"
-                onChange={(value) => setSignature(value ?? "")}
+                onChange={setSignature}
               />
             </Field>
           </DialogBody>
 
           <DialogActions>
-            <Button plain onClick={() => setIsOpen(false)} type="button">
+            <Button disabled={isSubmitting} variant="plain" onClick={closeDialog} type="button">
               Cancel
             </Button>
-            <Button disabled={signMutation.isPending} type="submit">
-              {signMutation.isPending ? "Signing..." : "Sign"}
+            <Button disabled={isSubmitting} type="submit">
+              {submitLabel}
             </Button>
           </DialogActions>
         </form>

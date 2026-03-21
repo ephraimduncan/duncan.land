@@ -1,14 +1,13 @@
 "use client";
 
 import { Minus, Plus, Maximize, Minimize, RotateCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 interface CanvasControlsProps {
   zoomPercent: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomToFit: () => void;
-  onZoomTo100: () => void;
 }
 
 export function CanvasControls({
@@ -16,7 +15,6 @@ export function CanvasControls({
   onZoomIn,
   onZoomOut,
   onZoomToFit,
-  onZoomTo100,
 }: CanvasControlsProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -32,12 +30,15 @@ export function CanvasControls({
   }, []);
 
   const toggleFullscreen = async () => {
-    if (!document.fullscreenElement) {
-      await document.documentElement.requestFullscreen();
-    } else {
+    if (document.fullscreenElement) {
       await document.exitFullscreen();
+      return;
     }
+
+    await document.documentElement.requestFullscreen();
   };
+
+  const fullscreenLabel = isFullscreen ? "Exit fullscreen" : "Enter fullscreen";
 
   return (
     <div
@@ -47,40 +48,46 @@ export function CanvasControls({
     >
       <ControlButton
         onClick={toggleFullscreen}
-        aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        title={isFullscreen ? "Exit fullscreen (F)" : "Enter fullscreen (F)"}
+        label={fullscreenLabel}
+        title={`${fullscreenLabel} (F)`}
       >
         {isFullscreen ? <Minimize size={15} /> : <Maximize size={15} />}
       </ControlButton>
       <ControlButton
         onClick={onZoomToFit}
-        aria-label="Zoom to fit"
+        label="Zoom to fit"
         title="Zoom to fit"
       >
         <RotateCcw size={15} />
       </ControlButton>
-      <ControlButton onClick={onZoomIn} aria-label="Zoom in" title="Zoom in">
+      <ControlButton onClick={onZoomIn} label="Zoom in" title="Zoom in">
         <Plus size={15} />
       </ControlButton>
       <span className="sr-only" aria-live="polite">
         {zoomPercent}%
       </span>
-      <ControlButton onClick={onZoomOut} aria-label="Zoom out" title="Zoom out">
+      <ControlButton onClick={onZoomOut} label="Zoom out" title="Zoom out">
         <Minus size={15} />
       </ControlButton>
     </div>
   );
 }
 
-function ControlButton({
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+interface ControlButtonProps {
+  children: ReactNode;
+  label: string;
+  onClick: () => void | Promise<void>;
+  title: string;
+}
+
+function ControlButton({ children, label, onClick, title }: ControlButtonProps) {
   return (
     <button
       type="button"
+      aria-label={label}
       className="rounded-xl bg-grey-100 p-1.5 text-grey-700 transition-colors hover:bg-grey-200 active:scale-95 dark:bg-grey-800 dark:text-grey-300 dark:hover:bg-grey-700"
-      {...props}
+      onClick={onClick}
+      title={title}
     >
       {children}
     </button>

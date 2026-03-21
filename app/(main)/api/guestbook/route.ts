@@ -1,17 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGuestbookPosts } from '@/lib/data/guestbook';
+import type { ApiError, GuestbookPostsResponse } from '@/types/guestbook';
 
-export async function GET(request: NextRequest) {
+type GetGuestbookResponse =
+  | GuestbookPostsResponse
+  | ApiError<'INVALID_CURSOR' | 'INTERNAL_ERROR'>;
+
+export async function GET(
+  request: NextRequest,
+): Promise<NextResponse<GetGuestbookResponse>> {
+  const cursorParam = request.nextUrl.searchParams.get('cursor');
+
+  if (cursorParam !== null && !/^\d+$/.test(cursorParam)) {
+    return NextResponse.json(
+      { error: 'INVALID_CURSOR', message: 'Cursor must be a non-negative integer' },
+      { status: 400 },
+    );
+  }
+
+  const cursor = cursorParam === null ? 0 : Number.parseInt(cursorParam, 10);
+
   try {
-    const cursor = parseInt(request.nextUrl.searchParams.get('cursor') || '0', 10);
-
-    if (isNaN(cursor) || cursor < 0) {
-      return NextResponse.json(
-        { error: 'INVALID_CURSOR', message: 'Invalid cursor parameter' },
-        { status: 400 }
-      );
-    }
-
     const response = await getGuestbookPosts(cursor);
 
     return NextResponse.json(response, {
@@ -24,7 +33,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: 'INTERNAL_ERROR', message: 'Failed to fetch guestbook posts' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

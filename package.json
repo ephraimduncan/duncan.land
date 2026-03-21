@@ -7,7 +7,7 @@
     "build": "next build",
     "preview": "next build && next start",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint app components lib types utils content-collections.ts next.config.js postcss.config.js eslint.config.mjs",
     "typecheck": "tsgo --noEmit",
     "prepare": "lefthook install",
     "migrate": "turso db shell portfolio-local < lib/migrations.sql"

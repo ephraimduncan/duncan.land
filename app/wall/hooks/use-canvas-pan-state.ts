@@ -7,26 +7,27 @@ export interface Point {
   y: number;
 }
 
+const ORIGIN: Point = { x: 0, y: 0 };
+
 export function useCanvasPanState() {
-  const [canvasPan, setCanvasPanState] = useState<Point>({ x: 0, y: 0 });
-  const canvasPanRef = useRef(canvasPan);
+  const [pan, setPanState] = useState<Point>(ORIGIN);
+  const panRef = useRef(pan);
 
-  const setCanvasPan = useCallback(
+  const setPan = useCallback(
     (value: SetStateAction<Point>) => {
-      setCanvasPanState((previousPan) => {
-        const nextPan =
-          typeof value === "function" ? value(previousPan) : value;
+      setPanState((previousPan) => {
+        const nextPan = typeof value === "function" ? value(previousPan) : value;
 
-        canvasPanRef.current = nextPan;
+        panRef.current = nextPan;
         return nextPan;
       });
     },
-    [setCanvasPanState]
+    [setPanState]
   );
 
   return {
-    canvasPan,
-    setCanvasPan,
-    canvasPanRef,
-  };
+    pan,
+    panRef,
+    setPan,
+  } as const;
 }

@@ -1,19 +1,11 @@
-import { Link as NextViewTransition } from "next-view-transitions";
+import { Link } from "next-view-transitions";
 
-const navItems = {
-  "/": {
-    name: "home",
-  },
-  "/blog": {
-    name: "blog",
-  },
-  "/thoughts": {
-    name: "thoughts",
-  },
-  "/guestbook": {
-    name: "guestbook",
-  },
-};
+const NAV_ITEMS = [
+  { href: "/", label: "home" },
+  { href: "/blog", label: "blog" },
+  { href: "/thoughts", label: "thoughts" },
+  { href: "/guestbook", label: "guestbook" },
+] as const;
 
 export function Navbar() {
   return (
@@ -24,17 +16,15 @@ export function Navbar() {
           id="nav"
         >
           <div className="flex flex-row space-x-0 pr-10">
-            {Object.entries(navItems).map(([path, { name }]) => {
-              return (
-                <NextViewTransition
-                  key={path}
-                  href={path}
-                  className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2"
-                >
-                  {name}
-                </NextViewTransition>
-              );
-            })}
+            {NAV_ITEMS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2"
+              >
+                {label}
+              </Link>
+            ))}
           </div>
         </nav>
       </div>

@@ -13,23 +13,29 @@ interface GuestLayoutProps {
 async function AuthContent() {
   const { user } = await auth();
 
-  return (
-    <div className="space-y-4">
-      <h1 className="font-medium text-2xl tracking-tighter">
-        {user ? `Hello, ${user.name}!` : "Sign my guestbook"}
-      </h1>
+  if (!user) {
+    return (
+      <div className="space-y-4">
+        <h1 className="font-medium text-2xl tracking-tighter">
+          Sign my guestbook
+        </h1>
 
-      {user ? (
-        <div className="flex flex-col sm:flex-row w-full sm:justify-between sm:items-center gap-2">
-          <SignDialog user={user} />
-          <SignOutButton />
-        </div>
-      ) : (
-        <div className="flex flex-col sm:flex-row gap-2">
-          <SignInButton />
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <SignInButton redirectTo="/guestbook" />
           <WallButton />
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <h1 className="font-medium text-2xl tracking-tighter">Hello, {user.name}!</h1>
+
+      <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <SignDialog user={user} />
+        <SignOutButton />
+      </div>
     </div>
   );
 }
@@ -53,7 +59,7 @@ export default function GuestLayout({ children }: GuestLayoutProps) {
       </FadeIn.Item>
 
       <FadeIn.Item>
-        <div className="space-y-4"> {children}</div>
+        <div className="space-y-4">{children}</div>
       </FadeIn.Item>
     </FadeIn.Container>
   );

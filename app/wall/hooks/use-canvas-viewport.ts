@@ -1,89 +1,59 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useCanvasGestures } from "./use-canvas-gestures";
-import { useCanvasPanState, type Point } from "./use-canvas-pan-state";
+import { useCanvasPanState } from "./use-canvas-pan-state";
 import { useCanvasScaleControls } from "./use-canvas-scale-controls";
 
-interface UseCanvasViewportOptions {
-  minScale?: number;
-  maxScale?: number;
-  zoomStep?: number;
-  wheelZoomDamping?: number;
-  initialScale?: number;
-}
+const INITIAL_SCALE = 0.8;
 
-export default function useCanvasViewport({
-  minScale = 0.25,
-  maxScale = 3,
-  zoomStep = 0.06,
-  wheelZoomDamping = 0.009,
-  initialScale = 1,
-}: UseCanvasViewportOptions = {}) {
+export default function useCanvasViewport() {
   const canvasRef = useRef<HTMLDivElement | null>(null);
+  const [isViewportReady, setIsViewportReady] = useState(false);
 
-  const { canvasPan, setCanvasPan, canvasPanRef } = useCanvasPanState();
-
-  const computeCentredPan = useCallback((_scale: number): Point => {
-    return {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    };
-  }, []);
+  const { pan, panRef, setPan } = useCanvasPanState();
 
   const {
-    canvasScale,
-    canvasScaleRef,
+    scale,
+    scaleRef,
     zoomPercent,
-    scaleByAtPoint,
     setScaleAtPoint,
     zoomIn,
     zoomOut,
-    zoomTo100,
     zoomToFit,
-    centerToContentBounds,
+    centerPan,
   } = useCanvasScaleControls({
-    minScale,
-    maxScale,
-    zoomStep,
-    initialScale,
+    initialScale: INITIAL_SCALE,
     canvasRef,
-    canvasPanRef,
-    setCanvasPan,
-    computeCentredPan,
+    panRef,
+    setPan,
   });
 
   const { onPointerDown, onPointerMove, wasDragging } = useCanvasGestures({
     canvasRef,
-    canvasPanRef,
-    canvasScaleRef,
-    setCanvasPan,
-    scaleByAtPoint,
+    panRef,
+    scaleRef,
+    setPan,
     setScaleAtPoint,
-    wheelZoomDamping,
   });
 
   useEffect(() => {
-    centerToContentBounds();
-  }, [centerToContentBounds]);
+    centerPan();
+    setIsViewportReady(true);
+  }, [centerPan]);
 
   return {
-    canvas: {
-      ref: canvasRef,
-      pan: canvasPan,
-      onPointerDown,
-      onPointerMove,
-      wasDragging,
-    },
-    zoom: {
-      scale: canvasScale,
-      percent: zoomPercent,
-      zoomIn,
-      zoomOut,
-      zoomTo100,
-      zoomToFit,
-      getScale: () => canvasScaleRef.current,
-    },
-  };
+    canvasRef,
+    pan,
+    scale,
+    zoomPercent,
+    isViewportReady,
+    onPointerDown,
+    onPointerMove,
+    wasDragging,
+    zoomIn,
+    zoomOut,
+    zoomToFit,
+  } as const;
 }

@@ -8,14 +8,14 @@ import { useRouter } from "next/navigation";
 export function SignOutButton() {
   const router = useRouter();
 
-  const handleSignOut = async () => {
+  async function handleSignOut() {
     await signOut();
     router.push("/");
     router.refresh();
-  };
+  }
 
   return (
-    <Button plain type="button" onClick={handleSignOut}>
+    <Button variant="plain" type="button" onClick={handleSignOut}>
       <SignOutIcon />
       Sign out
     </Button>

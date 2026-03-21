@@ -8,15 +8,8 @@ import { useInView } from "react-intersection-observer";
 import { PostCard } from "./post-card";
 
 export function PostsList() {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-    error
-  } = useGuestbookPosts();
+  const guestbookPosts = useGuestbookPosts();
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } = guestbookPosts;
 
   const { ref, inView } = useInView({
     rootMargin: '1000px',
@@ -24,12 +17,14 @@ export function PostsList() {
   });
 
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+    if (!inView || !hasNextPage || isFetchingNextPage) {
+      return;
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) {
+    fetchNextPage();
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
+
+  if (guestbookPosts.status === 'pending') {
     return (
       <div className="flex justify-center py-8">
         <Loader className="h-6 w-6 animate-spin" />
@@ -37,7 +32,7 @@ export function PostsList() {
     );
   }
 
-  if (isError) {
+  if (guestbookPosts.status === 'error') {
     return (
       <div className="text-center py-8 text-grey-600 dark:text-grey-400">
         Failed to load posts. Please try again later.
@@ -45,7 +40,7 @@ export function PostsList() {
     );
   }
 
-  const posts = data?.posts || [];
+  const posts = guestbookPosts.data.posts;
 
   if (posts.length === 0) {
     return (
@@ -67,7 +62,7 @@ export function PostsList() {
 
       {hasNextPage && (
         <div ref={ref} className="flex justify-center mt-4">
-          <Button disabled={isFetchingNextPage}>
+          <Button disabled={isFetchingNextPage} type="button">
             {isFetchingNextPage ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />

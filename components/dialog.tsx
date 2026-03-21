@@ -1,39 +1,41 @@
 import {
-    Description as HeadlessDescription,
     Dialog as HeadlessDialog,
     DialogPanel as HeadlessDialogPanel,
     DialogTitle as HeadlessDialogTitle,
     Transition as HeadlessTransition,
     TransitionChild as HeadlessTransitionChild,
-    type DialogProps as HeadlessDialogProps,
 } from "@headlessui/react";
 import clsx from "clsx";
-import type React from "react";
+import type { ReactNode } from "react";
 import { Fragment } from "react";
-import { Text } from "./text";
 
-const sizes = {
-    xs: "sm:max-w-xs",
-    sm: "sm:max-w-sm",
-    md: "sm:max-w-md",
+const panelSizes = {
     lg: "sm:max-w-lg",
-    xl: "sm:max-w-xl",
-    "2xl": "sm:max-w-2xl",
-    "3xl": "sm:max-w-3xl",
-    "4xl": "sm:max-w-4xl",
-    "5xl": "sm:max-w-5xl",
+    sm: "sm:max-w-sm",
+} as const;
+
+type DialogSize = keyof typeof panelSizes;
+
+type DialogProps = {
+    children: ReactNode;
+    open: boolean;
+    onClose: () => void;
+    size: DialogSize;
+};
+
+type DialogSectionProps = {
+    children: ReactNode;
+    className?: string;
 };
 
 export function Dialog({
     open,
     onClose,
-    size = "lg",
-    className,
+    size,
     children,
-    ...props
-}: { size?: keyof typeof sizes; children: React.ReactNode } & HeadlessDialogProps) {
+}: DialogProps) {
     return (
-        <HeadlessTransition appear as={Fragment} show={open} {...props}>
+        <HeadlessTransition appear as={Fragment} show={open}>
             <HeadlessDialog onClose={onClose}>
                 <HeadlessTransitionChild
                     as={Fragment}
@@ -60,8 +62,7 @@ export function Dialog({
                         >
                             <HeadlessDialogPanel
                                 className={clsx(
-                                    className,
-                                    sizes[size],
+                                    panelSizes[size],
                                     "row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-(--gutter) shadow-lg ring-1 ring-grey-950/10 [--gutter:--spacing(8)] sm:mb-auto sm:rounded-2xl dark:bg-grey-950 dark:ring-white/10 forced-colors:outline-solid"
                                 )}
                             >
@@ -75,31 +76,29 @@ export function Dialog({
     );
 }
 
-export function DialogTitle({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+export function DialogTitle({ children, className }: DialogSectionProps) {
     return (
         <HeadlessDialogTitle
-            {...props}
             className={clsx(
                 className,
                 "text-balance text-lg/6 font-semibold text-grey-950 sm:text-base/6 dark:text-white"
             )}
-        />
+        >
+            {children}
+        </HeadlessDialogTitle>
     );
 }
 
-export function DialogDescription({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
-    return <HeadlessDescription as={Text} {...props} className={clsx(className, "mt-2 text-pretty")} />;
+export function DialogBody({ children, className }: DialogSectionProps) {
+    return <div className={clsx(className, "mt-6")}>{children}</div>;
 }
 
-export function DialogBody({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
-    return <div {...props} className={clsx(className, "mt-6")} />;
-}
-
-export function DialogActions({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+export function DialogActions({ children, className }: DialogSectionProps) {
     return (
         <div
-            {...props}
             className={clsx(className, "mt-8 flex flex-row items-center justify-end gap-3 *:w-full  sm:*:w-auto")}
-        />
+        >
+            {children}
+        </div>
     );
 }

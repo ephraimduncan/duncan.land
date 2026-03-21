@@ -1,5 +1,3 @@
-import { Loader } from "lucide-react";
-import { Suspense } from "react";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { getQueryClient } from "@/lib/query/query-client";
@@ -22,29 +20,17 @@ export const metadata: Metadata = {
 export default async function GuestbookPage() {
   const queryClient = getQueryClient();
 
-  try {
-    await queryClient.prefetchInfiniteQuery({
-      queryKey: guestbookKeys.postsList(),
-      queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage: GuestbookPostsResponse) =>
-        lastPage.hasMore ? lastPage.nextCursor : undefined,
-    });
-  } catch (error) {
-    console.error('[GUESTBOOK_PREFETCH]', error);
-  }
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: guestbookKeys.posts,
+    queryFn: ({ pageParam }) => getGuestbookPosts(pageParam as number),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: GuestbookPostsResponse) =>
+      lastPage.hasMore ? lastPage.nextCursor : undefined,
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense
-        fallback={
-          <div className="flex justify-center py-8">
-            <Loader className="h-6 w-6 animate-spin" />
-          </div>
-        }
-      >
-        <PostsList />
-      </Suspense>
+      <PostsList />
     </HydrationBoundary>
   );
 }

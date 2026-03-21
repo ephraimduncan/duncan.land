@@ -69,7 +69,7 @@ export const Post = defineCollection({
     description: z.string().optional(),
     date: z.string().transform((str) => new Date(str)),
     tags: z.array(z.string()).optional(),
-    draft: z.boolean().optional(),
+    draft: z.boolean().default(false),
     archived: z.boolean().default(false),
     reference: z.string().optional(),
   }),

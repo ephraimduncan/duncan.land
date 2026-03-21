@@ -47,7 +47,7 @@ export function LoadMore<T extends string | number>({
       {items}
       {offset && (
         <div ref={ref} className="flex justify-center mt-4">
-          <Button disabled={loading} onClick={() => {}}>
+          <Button disabled={loading} type="button">
             {loading ? (
               <>
                 <Loader className="mr-2 h-4 w-4 animate-spin" />

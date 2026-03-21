@@ -1,12 +1,11 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useCanvasViewport from "../hooks/use-canvas-viewport";
 import { useViewportCulling } from "../hooks/use-viewport-culling";
 import type { SignaturePosition } from "../lib/signature-layout";
-import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
 import { SignatureElement } from "./signature-element";
-import { SignatureDialogController, type SignatureDialogHandle } from "./signature-dialog";
+import { SignatureDialog } from "./signature-dialog";
 import { CanvasControls } from "./canvas-controls";
 import { GuestbookCTA } from "./guestbook-cta";
 
@@ -19,21 +18,39 @@ const BASE_DELAY_MS = 0;
 const STAGGER_MS = 30;
 const RING_SIZE = 5;
 
+function getRevealDelay(revealIndexById: Map<string, number>, id: string) {
+  const revealIndex = revealIndexById.get(id);
+
+  if (revealIndex === undefined) {
+    throw new Error(`Missing reveal order for signature ${id}`);
+  }
+
+  const ringIndex = Math.floor(revealIndex / RING_SIZE) % 10;
+  return BASE_DELAY_MS + ringIndex * STAGGER_MS;
+}
+
 export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
-  const dialogRef = useRef<SignatureDialogHandle | null>(null);
+  const [selectedSignature, setSelectedSignature] = useState<SignaturePosition["signature"] | null>(null);
 
   const {
-    canvas: { ref, pan, onPointerDown, onPointerMove, wasDragging },
-    zoom: { scale, percent, zoomIn, zoomOut, zoomToFit, zoomTo100 },
-  } = useCanvasViewport({ initialScale: 0.8 });
+    canvasRef,
+    pan,
+    scale,
+    zoomPercent,
+    isViewportReady,
+    onPointerDown,
+    onPointerMove,
+    wasDragging,
+    zoomIn,
+    zoomOut,
+    zoomToFit,
+  } = useCanvasViewport();
 
   const visiblePositions = useViewportCulling({
     positions,
     pan,
     scale,
-    elementWidth: ELEMENT_WIDTH,
-    elementHeight: ELEMENT_HEIGHT,
-    buffer: 500,
+    viewportReady: isViewportReady,
   });
 
   const revealIndexById = useMemo(() => {
@@ -46,17 +63,22 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
 
   const handleOpenSignature = useCallback(
     (signature: SignaturePosition["signature"]) => {
-      dialogRef.current?.open(signature);
+      if (wasDragging()) return;
+      setSelectedSignature(signature);
     },
-    [dialogRef]
+    [wasDragging]
   );
+
+  const closeSignature = useCallback(() => {
+    setSelectedSignature(null);
+  }, []);
 
   return (
     <>
       <GuestbookCTA />
 
       <div
-        ref={ref}
+        ref={canvasRef}
         className="absolute inset-0 touch-none select-none will-change-transform"
         style={{ transformOrigin: "0 0" }}
         onPointerDown={onPointerDown}
@@ -70,20 +92,13 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
             contain: "layout style",
           }}
         >
-          {visiblePositions.map((pos) => {
-            const revealIndex = revealIndexById.get(pos.id) ?? 0;
-            const ringIndex = Math.floor(revealIndex / RING_SIZE) % 10;
-            const revealDelayMs = BASE_DELAY_MS + ringIndex * STAGGER_MS;
-
+          {visiblePositions.map((position) => {
             return (
               <SignatureElement
-                key={pos.id}
-                signature={pos.signature}
-                x={pos.x}
-                y={pos.y}
-                revealDelayMs={revealDelayMs}
+                key={position.id}
+                position={position}
+                revealDelayMs={getRevealDelay(revealIndexById, position.id)}
                 onOpenSignature={handleOpenSignature}
-                wasDragging={wasDragging}
               />
             );
           })}
@@ -91,14 +106,15 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
       </div>
 
       <CanvasControls
-        zoomPercent={percent}
+        zoomPercent={zoomPercent}
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
         onZoomToFit={zoomToFit}
-        onZoomTo100={zoomTo100}
       />
 
-      <SignatureDialogController ref={dialogRef} />
+      {selectedSignature ? (
+        <SignatureDialog signature={selectedSignature} onClose={closeSignature} />
+      ) : null}
     </>
   );
 }

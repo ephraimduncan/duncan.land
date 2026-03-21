@@ -1,9 +1,9 @@
 "use client";
 
-import { Button as HeadlessButton, type ButtonProps as HeadlessButtonProps } from "@headlessui/react";
+import { Button as HeadlessButton } from "@headlessui/react";
 import { clsx } from "clsx";
-import React from "react";
-import { Link } from "./link";
+import { forwardRef, type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode } from "react";
+import { Link, type LinkProps } from "./link";
 
 const styles = {
     base: [
@@ -55,6 +55,11 @@ const styles = {
 
         // Disabled
         "data-disabled:before:shadow-none data-disabled:after:shadow-none",
+
+        // Default color
+        "text-grey-950 [--btn-bg:white] [--btn-border:var(--color-grey-950)]/10 [--btn-hover-overlay:var(--color-grey-950)]/2.5 data-active:[--btn-border:var(--color-grey-950)]/15 data-hover:[--btn-border:var(--color-grey-950)]/15",
+        "dark:text-white dark:[--btn-hover-overlay:var(--color-white)]/5 dark:[--btn-bg:var(--color-grey-800)]",
+        "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-500)] dark:data-active:[--btn-icon:var(--color-grey-400)] dark:data-hover:[--btn-icon:var(--color-grey-400)]",
     ],
 
     plain: [
@@ -67,43 +72,38 @@ const styles = {
         // Icon
         "[--btn-icon:var(--color-zinc-500)] data-active:[--btn-icon:var(--color-zinc-700)] data-hover:[--btn-icon:var(--color-zinc-700)] dark:[--btn-icon:var(--color-zinc-500)] dark:data-active:[--btn-icon:var(--color-zinc-400)] dark:data-hover:[--btn-icon:var(--color-zinc-400)]",
     ],
-
-    colors: {
-        light: [
-            "text-grey-950 [--btn-bg:white] [--btn-border:var(--color-grey-950)]/10 [--btn-hover-overlay:var(--color-grey-950)]/2.5 data-active:[--btn-border:var(--color-grey-950)]/15 data-hover:[--btn-border:var(--color-grey-950)]/15",
-            "dark:text-white dark:[--btn-hover-overlay:var(--color-white)]/5 dark:[--btn-bg:var(--color-grey-800)]",
-            "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-500)] dark:data-active:[--btn-icon:var(--color-grey-400)] dark:data-hover:[--btn-icon:var(--color-grey-400)]",
-        ],
-        dark: [
-            "text-white [--btn-bg:var(--color-grey-900)] [--btn-border:var(--color-grey-950)]/90 [--btn-hover-overlay:var(--color-white)]/10",
-            "dark:[--btn-hover-overlay:var(--color-white)]/5 dark:[--btn-bg:var(--color-grey-800)]",
-            "[--btn-icon:var(--color-grey-400)] data-active:[--btn-icon:var(--color-grey-300)] data-hover:[--btn-icon:var(--color-grey-300)]",
-        ],
-    },
 };
 
-type ButtonProps = (
-    | { color?: keyof typeof styles.colors; outline?: never; plain?: never }
-    | { color?: never; outline: true; plain?: never }
-    | { color?: never; outline?: never; plain: true }
-) & { children: React.ReactNode } & (HeadlessButtonProps | React.ComponentPropsWithoutRef<typeof Link>);
+type ButtonOwnProps = {
+    children: ReactNode;
+    className?: string;
+    variant?: "plain" | "solid";
+};
 
-export const Button = React.forwardRef(function Button(
-    { color, outline, plain, className, children, ...props }: ButtonProps,
-    ref: React.ForwardedRef<HTMLElement>
+type ButtonLinkProps = ButtonOwnProps & Omit<LinkProps, "children" | "className">;
+type ButtonActionProps = ButtonOwnProps &
+    Pick<ComponentPropsWithoutRef<"button">, "disabled" | "onClick"> & {
+        type: "button" | "submit" | "reset";
+    };
+
+export type ButtonProps = ButtonLinkProps | ButtonActionProps;
+
+export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
+    { variant = "solid", className, children, ...props }: ButtonProps,
+    ref: ForwardedRef<HTMLElement>
 ) {
-    let classes = clsx(
-        className,
-        styles.base,
-        plain ? styles.plain : clsx(styles.solid, styles.colors[color ?? "light"])
-    );
+    const classes = clsx(className, styles.base, styles[variant]);
 
     return "href" in props ? (
-        <Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
+        <Link {...props} className={classes} ref={ref as ForwardedRef<HTMLAnchorElement>}>
             {children}
         </Link>
     ) : (
-        <HeadlessButton {...props} className={clsx(classes, "cursor-default")} ref={ref}>
+        <HeadlessButton
+            {...props}
+            className={clsx(classes, "cursor-default")}
+            ref={ref as ForwardedRef<HTMLButtonElement>}
+        >
             {children}
         </HeadlessButton>
     );

@@ -1,6 +1,6 @@
 export const average = (a: number, b: number) => (a + b) / 2;
 
-export const getSvgPathFromStroke = (points: number[][], closed = true) => {
+export const getSvgPathFromStroke = (points: number[][]) => {
     const len = points.length;
 
     if (len < 4) {
@@ -21,9 +21,5 @@ export const getSvgPathFromStroke = (points: number[][], closed = true) => {
         result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(2)} `;
     }
 
-    if (closed) {
-        result += "Z";
-    }
-
-    return result;
+    return `${result}Z`;
 };

@@ -1,10 +1,19 @@
-export interface GuestbookPost {
-  id: string;
-  message: string;
-  created_at: Date;
-  signature: string | null;
+export interface GuestbookAuthor {
   username: string;
   name: string | null;
+}
+
+export interface GuestbookPost extends GuestbookAuthor {
+  id: string;
+  message: string;
+  created_at: string;
+  signature: string | null;
+}
+
+export interface GuestbookSignature extends GuestbookAuthor {
+  id: string;
+  created_at: string;
+  signature: string;
 }
 
 export interface GuestbookPostsResponse {
@@ -13,13 +22,13 @@ export interface GuestbookPostsResponse {
   hasMore: boolean;
 }
 
-export interface SignGuestbookInput {
+export interface SignGuestbookRequest {
   message: string;
-  signature: string;
-  optimisticUser?: {
-    username: string;
-    name: string | null;
-  };
+  signature: string | null;
+}
+
+export interface SignGuestbookInput extends SignGuestbookRequest {
+  author: GuestbookAuthor;
 }
 
 export interface SignGuestbookResponse {
@@ -27,12 +36,29 @@ export interface SignGuestbookResponse {
   message: string;
 }
 
-export interface EligibilityResponse {
-  eligible: boolean;
-  reason?: string;
+export type EligibilityReason = 'ALREADY_SIGNED' | 'NOT_AUTHENTICATED';
+
+export type EligibilityResponse =
+  | { eligible: true }
+  | { eligible: false; reason: EligibilityReason };
+
+export interface UploadSignatureRequest {
+  signature: string;
 }
 
-export interface ApiError {
-  error: string;
+export interface UploadSignatureResponse {
+  url: string;
+}
+
+export type ApiErrorCode =
+  | 'ALREADY_SIGNED'
+  | 'INVALID_CURSOR'
+  | 'INVALID_INPUT'
+  | 'INTERNAL_ERROR'
+  | 'UNAUTHORIZED'
+  | 'UPLOAD_FAILED';
+
+export interface ApiError<Code extends ApiErrorCode = ApiErrorCode> {
+  error: Code;
   message: string;
 }

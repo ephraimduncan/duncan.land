@@ -5,28 +5,47 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const date = (input: Date): string => {
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(input);
-};
+const dateFormatter = new Intl.DateTimeFormat("en", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
 
-const number = (input: number): string => {
-  return new Intl.NumberFormat("en", {
-    style: "decimal",
-  }).format(input);
-};
+const numberFormatter = new Intl.NumberFormat("en", {
+  style: "decimal",
+});
 
-const time = (value: number, unit: Intl.RelativeTimeFormatUnit): string => {
-  return new Intl.RelativeTimeFormat("en", {
-    numeric: "auto",
-  }).format(value, unit);
-};
+const relativeTimeFormatter = new Intl.RelativeTimeFormat("en", {
+  numeric: "auto",
+});
+
+interface Formatter {
+  date(input: Date): string;
+  dateTimeUtc(input: Date): string;
+  number(input: number): string;
+  time(value: number, unit: Intl.RelativeTimeFormatUnit): string;
+}
+
+const dateTimeUtcFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+});
 
 export const formatter = {
-  date,
-  number,
-  time,
-};
+  date(input) {
+    return dateFormatter.format(input);
+  },
+  dateTimeUtc(input) {
+    return dateTimeUtcFormatter.format(input);
+  },
+  number(input) {
+    return numberFormatter.format(input);
+  },
+  time(value, unit) {
+    return relativeTimeFormatter.format(value, unit);
+  },
+} satisfies Formatter;

@@ -2,30 +2,25 @@
 
 import Image from "next/image";
 import { memo } from "react";
-import type { WallSignature } from "@/lib/data/wall";
-import { ELEMENT_HEIGHT, ELEMENT_WIDTH } from "../lib/signature-layout";
+import {
+  ELEMENT_HEIGHT,
+  ELEMENT_WIDTH,
+  type SignaturePosition,
+} from "../lib/signature-layout";
 
 interface SignatureElementProps {
-  signature: WallSignature;
-  x: number;
-  y: number;
+  position: SignaturePosition;
   revealDelayMs: number;
-  onOpenSignature: (signature: WallSignature) => void;
-  wasDragging: () => boolean;
+  onOpenSignature: (signature: SignaturePosition["signature"]) => void;
 }
 
 export const SignatureElement = memo(function SignatureElement({
-  signature,
-  x,
-  y,
+  position,
   revealDelayMs,
   onOpenSignature,
-  wasDragging,
 }: SignatureElementProps) {
-  const handleClick = () => {
-    if (wasDragging()) return;
-    onOpenSignature(signature);
-  };
+  const { signature, x, y } = position;
+  const displayName = signature.name ?? signature.username;
 
   return (
     <div
@@ -34,14 +29,14 @@ export const SignatureElement = memo(function SignatureElement({
         width: `${ELEMENT_WIDTH}px`,
         height: `${ELEMENT_HEIGHT}px`,
         transform: `translate3d(${x}px, ${y}px, 0px)`,
-        animationDelay: `${Math.max(0, revealDelayMs)}ms`,
+        animationDelay: `${revealDelayMs}ms`,
         contain: "layout style paint",
       }}
     >
       <div className="relative h-full w-full pointer-events-none">
         <Image
           src={signature.signature}
-          alt={`Signature by ${signature.name || signature.username}`}
+          alt={`Signature by ${displayName}`}
           fill
           className="object-contain opacity-80 dark:opacity-90 [.dark_&]:invert"
           unoptimized
@@ -50,8 +45,8 @@ export const SignatureElement = memo(function SignatureElement({
       <button
         type="button"
         data-element="true"
-        aria-label={`Open signature by ${signature.name || signature.username}`}
-        onClick={handleClick}
+        aria-label={`Open signature by ${displayName}`}
+        onClick={() => onOpenSignature(signature)}
         className="signature-hit"
       />
     </div>
