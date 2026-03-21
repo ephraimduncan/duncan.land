@@ -1,13 +1,14 @@
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteReact from "@vitejs/plugin-react";
+import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 import contentCollections from "@content-collections/vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   server: { port: 3000 },
   resolve: {
+    tsconfigPaths: true,
     alias: {
       // bright (code highlighter) imports server-only which throws outside RSC.
       // Alias to empty module since TanStack Start has no RSC boundary.
@@ -20,14 +21,10 @@ export default defineConfig({
   },
   plugins: [
     contentCollections(),
-    tsconfigPaths(),
     tailwindcss(),
     tanstackStart(),
     // React's Vite plugin must come after TanStack Start's plugin
-    viteReact({
-      babel: {
-        plugins: [["babel-plugin-react-compiler"]],
-      },
-    }),
+    viteReact(),
+    babel({ presets: [reactCompilerPreset()] }),
   ],
 });
