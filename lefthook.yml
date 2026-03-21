@@ -6,13 +6,13 @@ pre-commit:
   commands:
     lint:
       glob: "*.{js,jsx,ts,tsx}"
-      run: vp lint --fix {staged_files}
+      run: vp lint --fix {staged_files} </dev/null
       stage_fixed: true
 
     typecheck:
-      run: vp exec tsgo --noEmit
+      run: vp exec tsgo --noEmit </dev/null
 
 pre-push:
   commands:
     build:
-      run: vp build
+      run: vp build </dev/null
