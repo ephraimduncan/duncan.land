@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "start": "vite preview",
-    "lint": "eslint . && tsgo --noEmit",
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
+    "start": "vp preview",
+    "lint": "vp lint . && tsgo --noEmit",
     "typecheck": "tsgo --noEmit",
     "prepare": "lefthook install",
     "migrate": "turso db shell portfolio-local < lib/migrations.sql"
@@ -33,7 +33,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^2.30.0",
     "drizzle-orm": "^0.45.1",
-    "eslint": "^9.0.0",
     "geist": "^1.0.0",
     "lucide-react": "^0.460.0",
     "motion": "^11.11.12",
@@ -48,7 +47,7 @@
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^4.1.12",
-    "vite": "^8.0.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest"
   },
   "devDependencies": {
     "@content-collections/core": "^0.11.1",
@@ -60,11 +59,18 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.3",
     "lefthook": "^2.0.0",
-    "zod": "^4.1.5"
+    "zod": "^4.1.5",
+    "vite-plus": "latest"
   },
   "trustedDependencies": [
     "@tailwindcss/oxide",
     "unrs-resolver"
   ],
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+      "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+    }
+  }
 }

@@ -171,7 +171,7 @@ export default function TokenUsageGraph({ data }: { data: UsageDay[] }) {
       pressed,
       data,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
     [activeIndex, x, y, morph, idle, pressed, data],
   );
 
