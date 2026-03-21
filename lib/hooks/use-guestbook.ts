@@ -1,5 +1,3 @@
-'use client';
-
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { guestbookApi } from '@/lib/api/guestbook';
 import { guestbookKeys } from '@/lib/query/query-keys';

@@ -1,9 +1,9 @@
-import { Link } from "next-view-transitions";
+import { Link } from "@tanstack/react-router";
 
 const FOOTER_LINKS = [
-  { href: "/token-usage", label: "/token-usage" },
-  { href: "/uses", label: "/uses" },
-] as const;
+  { href: "/token-usage" as const, label: "/token-usage" },
+  { href: "/uses" as const, label: "/uses" },
+];
 
 export function SiteFooter() {
   return (
@@ -15,7 +15,7 @@ export function SiteFooter() {
           </a>
 
           {FOOTER_LINKS.map(({ href, label }) => (
-            <Link key={href} href={href} className="text-sm">
+            <Link key={href} to={href as string} className="text-sm">
               {label}
             </Link>
           ))}

@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 
 import { useIsHydrated } from "@/lib/hooks/use-is-hydrated";

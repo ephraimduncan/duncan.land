@@ -11,9 +11,10 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
+# tanstack start / vite
+/.output/
+/.vinxi/
+/dist/
 
 # production
 /build
@@ -35,10 +36,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 .contentlayer
 .content-collections
-features
+/features
 .env
 *.db
 local.dbs

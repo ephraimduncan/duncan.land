@@ -5,7 +5,7 @@ export function useScrollEnd(
   target: RefObject<HTMLDivElement | null>,
   deps: DependencyList = [],
 ) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // oxlint-disable-next-line react-hooks/exhaustive-deps
   const stableCallback = useCallback(callback, deps);
 
   useEffect(() => {

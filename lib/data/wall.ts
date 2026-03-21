@@ -1,4 +1,3 @@
-import 'server-only';
 import { drizzleDb } from '@/lib/drizzle';
 import { post, user } from '@/lib/schema';
 import { and, asc, eq, isNotNull, ne } from 'drizzle-orm';

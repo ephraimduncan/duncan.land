@@ -8,6 +8,6 @@ import { useEffect } from "react";
  */
 export const unsafe_useEffectOnce = (callback: EffectCallback) => {
     // Intentionally avoiding exhaustive deps and rule of hooks here
-    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/rules-of-hooks
+    // oxlint-disable-next-line react-hooks/exhaustive-deps, react-hooks/rules-of-hooks
     return useEffect(callback, []);
 };

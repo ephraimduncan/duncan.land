@@ -1,7 +1,7 @@
 import { allPosts, allThoughts } from "content-collections";
 import { formatter } from "@/lib/utils";
 
-import { Link as NextViewTransition } from "next-view-transitions";
+import { Link } from "@tanstack/react-router";
 import React from "react";
 
 type PostCategory = "thoughts" | "posts" | "archive";
@@ -50,25 +50,22 @@ export const Posts = ({ category }: PostProps) => {
 
   return (
     <div className="flex flex-col">
-      <NextViewTransition href={section.href} className="flex justify-between">
+      <Link to={section.href} className="flex justify-between">
         <h2 className="py-2 text-2xl font-medium tracking-tighter dark:text-grey-100">
           {section.title}
         </h2>
-      </NextViewTransition>
+      </Link>
 
       {posts.map((post) => {
         return (
           <React.Fragment key={post.slug}>
             <div className="border-border border-t border-grey-900" />
-            <NextViewTransition
-              href={post.slug}
-              className="flex w-full justify-between py-2 dark:text-grey-100"
-            >
+            <Link to={post.slug} className="flex w-full justify-between py-2 dark:text-grey-100">
               <p>{post.title}</p>
               <p className="mt-0 dark:text-grey-100">
                 {formatter.date(post.date)}
               </p>
-            </NextViewTransition>
+            </Link>
           </React.Fragment>
         );
       })}

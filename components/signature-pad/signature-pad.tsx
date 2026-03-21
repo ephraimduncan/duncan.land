@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import type { StrokeOptions } from "perfect-freehand";
 import { getStroke } from "perfect-freehand";

@@ -1,4 +1,3 @@
-import 'server-only';
 import { drizzleDb } from '@/lib/drizzle';
 import { post, user } from '@/lib/schema';
 import { eq, desc, count } from 'drizzle-orm';
