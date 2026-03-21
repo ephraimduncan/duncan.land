@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import type { MotionValue } from "motion/react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";

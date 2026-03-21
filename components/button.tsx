@@ -1,5 +1,3 @@
-"use client";
-
 import { Button as HeadlessButton } from "@headlessui/react";
 import { clsx } from "clsx";
 import { forwardRef, type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode } from "react";

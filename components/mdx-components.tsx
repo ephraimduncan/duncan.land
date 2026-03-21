@@ -1,6 +1,5 @@
 import { Code } from "bright";
 import { MDXContent } from "@content-collections/mdx/react";
-import Image from "next/image";
 import React, { ClassAttributes, HTMLAttributes } from "react";
 
 Code.theme = {
@@ -10,7 +9,7 @@ Code.theme = {
 };
 
 const components = {
-  Image,
+  Image: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img loading="lazy" {...props} />,
   pre: Code,
   h1: (
     props: React.JSX.IntrinsicAttributes &
