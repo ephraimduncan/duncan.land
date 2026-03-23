@@ -15,10 +15,7 @@ export class Point implements PointLike {
     return Math.hypot(point.x - this.x, point.y - this.y);
   }
 
-  public static fromPointerEvent(
-    event: ReactPointerEvent<HTMLElement>,
-    dpi = 1,
-  ): Point {
+  public static fromPointerEvent(event: ReactPointerEvent<HTMLElement>, dpi = 1): Point {
     const { top, bottom, left, right } = event.currentTarget.getBoundingClientRect();
 
     const x = (Math.min(Math.max(left, event.clientX), right) - left) * dpi;

@@ -1,30 +1,36 @@
-import { createFileRoute } from '@tanstack/react-router'
-import * as FadeIn from '@/components/motion'
-import { getSession } from '@/lib/auth-server'
-import { PostsList } from '@/components/guestbook/posts-list'
-import { SignDialog } from '@/components/guestbook/sign-dialog'
-import { SignInButton } from '@/components/guestbook/sign-in-button'
-import { SignOutButton } from '@/components/guestbook/sign-out-button'
-import { WallButton } from '@/components/guestbook/wall-button'
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import * as FadeIn from "@/components/motion";
+import { getSession } from "@/lib/auth-server";
+import { getGuestbookPosts } from "@/lib/data/guestbook";
+import { PostsList } from "@/components/guestbook/posts-list";
+import { SignDialog } from "@/components/guestbook/sign-dialog";
+import { SignInButton } from "@/components/guestbook/sign-in-button";
+import { SignOutButton } from "@/components/guestbook/sign-out-button";
+import { WallButton } from "@/components/guestbook/wall-button";
 
-export const Route = createFileRoute('/_main/guestbook')({
+const getInitialPosts = createServerFn({ method: "GET" }).handler(() => {
+  return getGuestbookPosts(0);
+});
+
+export const Route = createFileRoute("/_main/guestbook")({
   loader: async () => {
-    const authState = await getSession()
-    return { authState }
+    const [authState, initialPosts] = await Promise.all([getSession(), getInitialPosts()]);
+    return { authState, initialPosts };
   },
   head: () => ({
     meta: [
-      { title: 'Guestbook | Ephraim Duncan' },
-      { name: 'description', content: 'Sign the guestbook and leave your mark!' },
-      { property: 'og:title', content: "Sign Duncan's Guestbook" },
-      { property: 'og:description', content: 'Leave your mark in the guestbook' },
+      { title: "Guestbook | Ephraim Duncan" },
+      { name: "description", content: "Sign the guestbook and leave your mark!" },
+      { property: "og:title", content: "Sign Duncan's Guestbook" },
+      { property: "og:description", content: "Leave your mark in the guestbook" },
     ],
   }),
   component: GuestbookPage,
-})
+});
 
 function GuestbookPage() {
-  const { authState } = Route.useLoaderData()
+  const { authState, initialPosts } = Route.useLoaderData();
 
   return (
     <FadeIn.Container>
@@ -49,9 +55,9 @@ function GuestbookPage() {
       </FadeIn.Item>
       <FadeIn.Item>
         <div className="space-y-4">
-          <PostsList />
+          <PostsList initialPosts={initialPosts} />
         </div>
       </FadeIn.Item>
     </FadeIn.Container>
-  )
+  );
 }

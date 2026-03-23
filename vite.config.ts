@@ -8,19 +8,14 @@ import { nitro } from "nitro/vite";
 
 export default defineConfig({
   lint: {
-    "plugins": [
-      "oxc",
-      "typescript",
-      "unicorn",
-      "react"
-    ],
-    "categories": {
-      "correctness": "warn"
+    plugins: ["oxc", "typescript", "unicorn", "react"],
+    categories: {
+      correctness: "warn",
     },
-    "env": {
-      "builtin": true
+    env: {
+      builtin: true,
     },
-    "ignorePatterns": [
+    ignorePatterns: [
       "**/*.ts",
       "**/*.tsx",
       "node_modules/",
@@ -28,9 +23,9 @@ export default defineConfig({
       ".output/",
       ".vinxi/",
       ".content-collections/",
-      ".contentlayer/"
+      ".contentlayer/",
     ],
-    "rules": {
+    rules: {
       "constructor-super": "error",
       "for-direction": "error",
       "getter-return": "error",
@@ -89,25 +84,23 @@ export default defineConfig({
       "no-with": "error",
       "require-yield": "error",
       "use-isnan": "error",
-      "valid-typeof": "error"
+      "valid-typeof": "error",
     },
-    "overrides": [
+    overrides: [
       {
-        "files": [
-          "**/*.{js,mjs}"
-        ],
-        "rules": {
-          "no-unused-vars": "off"
+        files: ["**/*.{js,mjs}"],
+        rules: {
+          "no-unused-vars": "off",
         },
-        "env": {
-          "es2026": true
-        }
-      }
+        env: {
+          es2026: true,
+        },
+      },
     ],
-    "options": {
-      "typeAware": true,
-      "typeCheck": true
-    }
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
   },
   server: { port: 3000 },
   resolve: {

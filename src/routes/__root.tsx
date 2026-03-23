@@ -1,9 +1,4 @@
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 import { AppThemeProvider } from "@/components/mode-toggle";
@@ -151,9 +146,7 @@ function RootProviders({ children }: { children: ReactNode }) {
       <QueryProvider>
         <AppThemeProvider>
           {children}
-          {import.meta.env.DEV ? (
-            <Agentation endpoint="http://localhost:4747" />
-          ) : null}
+          {import.meta.env.DEV ? <Agentation endpoint="http://localhost:4747" /> : null}
         </AppThemeProvider>
       </QueryProvider>
     </>

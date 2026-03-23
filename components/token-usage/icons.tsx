@@ -108,7 +108,10 @@ export function GLMIcon({ size = 16 }: ModelIconProps) {
     >
       <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" />
       <path d="M8 8H11V10H10V14H8V8Z" fill="currentColor" />
-      <path d="M12.5 8H14.5L16 10.75L17.5 8H19.5V14H17.5V11.8L16.7 13.2H15.3L14.5 11.8V14H12.5V8Z" fill="currentColor" />
+      <path
+        d="M12.5 8H14.5L16 10.75L17.5 8H19.5V14H17.5V11.8L16.7 13.2H15.3L14.5 11.8V14H12.5V8Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }

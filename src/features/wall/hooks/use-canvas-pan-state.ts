@@ -20,7 +20,7 @@ export function useCanvasPanState() {
         return nextPan;
       });
     },
-    [setPanState]
+    [setPanState],
   );
 
   return {

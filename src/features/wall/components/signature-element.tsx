@@ -1,9 +1,5 @@
 import { memo } from "react";
-import {
-  ELEMENT_HEIGHT,
-  ELEMENT_WIDTH,
-  type SignaturePosition,
-} from "../lib/signature-layout";
+import { ELEMENT_HEIGHT, ELEMENT_WIDTH, type SignaturePosition } from "../lib/signature-layout";
 
 interface SignatureElementProps {
   position: SignaturePosition;

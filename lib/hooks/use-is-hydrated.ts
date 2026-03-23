@@ -8,9 +8,5 @@ const getServerSnapshot = () => false;
 const getSnapshot = () => true;
 
 export function useIsHydrated() {
-  return React.useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot,
-  );
+  return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

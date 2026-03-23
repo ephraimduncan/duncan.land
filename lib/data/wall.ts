@@ -1,10 +1,10 @@
-import { drizzleDb } from '@/lib/drizzle';
-import { post, user } from '@/lib/schema';
-import { and, asc, eq, isNotNull, ne } from 'drizzle-orm';
-import type { GuestbookSignature } from '@/types/guestbook';
+import { drizzleDb } from "@/lib/drizzle";
+import { post, user } from "@/lib/schema";
+import { and, asc, eq, isNotNull, ne } from "drizzle-orm";
+import type { GuestbookSignature } from "@/types/guestbook";
 
 function expectSignature(signature: string | null, postId: string) {
-  if (signature !== null && signature !== '') {
+  if (signature !== null && signature !== "") {
     return signature;
   }
 
@@ -22,7 +22,7 @@ export async function getAllSignatures(): Promise<GuestbookSignature[]> {
     })
     .from(post)
     .innerJoin(user, eq(post.user_id, user.id))
-    .where(and(isNotNull(post.signature), ne(post.signature, '')))
+    .where(and(isNotNull(post.signature), ne(post.signature, "")))
     .orderBy(asc(post.created_at));
 
   return rows.map((row) => ({

@@ -43,11 +43,7 @@ export function AppThemeSwitcher() {
 
 export function AppThemeProvider({ children }: React.PropsWithChildren) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-    >
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       {children}
     </ThemeProvider>
   );

@@ -21,14 +21,18 @@ interface ApiResponse {
       modelId: string;
       providerId: string;
       cost: number;
-      tokens: { input: number; output: number; cacheRead: number; cacheWrite: number; reasoning: number };
+      tokens: {
+        input: number;
+        output: number;
+        cacheRead: number;
+        cacheWrite: number;
+        reasoning: number;
+      };
     }[];
   }[];
 }
 
-function aggregateByModel(
-  clients: ApiResponse["contributions"][number]["clients"],
-): UsageClient[] {
+function aggregateByModel(clients: ApiResponse["contributions"][number]["clients"]): UsageClient[] {
   const map = new Map<string, UsageClient>();
   for (const cl of clients.filter((c) => c.modelId !== "<synthetic>" && c.cost > 0)) {
     const existing = map.get(cl.modelId);

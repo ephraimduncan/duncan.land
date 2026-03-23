@@ -51,11 +51,7 @@ export function CanvasControls({
       >
         {isFullscreen ? <Minimize size={15} /> : <Maximize size={15} />}
       </ControlButton>
-      <ControlButton
-        onClick={onZoomToFit}
-        label="Zoom to fit"
-        title="Zoom to fit"
-      >
+      <ControlButton onClick={onZoomToFit} label="Zoom to fit" title="Zoom to fit">
         <RotateCcw size={15} />
       </ControlButton>
       <ControlButton onClick={onZoomIn} label="Zoom in" title="Zoom in">

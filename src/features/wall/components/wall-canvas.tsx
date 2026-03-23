@@ -28,7 +28,9 @@ function getRevealDelay(revealIndexById: Map<string, number>, id: string) {
 }
 
 export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
-  const [selectedSignature, setSelectedSignature] = useState<SignaturePosition["signature"] | null>(null);
+  const [selectedSignature, setSelectedSignature] = useState<SignaturePosition["signature"] | null>(
+    null,
+  );
 
   const {
     canvasRef,
@@ -64,7 +66,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
       if (wasDragging()) return;
       setSelectedSignature(signature);
     },
-    [wasDragging]
+    [wasDragging],
   );
 
   const closeSignature = useCallback(() => {

@@ -49,9 +49,7 @@ function PagePage() {
         <FadeIn.Item>
           <div>
             <h1 className="text-2xl font-normal">{page.title}</h1>
-            {page.description && (
-              <p className="text-xl my-0">{page.description}</p>
-            )}
+            {page.description && <p className="text-xl my-0">{page.description}</p>}
           </div>
         </FadeIn.Item>
 

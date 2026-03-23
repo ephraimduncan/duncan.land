@@ -62,9 +62,7 @@ export const Posts = ({ category }: PostProps) => {
             <div className="border-border border-t border-grey-900" />
             <Link to={post.slug} className="flex w-full justify-between py-2 dark:text-grey-100">
               <p>{post.title}</p>
-              <p className="mt-0 dark:text-grey-100">
-                {formatter.date(post.date)}
-              </p>
+              <p className="mt-0 dark:text-grey-100">{formatter.date(post.date)}</p>
             </Link>
           </React.Fragment>
         );

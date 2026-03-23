@@ -1,21 +1,21 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin '@tailwindcss/typography';
 
 @font-face {
-  font-family: 'Kaisei Tokumin';
+  font-family: "Kaisei Tokumin";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/kaisei-tokumin-latin-700-normal.woff2') format('woff2');
+  src: url("/fonts/kaisei-tokumin-latin-700-normal.woff2") format("woff2");
 }
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-kaisei: 'Kaisei Tokumin', serif;
-  --font-newsreader: 'Newsreader', serif;
-  --font-newsreader-regular: 'Newsreader', serif;
+  --font-kaisei: "Kaisei Tokumin", serif;
+  --font-newsreader: "Newsreader", serif;
+  --font-newsreader-regular: "Newsreader", serif;
 }
 
 @theme {
@@ -57,14 +57,14 @@
 }
 
 em {
-    @apply font-emp italic;
+  @apply font-emp italic;
 }
 
 .inline-link {
-    @apply underline decoration-1 cursor-pointer;
+  @apply underline decoration-1 cursor-pointer;
 }
 
 .katex-display {
-    font-size: 1.2em; /* Adjust as needed */
-    text-align: center;
+  font-size: 1.2em; /* Adjust as needed */
+  text-align: center;
 }

@@ -25,7 +25,6 @@ import { Route as MainSplatRouteImport } from './routes/_main/$'
 import { Route as MainThoughtsIndexRouteImport } from './routes/_main/thoughts/index'
 import { Route as ApiSignatureUploadRouteImport } from './routes/api/signature/upload'
 import { Route as ApiGuestbookSignRouteImport } from './routes/api/guestbook/sign'
-import { Route as ApiGuestbookCheckEligibilityRouteImport } from './routes/api/guestbook/check-eligibility'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MainThoughtsSplatRouteImport } from './routes/_main/thoughts/$'
 import { Route as MainPostsSplatRouteImport } from './routes/_main/posts/$'
@@ -109,12 +108,6 @@ const ApiGuestbookSignRoute = ApiGuestbookSignRouteImport.update({
   path: '/sign',
   getParentRoute: () => ApiGuestbookRoute,
 } as any)
-const ApiGuestbookCheckEligibilityRoute =
-  ApiGuestbookCheckEligibilityRouteImport.update({
-    id: '/check-eligibility',
-    path: '/check-eligibility',
-    getParentRoute: () => ApiGuestbookRoute,
-  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -147,7 +140,6 @@ export interface FileRoutesByFullPath {
   '/posts/$': typeof MainPostsSplatRoute
   '/thoughts/$': typeof MainThoughtsSplatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/guestbook/check-eligibility': typeof ApiGuestbookCheckEligibilityRoute
   '/api/guestbook/sign': typeof ApiGuestbookSignRoute
   '/api/signature/upload': typeof ApiSignatureUploadRoute
   '/thoughts/': typeof MainThoughtsIndexRoute
@@ -168,7 +160,6 @@ export interface FileRoutesByTo {
   '/posts/$': typeof MainPostsSplatRoute
   '/thoughts/$': typeof MainThoughtsSplatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/guestbook/check-eligibility': typeof ApiGuestbookCheckEligibilityRoute
   '/api/guestbook/sign': typeof ApiGuestbookSignRoute
   '/api/signature/upload': typeof ApiSignatureUploadRoute
   '/thoughts': typeof MainThoughtsIndexRoute
@@ -191,7 +182,6 @@ export interface FileRoutesById {
   '/_main/posts/$': typeof MainPostsSplatRoute
   '/_main/thoughts/$': typeof MainThoughtsSplatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/guestbook/check-eligibility': typeof ApiGuestbookCheckEligibilityRoute
   '/api/guestbook/sign': typeof ApiGuestbookSignRoute
   '/api/signature/upload': typeof ApiSignatureUploadRoute
   '/_main/thoughts/': typeof MainThoughtsIndexRoute
@@ -214,7 +204,6 @@ export interface FileRouteTypes {
     | '/posts/$'
     | '/thoughts/$'
     | '/api/auth/$'
-    | '/api/guestbook/check-eligibility'
     | '/api/guestbook/sign'
     | '/api/signature/upload'
     | '/thoughts/'
@@ -235,7 +224,6 @@ export interface FileRouteTypes {
     | '/posts/$'
     | '/thoughts/$'
     | '/api/auth/$'
-    | '/api/guestbook/check-eligibility'
     | '/api/guestbook/sign'
     | '/api/signature/upload'
     | '/thoughts'
@@ -257,7 +245,6 @@ export interface FileRouteTypes {
     | '/_main/posts/$'
     | '/_main/thoughts/$'
     | '/api/auth/$'
-    | '/api/guestbook/check-eligibility'
     | '/api/guestbook/sign'
     | '/api/signature/upload'
     | '/_main/thoughts/'
@@ -388,13 +375,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGuestbookSignRouteImport
       parentRoute: typeof ApiGuestbookRoute
     }
-    '/api/guestbook/check-eligibility': {
-      id: '/api/guestbook/check-eligibility'
-      path: '/check-eligibility'
-      fullPath: '/api/guestbook/check-eligibility'
-      preLoaderRoute: typeof ApiGuestbookCheckEligibilityRouteImport
-      parentRoute: typeof ApiGuestbookRoute
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -448,12 +428,10 @@ const MainRouteChildren: MainRouteChildren = {
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
 
 interface ApiGuestbookRouteChildren {
-  ApiGuestbookCheckEligibilityRoute: typeof ApiGuestbookCheckEligibilityRoute
   ApiGuestbookSignRoute: typeof ApiGuestbookSignRoute
 }
 
 const ApiGuestbookRouteChildren: ApiGuestbookRouteChildren = {
-  ApiGuestbookCheckEligibilityRoute: ApiGuestbookCheckEligibilityRoute,
   ApiGuestbookSignRoute: ApiGuestbookSignRoute,
 }
 

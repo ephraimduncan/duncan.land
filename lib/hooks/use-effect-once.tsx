@@ -7,7 +7,7 @@ import { useEffect } from "react";
  * DANGER: The effect will run twice in concurrent react and development environments.
  */
 export const unsafe_useEffectOnce = (callback: EffectCallback) => {
-    // Intentionally avoiding exhaustive deps and rule of hooks here
-    // oxlint-disable-next-line react-hooks/exhaustive-deps, react-hooks/rules-of-hooks
-    return useEffect(callback, []);
+  // Intentionally avoiding exhaustive deps and rule of hooks here
+  // oxlint-disable-next-line react-hooks/exhaustive-deps, react-hooks/rules-of-hooks
+  return useEffect(callback, []);
 };

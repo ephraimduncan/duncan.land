@@ -1,28 +1,16 @@
 import { Button } from "@/components/button";
-import {
-  Dialog,
-  DialogActions,
-  DialogBody,
-  DialogTitle,
-} from "@/components/dialog";
+import { Dialog, DialogActions, DialogBody, DialogTitle } from "@/components/dialog";
 import { Field, Label } from "@/components/fieldset";
 import { SignaturePad } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
+import { signatureApi, SignatureUploadError } from "@/lib/api/signature";
 import type { User } from "@/lib/auth";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
-import type { UploadSignatureResponse } from "@/types/guestbook";
 
 type SubmitState = "idle" | "uploading-signature" | "signing";
-
-class SignatureUploadError extends Error {
-  constructor() {
-    super("Failed to upload signature");
-  }
-}
-
 interface SignDialogProps {
   user: User;
 }
@@ -54,26 +42,6 @@ export function SignDialog({ user }: SignDialogProps) {
     resetForm();
   }
 
-  async function uploadSignature(signatureData: string): Promise<string> {
-    let response: Response;
-
-    try {
-      response = await fetch("/api/signature/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ signature: signatureData }),
-      });
-    } catch {
-      throw new SignatureUploadError();
-    }
-
-    if (!response.ok) {
-      throw new SignatureUploadError();
-    }
-
-    const { url } = (await response.json()) as UploadSignatureResponse;
-    return url;
-  }
 
   function handleMessageChange(value: string) {
     setMessage(value);
@@ -99,7 +67,7 @@ export function SignDialog({ user }: SignDialogProps) {
 
       if (signature) {
         setSubmitState("uploading-signature");
-        signatureUrl = await uploadSignature(signature);
+        signatureUrl = await signatureApi.upload(signature);
       }
 
       setSubmitState("signing");

@@ -80,10 +80,7 @@ function getGridPosition(column: number, row: number) {
 }
 
 function findFallbackPosition(placedRects: PlacedRect[], searchRadius: number) {
-  const startLayer = Math.max(
-    0,
-    Math.ceil(searchRadius / Math.min(GRID_STEP_X, GRID_STEP_Y))
-  );
+  const startLayer = Math.max(0, Math.ceil(searchRadius / Math.min(GRID_STEP_X, GRID_STEP_Y)));
 
   for (let layer = startLayer; ; layer++) {
     if (layer === 0) {
@@ -154,7 +151,10 @@ function findPosition(id: string, placedRects: PlacedRect[], searchRadius: numbe
 
 export function computeSignatureLayout(signatures: GuestbookSignature[]): SignatureLayout {
   const placedRects: PlacedRect[] = [];
-  const searchRadius = Math.min(MAX_RADIUS, computeTargetRadius(signatures.length) + RADIAL_STEP * 2);
+  const searchRadius = Math.min(
+    MAX_RADIUS,
+    computeTargetRadius(signatures.length) + RADIAL_STEP * 2,
+  );
 
   const positions = signatures.map((signature) => {
     const { x, y } = findPosition(signature.id, placedRects, searchRadius);

@@ -12,8 +12,7 @@ const PROJECTS = [
   },
   {
     name: "Formbase",
-    description:
-      "Backend for HTML forms with uploads, alerts, and integrations.",
+    description: "Backend for HTML forms with uploads, alerts, and integrations.",
     href: "https://formbase.dev?ref=duncan.land",
   },
   {
@@ -33,8 +32,7 @@ const PROJECTS = [
   },
   {
     name: "Writer",
-    description:
-      "All-in-one AI writing workspace for research, drafting, and edits.",
+    description: "All-in-one AI writing workspace for research, drafting, and edits.",
     href: "https://writer.so?ref=duncan.land",
   },
 ] as const;
@@ -44,8 +42,7 @@ export const Route = createFileRoute("/_main/")({
   head: () => ({
     meta: [
       {
-        title:
-          "Ephraim Duncan — Software Engineer & Open Source Developer",
+        title: "Ephraim Duncan — Software Engineer & Open Source Developer",
       },
     ],
   }),
@@ -79,21 +76,19 @@ function Home() {
 
       <FadeIn.Item>
         <p className="mb-2">
-          I&apos;m a software engineer and open-source developer building
-          polished web experiences with magical, unique, and delightful details.
-          As a full-stack developer, I aim to create beautiful and functional
-          software that is both intuitive and enjoyable for users.
+          I&apos;m a software engineer and open-source developer building polished web experiences
+          with magical, unique, and delightful details. As a full-stack developer, I aim to create
+          beautiful and functional software that is both intuitive and enjoyable for users.
         </p>
         <p>
-          I have a passion for learning, and I am constantly seeking to improve
-          my skills mostly through <span className="inline-link">reading</span>{" "}
-          and{" "}
+          I have a passion for learning, and I am constantly seeking to improve my skills mostly
+          through <span className="inline-link">reading</span> and{" "}
           <Link to="/blog">
             <span className="inline-link">writing</span>
           </Link>
           . I&apos;m interested in
-          <em> TypeScript</em> and <em> Go</em>, and at the same time, I&apos;m
-          also experimenting with native apps with <em> Swift</em>.
+          <em> TypeScript</em> and <em> Go</em>, and at the same time, I&apos;m also experimenting
+          with native apps with <em> Swift</em>.
         </p>
       </FadeIn.Item>
       <FadeIn.Item>
@@ -140,20 +135,11 @@ function Home() {
           />
         </svg>
 
-        <ExternalLink
-          text="follow me on x"
-          href="https://twitter.com/ephraimduncan"
-        />
+        <ExternalLink text="follow me on x" href="https://twitter.com/ephraimduncan" />
 
-        <ExternalLink
-          text="let's collaborate on github"
-          href="https://github.com/ephraimduncan"
-        />
+        <ExternalLink text="let's collaborate on github" href="https://github.com/ephraimduncan" />
 
-        <ExternalLink
-          text="love to talk?"
-          href="https://cal.com/ephraimduncan/30min"
-        />
+        <ExternalLink text="love to talk?" href="https://cal.com/ephraimduncan/30min" />
       </FadeIn.Item>
     </FadeIn.Container>
   );

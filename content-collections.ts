@@ -8,12 +8,12 @@ import { z } from "zod";
 const computedFields = {
   slug: (doc: any, collectionName: string) => {
     // Extract just the filename without extension
-    const filename = doc._meta.fileName.replace(/\.mdx$/, '');
+    const filename = doc._meta.fileName.replace(/\.mdx$/, "");
     return `/${collectionName}/${filename}`;
   },
   slugAsParams: (doc: any) => {
     // Extract just the filename without extension
-    return doc._meta.fileName.replace(/\.mdx$/, '');
+    return doc._meta.fileName.replace(/\.mdx$/, "");
   },
   readTimeMinutes: (doc: any) => {
     const wordsPerMinute = 200;
@@ -52,7 +52,7 @@ export const Page = defineCollection({
     return {
       ...doc,
       body,
-      slug: computedFields.slug(doc, 'pages'),
+      slug: computedFields.slug(doc, "pages"),
       slugAsParams: computedFields.slugAsParams(doc),
       readTimeMinutes: computedFields.readTimeMinutes(doc),
       ...addCompatibilityFields(doc),
@@ -82,7 +82,7 @@ export const Post = defineCollection({
     return {
       ...doc,
       body,
-      slug: computedFields.slug(doc, 'posts'),
+      slug: computedFields.slug(doc, "posts"),
       slugAsParams: computedFields.slugAsParams(doc),
       readTimeMinutes: computedFields.readTimeMinutes(doc),
       ...addCompatibilityFields(doc),
@@ -107,7 +107,7 @@ export const Thoughts = defineCollection({
     return {
       ...doc,
       body,
-      slug: computedFields.slug(doc, 'thoughts'),
+      slug: computedFields.slug(doc, "thoughts"),
       slugAsParams: computedFields.slugAsParams(doc),
       readTimeMinutes: computedFields.readTimeMinutes(doc),
       ...addCompatibilityFields(doc),

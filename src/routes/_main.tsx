@@ -1,10 +1,10 @@
-import { Outlet, createFileRoute } from '@tanstack/react-router'
-import { Navbar } from '@/components/navbar'
-import { SiteFooter } from '@/components/site-footer'
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/navbar";
+import { SiteFooter } from "@/components/site-footer";
 
-export const Route = createFileRoute('/_main')({
+export const Route = createFileRoute("/_main")({
   component: MainLayout,
-})
+});
 
 function MainLayout() {
   return (
@@ -15,5 +15,5 @@ function MainLayout() {
       </main>
       <SiteFooter />
     </>
-  )
+  );
 }

@@ -26,7 +26,7 @@ export const session = sqliteTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
-  (table) => [index("idx_session_userId").on(table.userId)]
+  (table) => [index("idx_session_userId").on(table.userId)],
 );
 
 export const account = sqliteTable(
@@ -51,7 +51,7 @@ export const account = sqliteTable(
   (table) => [
     index("idx_account_userId").on(table.userId),
     uniqueIndex("idx_account_provider").on(table.providerId, table.accountId),
-  ]
+  ],
 );
 
 export const verification = sqliteTable(
@@ -64,7 +64,7 @@ export const verification = sqliteTable(
     createdAt: integer("createdAt", { mode: "timestamp" }),
     updatedAt: integer("updatedAt", { mode: "timestamp" }),
   },
-  (table) => [index("idx_verification_identifier").on(table.identifier)]
+  (table) => [index("idx_verification_identifier").on(table.identifier)],
 );
 
 export const post = sqliteTable("post", {

@@ -1,8 +1,8 @@
-import { drizzleDb } from '@/lib/drizzle';
-import { post, user } from '@/lib/schema';
-import { eq, desc, count } from 'drizzle-orm';
-import { nanoid } from 'nanoid';
-import type { GuestbookPost, GuestbookPostsResponse } from '@/types/guestbook';
+import { drizzleDb } from "@/lib/drizzle";
+import { post, user } from "@/lib/schema";
+import { eq, desc, count } from "drizzle-orm";
+import { nanoid } from "nanoid";
+import type { GuestbookPost, GuestbookPostsResponse } from "@/types/guestbook";
 
 const PAGE_SIZE = 30;
 
@@ -22,7 +22,7 @@ function serializeGuestbookPost(post: {
 
 export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPostsResponse> {
   if (cursor < 0 || !Number.isFinite(cursor)) {
-    throw new Error('Invalid cursor parameter');
+    throw new Error("Invalid cursor parameter");
   }
 
   const posts = await drizzleDb
@@ -51,9 +51,7 @@ export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPo
 }
 
 export async function getGuestbookCount(): Promise<number> {
-  const result = await drizzleDb
-    .select({ count: count() })
-    .from(post);
+  const result = await drizzleDb.select({ count: count() }).from(post);
 
   return result[0]?.count ?? 0;
 }
@@ -103,7 +101,7 @@ export async function getPostWithUser(postId: string): Promise<GuestbookPost> {
 
   const row = rows[0];
   if (!row) {
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
   return serializeGuestbookPost(row);

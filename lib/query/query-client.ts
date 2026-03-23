@@ -1,4 +1,4 @@
-import { QueryClient, DefaultOptions } from '@tanstack/react-query';
+import { QueryClient, DefaultOptions } from "@tanstack/react-query";
 
 type QueryError = Error & { status?: number };
 
@@ -8,7 +8,7 @@ function getErrorStatus(error: unknown): number | null {
   }
 
   const { status } = error as QueryError;
-  return typeof status === 'number' ? status : null;
+  return typeof status === "number" ? status : null;
 }
 
 function shouldRetryQuery(failureCount: number, error: unknown): boolean {
@@ -30,11 +30,11 @@ const defaultOptions: DefaultOptions = {
     refetchOnMount: false,
     retry: shouldRetryQuery,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    networkMode: 'online',
+    networkMode: "online",
   },
   mutations: {
     retry: 1,
-    networkMode: 'online',
+    networkMode: "online",
   },
 };
 
@@ -53,7 +53,7 @@ function getBrowserQueryClient(): QueryClient {
 }
 
 export function getQueryClient(): QueryClient {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return createQueryClient();
   }
 

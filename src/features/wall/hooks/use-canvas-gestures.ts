@@ -48,11 +48,7 @@ interface UseCanvasGesturesOptions {
   panRef: { current: Point };
   scaleRef: { current: number };
   setPan: Dispatch<SetStateAction<Point>>;
-  setScaleAtPoint: (
-    clientX: number,
-    clientY: number,
-    targetScale: number
-  ) => void;
+  setScaleAtPoint: (clientX: number, clientY: number, targetScale: number) => void;
 }
 
 const DRAG_THRESHOLD = 8;
@@ -92,7 +88,7 @@ export function useCanvasGestures({
         });
       }
     },
-    [panRef, setPan]
+    [panRef, setPan],
   );
 
   const isElementTarget = useCallback((eventTarget: EventTarget | null) => {
@@ -110,7 +106,7 @@ export function useCanvasGestures({
         startPanY: panRef.current.y,
       };
     },
-    [panRef]
+    [panRef],
   );
 
   const finishGesture = useCallback(() => {
@@ -136,7 +132,7 @@ export function useCanvasGestures({
         event.currentTarget.setPointerCapture(event.pointerId);
       }
     },
-    [isElementTarget, startPanGesture]
+    [isElementTarget, startPanGesture],
   );
 
   const handleCanvasPointerMove = useCallback(
@@ -185,7 +181,7 @@ export function useCanvasGestures({
         startScale: scaleRef.current,
       };
     },
-    [scaleRef, startPanGesture]
+    [scaleRef, startPanGesture],
   );
 
   useEffect(() => {
@@ -302,14 +298,7 @@ export function useCanvasGestures({
 
       pendingPanRef.current = null;
     };
-  }, [
-    canvasRef,
-    panRef,
-    scaleRef,
-    finishGesture,
-    setScaleAtPoint,
-    schedulePanUpdate,
-  ]);
+  }, [canvasRef, panRef, scaleRef, finishGesture, setScaleAtPoint, schedulePanUpdate]);
 
   const wasDragging = useCallback(() => {
     return Date.now() - lastDragEndRef.current < RECENT_DRAG_WINDOW_MS;

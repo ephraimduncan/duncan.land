@@ -36,9 +36,7 @@ export const Route = createFileRoute("/_main/posts/$")({
           name: "twitter:description",
           content: loaderData.description ?? "",
         },
-        ...(loaderData.draft
-          ? [{ name: "robots", content: "noindex, nofollow" }]
-          : []),
+        ...(loaderData.draft ? [{ name: "robots", content: "noindex, nofollow" }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
     };
@@ -75,9 +73,7 @@ function PostPage() {
                   day: "numeric",
                 })}
               </p>
-              <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
-                •
-              </p>
+              <p className="text-base mt-0 text-grey-700 dark:text-grey-200">•</p>
 
               <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
                 {post.readTimeMinutes}

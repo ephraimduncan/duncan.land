@@ -6,10 +6,7 @@ export function requiredEnv(name: string, value: string | undefined): string {
   return value;
 }
 
-export function requiredEnvList(
-  name: string,
-  value: string | undefined
-): string[] {
+export function requiredEnvList(name: string, value: string | undefined): string[] {
   const items = requiredEnv(name, value)
     .split(",")
     .map((item) => item.trim())

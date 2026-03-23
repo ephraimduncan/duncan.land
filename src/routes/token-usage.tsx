@@ -35,7 +35,10 @@ function TokenUsagePage() {
       <header className="fixed inset-x-0 top-0 z-50 pt-[30px] pb-3">
         <div className="flex justify-center">
           <div className="flex items-center justify-between" style={{ width: chartWidth }}>
-            <Link to="/" className="pointer-events-auto font-mono text-xs text-grey-800 dark:text-grey-100">
+            <Link
+              to="/"
+              className="pointer-events-auto font-mono text-xs text-grey-800 dark:text-grey-100"
+            >
               ←
             </Link>
             <div className="font-mono text-xs text-grey-800 dark:text-grey-100">

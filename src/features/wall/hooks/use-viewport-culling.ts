@@ -35,10 +35,7 @@ export function useViewportCulling({
       const bottom = pos.y + ELEMENT_HEIGHT;
 
       return (
-        right >= worldLeft &&
-        pos.x <= worldRight &&
-        bottom >= worldTop &&
-        pos.y <= worldBottom
+        right >= worldLeft && pos.x <= worldRight && bottom >= worldTop && pos.y <= worldBottom
       );
     });
   }, [pan.x, pan.y, positions, scale, viewportReady]);

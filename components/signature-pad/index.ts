@@ -1,1 +1,1 @@
-export * from './signature-pad';
+export * from "./signature-pad";

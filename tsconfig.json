@@ -19,16 +19,6 @@
       "content-collections": ["./.content-collections/generated"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".content-collections/generated"
-  ],
-  "exclude": [
-    "node_modules",
-    "scripts",
-    "mood",
-    ".output",
-    ".vinxi"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".content-collections/generated"],
+  "exclude": ["node_modules", "scripts", "mood", ".output", ".vinxi"]
 }

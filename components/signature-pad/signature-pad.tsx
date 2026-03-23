@@ -38,14 +38,8 @@ const getStrokeOptions = (canvas: HTMLCanvasElement) => {
   } satisfies StrokeOptions;
 };
 
-const drawLine = (
-  context: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
-  line: Line,
-) => {
-  const path = new Path2D(
-    getSvgPathFromStroke(getStroke(line, getStrokeOptions(canvas))),
-  );
+const drawLine = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, line: Line) => {
+  const path = new Path2D(getSvgPathFromStroke(getStroke(line, getStrokeOptions(canvas))));
 
   context.fill(path);
 };
@@ -55,10 +49,7 @@ export interface SignaturePadProps {
   onChange: (_signatureDataUrl: string | null) => void;
 }
 
-export const SignaturePad = ({
-  className,
-  onChange,
-}: SignaturePadProps) => {
+export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const linesRef = useRef<Line[]>([]);
   const currentLineRef = useRef<Line>([]);
@@ -131,10 +122,7 @@ export const SignaturePad = ({
     redraw(nextLine);
   };
 
-  const onPointerUp = (
-    event: PointerEvent<HTMLCanvasElement>,
-    shouldCommit = true,
-  ) => {
+  const onPointerUp = (event: PointerEvent<HTMLCanvasElement>, shouldCommit = true) => {
     if (event.cancelable) {
       event.preventDefault();
     }
@@ -153,10 +141,7 @@ export const SignaturePad = ({
       return;
     }
 
-    const nextLines = [
-      ...linesRef.current,
-      [...currentLine, Point.fromPointerEvent(event, DPI)],
-    ];
+    const nextLines = [...linesRef.current, [...currentLine, Point.fromPointerEvent(event, DPI)]];
 
     linesRef.current = nextLines;
     setLineCount(nextLines.length);

@@ -4,13 +4,19 @@ import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { PostCard } from "./post-card";
+import type { GuestbookPostsResponse } from "@/types/guestbook";
 
-export function PostsList() {
-  const guestbookPosts = useGuestbookPosts();
+interface PostsListProps {
+  /** First page of posts from the route loader — seeds the query cache for instant render. */
+  initialPosts: GuestbookPostsResponse;
+}
+
+export function PostsList({ initialPosts }: PostsListProps) {
+  const guestbookPosts = useGuestbookPosts(initialPosts);
   const { fetchNextPage, hasNextPage, isFetchingNextPage } = guestbookPosts;
 
   const { ref, inView } = useInView({
-    rootMargin: '1000px',
+    rootMargin: "1000px",
     threshold: 0,
   });
 
@@ -22,7 +28,7 @@ export function PostsList() {
     fetchNextPage();
   }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
 
-  if (guestbookPosts.status === 'pending') {
+  if (guestbookPosts.status === "pending") {
     return (
       <div className="flex justify-center py-8">
         <Loader className="h-6 w-6 animate-spin" />
@@ -30,7 +36,7 @@ export function PostsList() {
     );
   }
 
-  if (guestbookPosts.status === 'error') {
+  if (guestbookPosts.status === "error") {
     return (
       <div className="text-center py-8 text-grey-600 dark:text-grey-400">
         Failed to load posts. Please try again later.

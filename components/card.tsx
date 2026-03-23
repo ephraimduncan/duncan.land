@@ -21,12 +21,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           "relative w-full rounded-md border p-5 text-left shadow-xs",
           "bg-white dark:bg-grey-900",
           "border-grey-200 dark:border-grey-950",
-          className
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 Card.displayName = "Card";

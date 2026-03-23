@@ -7,10 +7,7 @@ import * as schema from "./schema";
 const baseURL = process.env.BETTER_AUTH_URL;
 
 const trustedOrigins = process.env.BETTER_AUTH_TRUSTED_ORIGINS
-  ? requiredEnvList(
-      "BETTER_AUTH_TRUSTED_ORIGINS",
-      process.env.BETTER_AUTH_TRUSTED_ORIGINS
-    )
+  ? requiredEnvList("BETTER_AUTH_TRUSTED_ORIGINS", process.env.BETTER_AUTH_TRUSTED_ORIGINS)
   : baseURL
     ? [baseURL]
     : undefined;
@@ -31,10 +28,7 @@ export const auth = betterAuth({
   socialProviders: {
     github: {
       clientId: requiredEnv("GITHUB_CLIENT_ID", process.env.GITHUB_CLIENT_ID),
-      clientSecret: requiredEnv(
-        "GITHUB_CLIENT_SECRET",
-        process.env.GITHUB_CLIENT_SECRET
-      ),
+      clientSecret: requiredEnv("GITHUB_CLIENT_SECRET", process.env.GITHUB_CLIENT_SECRET),
       scope: ["read:user", "user:email"],
       mapProfileToUser: (profile) => ({
         github_id: profile.id,

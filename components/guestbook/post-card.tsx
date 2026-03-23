@@ -12,9 +12,7 @@ export function PostCard({ post }: PostCardProps) {
 
   return (
     <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
-      <p className="leading-6 text-grey-900 dark:text-grey-50">
-        {post.message}
-      </p>
+      <p className="leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
 
       <div className="mt-auto flex items-center justify-between">
         <div className="flex flex-col justify-end h-full text-sm">
@@ -24,13 +22,7 @@ export function PostCard({ post }: PostCardProps) {
 
         {post.signature && (
           <div className="dark:invert -mb-4 -mr-4">
-            <img
-              alt="signature"
-              src={post.signature}
-              width={150}
-              height={150}
-              loading="lazy"
-            />
+            <img alt="signature" src={post.signature} width={150} height={150} loading="lazy" />
           </div>
         )}
       </div>

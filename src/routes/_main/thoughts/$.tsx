@@ -50,9 +50,7 @@ function ThoughtPage() {
                 day: "numeric",
               })}
             </p>
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
-              •
-            </p>
+            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">•</p>
 
             <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
               {thought.readTimeMinutes}

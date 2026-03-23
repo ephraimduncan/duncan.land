@@ -16,12 +16,7 @@ export function ReferenceLink({ reference }: ReferenceLinkProps) {
     <div className="text-grey-700 dark:text-grey-200">
       <span className="mr-2">[1]</span> {textWithoutMarkdown}{" "}
       {url && (
-        <a
-          href={url}
-          className="underline font-normal"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={url} className="underline font-normal" target="_blank" rel="noopener noreferrer">
           {url}
         </a>
       )}

@@ -56,7 +56,7 @@ export default function TokenUsageGraph({ data }: { data: UsageDay[] }) {
   const [pressed, setPressed] = React.useState(false);
 
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-  const activeDay = activeIndex === null ? null : data[activeIndex] ?? null;
+  const activeDay = activeIndex === null ? null : (data[activeIndex] ?? null);
   const activeDate = formatDate(activeDay?.date ?? null);
 
   const { scrollX } = useScroll({ container: rootRef });
@@ -303,7 +303,10 @@ export function Lines({
             style={{ width: LINE_WIDTH }}
           >
             {day.cost === 0 ? (
-              <div data-highlight={isFirstOfMonth} className="bg-grey-300 dark:bg-grey-600 h-1 w-full rounded-none" />
+              <div
+                data-highlight={isFirstOfMonth}
+                className="bg-grey-300 dark:bg-grey-600 h-1 w-full rounded-none"
+              />
             ) : clients.length === 0 ? (
               <div
                 data-highlight={isFirstOfMonth}
@@ -323,7 +326,11 @@ export function Lines({
           </div>
         );
       })}
-      <div aria-hidden className="absolute top-0 left-full" style={{ width: LINE_GAP, height: "100%" }} />
+      <div
+        aria-hidden
+        className="absolute top-0 left-full"
+        style={{ width: LINE_GAP, height: "100%" }}
+      />
       <div aria-hidden className="absolute top-full left-0" style={{ width: "100%", height: 25 }} />
       {children}
     </div>
@@ -406,7 +413,9 @@ export function Meta({ modelId, cost }: { modelId: string; cost: number }) {
           <Icon size={12} />
         </div>
       )}
-      <div className="font-mono text-sm whitespace-nowrap select-none">{getModelDisplayName(modelId)}</div>
+      <div className="font-mono text-sm whitespace-nowrap select-none">
+        {getModelDisplayName(modelId)}
+      </div>
       <div aria-hidden className="bg-grey-300 dark:bg-grey-600 h-1 w-1 shrink-0 rounded-full" />
       <div className="font-mono text-sm whitespace-nowrap select-none">{formatCost(cost)}</div>
     </div>

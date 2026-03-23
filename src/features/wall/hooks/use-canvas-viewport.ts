@@ -12,21 +12,13 @@ export default function useCanvasViewport() {
 
   const { pan, panRef, setPan } = useCanvasPanState();
 
-  const {
-    scale,
-    scaleRef,
-    zoomPercent,
-    setScaleAtPoint,
-    zoomIn,
-    zoomOut,
-    zoomToFit,
-    centerPan,
-  } = useCanvasScaleControls({
-    initialScale: INITIAL_SCALE,
-    canvasRef,
-    panRef,
-    setPan,
-  });
+  const { scale, scaleRef, zoomPercent, setScaleAtPoint, zoomIn, zoomOut, zoomToFit, centerPan } =
+    useCanvasScaleControls({
+      initialScale: INITIAL_SCALE,
+      canvasRef,
+      panRef,
+      setPan,
+    });
 
   const { onPointerDown, onPointerMove, wasDragging } = useCanvasGestures({
     canvasRef,

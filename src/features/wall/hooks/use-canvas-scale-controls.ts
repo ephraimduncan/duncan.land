@@ -51,7 +51,7 @@ export function useCanvasScaleControls({
         return nextScale;
       });
     },
-    [setScaleState]
+    [setScaleState],
   );
 
   const clampScale = useCallback((value: number) => clamp(value, MIN_SCALE, MAX_SCALE), []);
@@ -71,10 +71,8 @@ export function useCanvasScaleControls({
       const previousScale = scaleRef.current;
 
       const canvasBounds = canvasElement.getBoundingClientRect();
-      const worldX =
-        (clientX - canvasBounds.left - panRef.current.x) / previousScale;
-      const worldY =
-        (clientY - canvasBounds.top - panRef.current.y) / previousScale;
+      const worldX = (clientX - canvasBounds.left - panRef.current.x) / previousScale;
+      const worldY = (clientY - canvasBounds.top - panRef.current.y) / previousScale;
 
       const newPanX = clientX - canvasBounds.left - worldX * nextScale;
       const newPanY = clientY - canvasBounds.top - worldY * nextScale;
@@ -82,7 +80,7 @@ export function useCanvasScaleControls({
       setPan({ x: newPanX, y: newPanY });
       setScale(nextScale);
     },
-    [canvasRef, clampScale, panRef, setPan, setScale]
+    [canvasRef, clampScale, panRef, setPan, setScale],
   );
 
   const scaleByAtPoint = useCallback(
@@ -92,14 +90,14 @@ export function useCanvasScaleControls({
 
       setScaleKeepingPoint(clientX, clientY, nextScale);
     },
-    [setScaleKeepingPoint]
+    [setScaleKeepingPoint],
   );
 
   const setScaleAtPoint = useCallback(
     (clientX: number, clientY: number, targetScale: number) => {
       setScaleKeepingPoint(clientX, clientY, targetScale);
     },
-    [setScaleKeepingPoint]
+    [setScaleKeepingPoint],
   );
 
   const zoomIn = useCallback(() => {
@@ -125,9 +123,7 @@ export function useCanvasScaleControls({
     const nextPan = getViewportCenter();
 
     setPan((previousPan) =>
-      previousPan.x === nextPan.x && previousPan.y === nextPan.y
-        ? previousPan
-        : nextPan
+      previousPan.x === nextPan.x && previousPan.y === nextPan.y ? previousPan : nextPan,
     );
   }, [getViewportCenter, setPan]);
 

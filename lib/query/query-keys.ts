@@ -1,7 +1,6 @@
-const guestbookRootKey = ['guestbook'] as const;
+const guestbookRootKey = ["guestbook"] as const;
 
 export const guestbookKeys = {
   all: guestbookRootKey,
-  posts: [...guestbookRootKey, 'posts'] as const,
-  eligibility: [...guestbookRootKey, 'eligibility'] as const,
+  posts: [...guestbookRootKey, "posts"] as const,
 } as const;
