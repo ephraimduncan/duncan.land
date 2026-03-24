@@ -8,11 +8,11 @@ import type { GuestbookPostsResponse } from "@/types/guestbook";
 
 interface PostsListProps {
   /** First page of posts from the route loader — seeds the query cache for instant render. */
-  initialPosts: GuestbookPostsResponse;
+  initialPosts: GuestbookPostsResponse | null;
 }
 
 export function PostsList({ initialPosts }: PostsListProps) {
-  const guestbookPosts = useGuestbookPosts(initialPosts);
+  const guestbookPosts = useGuestbookPosts(initialPosts ?? undefined);
   const { fetchNextPage, hasNextPage, isFetchingNextPage } = guestbookPosts;
 
   const { ref, inView } = useInView({

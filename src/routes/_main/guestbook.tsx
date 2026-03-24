@@ -15,7 +15,10 @@ const getInitialPosts = createServerFn({ method: "GET" }).handler(() => {
 
 export const Route = createFileRoute("/_main/guestbook")({
   loader: async () => {
-    const [authState, initialPosts] = await Promise.all([getSession(), getInitialPosts()]);
+    const [authState, initialPosts] = await Promise.all([
+      getSession(),
+      getInitialPosts().catch(() => null),
+    ]);
     return { authState, initialPosts };
   },
   head: () => ({
