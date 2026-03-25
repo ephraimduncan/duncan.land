@@ -24,6 +24,7 @@ export default defineConfig({
       ".vinxi/",
       ".content-collections/",
       ".contentlayer/",
+      "src/routeTree.gen.ts",
     ],
     rules: {
       "constructor-super": "error",
