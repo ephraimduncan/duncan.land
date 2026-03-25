@@ -63,6 +63,11 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 
+  /* Prevent layout shift from scrollbar appearing/disappearing between routes */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   /* Typography: balanced headings, pretty body text */
   h1,
   h2,
