@@ -16,7 +16,9 @@ export const Route = createFileRoute("/token-usage")({
   errorComponent: ({ error }) => (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center font-mono text-sm">
-        <Link to="/" className="text-grey-800 dark:text-grey-100">←</Link>
+        <Link to="/" className="text-grey-800 dark:text-grey-100">
+          ←
+        </Link>
         <p className="mt-4 text-grey-500">Failed to load usage data</p>
       </div>
     </div>
@@ -40,7 +42,9 @@ function TokenUsagePage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center font-mono text-sm">
-          <Link to="/" className="text-grey-800 dark:text-grey-100">←</Link>
+          <Link to="/" className="text-grey-800 dark:text-grey-100">
+            ←
+          </Link>
           <p className="mt-4 text-grey-500">No usage data available</p>
         </div>
       </div>
@@ -61,7 +65,7 @@ function TokenUsagePage() {
             >
               ←
             </Link>
-            <div className="font-mono text-xs text-grey-800 dark:text-grey-100">
+            <div className="font-mono text-xs tabular-nums text-grey-800 dark:text-grey-100">
               ${formatCost(totalCost)}
             </div>
           </div>

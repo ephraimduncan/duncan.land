@@ -22,6 +22,9 @@ const styles = {
     // Disabled
     "data-disabled:opacity-50",
 
+    // Scale on press — tactile feedback, interruptible via CSS transition
+    "transition-[scale] duration-150 ease-out active:scale-[0.96]",
+
     // Icon
     "*:data-[slot=icon]:-mx-0.5 *:data-[slot=icon]:my-0.5 *:data-[slot=icon]:size-5 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-(--btn-icon) sm:*:data-[slot=icon]:my-1 sm:*:data-[slot=icon]:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:data-hover:[--btn-icon:ButtonText]",
   ],

@@ -27,7 +27,11 @@ export function AppThemeSwitcher() {
           key={label}
           onClick={() => setTheme(label)}
           className={cn(
-            "transition-all flex h-6 w-6 items-center justify-center rounded-[4px] hover:opacity-50 text-grey-600 dark:text-grey-300",
+            "relative flex h-6 w-6 items-center justify-center rounded-[4px] text-grey-600 dark:text-grey-300",
+            // Specific transition properties — never transition-all
+            "transition-[background-color,color,opacity] duration-150 ease-out hover:opacity-50",
+            // Expanded hit area: 40×40px pseudo-element on a 24×24 visible button
+            "after:absolute after:top-1/2 after:left-1/2 after:size-10 after:-translate-1/2 after:content-['']",
             {
               "bg-grey-200 dark:bg-grey-600 text-grey-800 dark:text-grey-100":
                 activeTheme === label,

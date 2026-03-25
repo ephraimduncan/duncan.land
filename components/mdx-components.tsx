@@ -9,7 +9,13 @@ Code.theme = {
 };
 
 const components = {
-  Image: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img loading="lazy" {...props} />,
+  Image: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img
+      loading="lazy"
+      {...props}
+      className="outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
+    />
+  ),
   pre: Code,
   h1: (
     props: React.JSX.IntrinsicAttributes &

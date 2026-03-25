@@ -42,7 +42,6 @@ export function SignDialog({ user }: SignDialogProps) {
     resetForm();
   }
 
-
   function handleMessageChange(value: string) {
     setMessage(value);
 

@@ -417,7 +417,9 @@ export function Meta({ modelId, cost }: { modelId: string; cost: number }) {
         {getModelDisplayName(modelId)}
       </div>
       <div aria-hidden className="bg-grey-300 dark:bg-grey-600 h-1 w-1 shrink-0 rounded-full" />
-      <div className="font-mono text-sm whitespace-nowrap select-none">{formatCost(cost)}</div>
+      <div className="font-mono text-sm tabular-nums whitespace-nowrap select-none">
+        {formatCost(cost)}
+      </div>
     </div>
   );
 }

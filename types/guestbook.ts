@@ -36,7 +36,6 @@ export interface SignGuestbookResponse {
   message: string;
 }
 
-
 export type ApiErrorCode =
   | "ALREADY_SIGNED"
   | "INVALID_CURSOR"

@@ -10,7 +10,11 @@ export function SiteFooter() {
     <footer className="fixed bottom-0 z-1000 w-full border-t border-solid border-grey-100 bg-grey-50 py-2 dark:border-grey-700 dark:bg-grey-950">
       <div className="mx-auto flex max-w-[712px] justify-between px-4 md:px-0">
         <div className="flex items-center gap-8">
-          <a href="https://twitter.com/ephraimduncan" aria-label="Twitter">
+          <a
+            href="https://twitter.com/ephraimduncan"
+            aria-label="Twitter"
+            className="relative after:absolute after:top-1/2 after:left-1/2 after:size-10 after:-translate-1/2 after:content-[''] transition-colors duration-150 ease-out hover:text-grey-900 dark:hover:text-grey-100"
+          >
             <TwitterIcon />
           </a>
 
