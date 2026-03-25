@@ -13,6 +13,14 @@ export const Route = createFileRoute("/token-usage")({
     meta: [{ title: "Token Usage | Ephraim Duncan" }],
   }),
   component: TokenUsagePage,
+  errorComponent: ({ error }) => (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="text-center font-mono text-sm">
+        <Link to="/" className="text-grey-800 dark:text-grey-100">←</Link>
+        <p className="mt-4 text-grey-500">Failed to load usage data</p>
+      </div>
+    </div>
+  ),
 });
 
 function formatCost(cost: number) {
@@ -27,6 +35,18 @@ function getChartWidth(lineCount: number) {
 
 function TokenUsagePage() {
   const data = Route.useLoaderData();
+
+  if (data.length === 0) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center font-mono text-sm">
+          <Link to="/" className="text-grey-800 dark:text-grey-100">←</Link>
+          <p className="mt-4 text-grey-500">No usage data available</p>
+        </div>
+      </div>
+    );
+  }
+
   const totalCost = data.reduce((sum, day) => sum + day.cost, 0);
   const chartWidth = getChartWidth(data.length);
 

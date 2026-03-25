@@ -53,14 +53,22 @@ function aggregateByModel(clients: ApiResponse["contributions"][number]["clients
 const API_URL = "https://agent-api-production-eea5.up.railway.app/api/usage";
 
 export async function fetchUsageData(): Promise<UsageDay[]> {
-  const res = await fetch(API_URL);
-  if (!res.ok) throw new Error("Failed to fetch usage data");
-  const data: ApiResponse = await res.json();
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) {
+      console.error(`Usage API returned ${res.status}: ${res.statusText}`);
+      return [];
+    }
+    const data: ApiResponse = await res.json();
 
-  return data.contributions.map((c) => ({
-    date: c.date,
-    cost: c.totals.cost,
-    tokens: c.totals.tokens,
-    clients: aggregateByModel(c.clients),
-  }));
+    return data.contributions.map((c) => ({
+      date: c.date,
+      cost: c.totals.cost,
+      tokens: c.totals.tokens,
+      clients: aggregateByModel(c.clients),
+    }));
+  } catch (error) {
+    console.error("Failed to fetch usage data:", error);
+    return [];
+  }
 }
