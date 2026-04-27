@@ -3,10 +3,27 @@
   "name": "duncan-land",
   "compatibility_date": "2026-04-27",
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "main": "@tanstack/react-start/server-entry",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  "workers_dev": true,
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "ephraimduncan.com",
+      "custom_domain": true,
+    },
+    {
+      "pattern": "www.ephraimduncan.com",
+      "custom_domain": true,
+    },
+    {
+      "pattern": "duncan.land",
+      "custom_domain": true,
+    },
+    {
+      "pattern": "www.duncan.land",
+      "custom_domain": true,
+    },
+  ],
 }
