@@ -8,6 +8,9 @@
   "main": "@tanstack/react-start/server-entry",
   "workers_dev": true,
   "compatibility_flags": ["nodejs_compat"],
+  "limits": {
+    "cpu_ms": 30000,
+  },
   "routes": [
     {
       "pattern": "ephraimduncan.com",
