@@ -28,19 +28,17 @@ function TalksPage() {
   return (
     <FadeIn.Container>
       <FadeIn.Item>
-        <section>
-          <span className="text-xl flex gap-2 items-center my-6 cursor-pointer">
+        <section className="space-y-6">
+          <div className="flex items-center gap-2 text-xl font-medium text-balance">
             <Microphone size={19} />
             Talks
-          </span>
+          </div>
 
           <div className="space-y-8">
             {TALKS.map((talk) => (
               <article key={talk.title}>
                 <div className="flex justify-between items-start">
-                  <h2 className="text-lg  decoration-grey-100 hover:decoration-1 mb-1">
-                    {talk.title}
-                  </h2>
+                  <h2 className="mb-1 text-lg text-balance">{talk.title}</h2>
                   <Suspense fallback={<span className="text-sm">{talk.date}</span>}>
                     <RelativeTime date={talk.date} />
                   </Suspense>

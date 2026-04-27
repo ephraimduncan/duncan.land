@@ -20,7 +20,7 @@ function BlogPage() {
         <Link
           to="/archive"
           viewTransition
-          className="cursor-pointer text-sm hover:underline decoration-grey-100 hover:decoration-1"
+          className="text-sm text-grey-600 hover:underline hover:decoration-1 dark:text-grey-300"
         >
           Archived Posts
         </Link>

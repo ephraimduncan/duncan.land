@@ -230,7 +230,7 @@ export function Provider({
         }
       }}
       className={clsx(
-        "flex min-h-screen items-center justify-center overflow-y-hidden px-48 max mx-auto",
+        "mx-auto flex min-h-dvh items-center justify-center overflow-y-hidden px-48",
         className,
       )}
       {...props}

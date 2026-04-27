@@ -20,14 +20,14 @@ export function AppThemeSwitcher() {
   const activeTheme = theme ?? "system";
 
   return (
-    <span className="flex w-fit items-center gap-0.5 overflow-hidden rounded-[6px] dark:bg-grey-900 bg-grey-100 p-[2px]">
+    <span className="flex w-fit items-center gap-0.5 overflow-hidden rounded-[6px] bg-grey-100 p-[2px] dark:bg-grey-900">
       {THEMES.map(({ label, icon: Icon }) => (
         <button
           type="button"
           key={label}
           onClick={() => setTheme(label)}
           className={cn(
-            "transition-all flex h-6 w-6 items-center justify-center rounded-[4px] hover:opacity-50 text-grey-600 dark:text-grey-300",
+            "flex size-6 items-center justify-center rounded-[4px] text-grey-600 transition-opacity hover:opacity-50 dark:text-grey-300",
             {
               "bg-grey-200 dark:bg-grey-600 text-grey-800 dark:text-grey-100":
                 activeTheme === label,

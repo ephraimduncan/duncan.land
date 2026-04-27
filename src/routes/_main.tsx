@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_main")({
 function MainLayout() {
   return (
     <>
-      <main className="max-w-[712px] mx-auto md:py-10 px-4 min-h-[calc(100vh-50px-100px)] mb-10">
+      <main className="isolate mx-auto mb-10 min-h-[calc(100dvh-50px-100px)] max-w-[712px] px-4 md:py-10">
         <Navbar />
         <Outlet />
       </main>

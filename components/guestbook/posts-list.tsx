@@ -56,9 +56,9 @@ export function PostsList({ initialPosts }: PostsListProps) {
 
   return (
     <>
-      <ul className="grid grid-cols-12 gap-5 mt-10">
+      <ul role="list" className="mt-10 grid gap-5 sm:grid-cols-2">
         {posts.map((post) => (
-          <li key={post.id} className="flex col-span-12 sm:col-span-6">
+          <li key={post.id} className="flex">
             <PostCard post={post} />
           </li>
         ))}

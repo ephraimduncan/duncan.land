@@ -16,7 +16,7 @@ export function PostCard({ post }: PostCardProps) {
 
       <div className="mt-auto flex items-center justify-between">
         <div className="flex flex-col justify-end h-full text-sm">
-          <p className="font-bold">{authorName}</p>
+          <p className="font-medium">{authorName}</p>
           <p>{signedAt}</p>
         </div>
 

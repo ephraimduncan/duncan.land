@@ -1,14 +1,9 @@
 import { Slot } from "@radix-ui/react-slot";
-import clsx, { ClassValue } from "clsx";
 import React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 
 interface CardProps extends React.ComponentPropsWithoutRef<"div"> {
   asChild?: boolean;
-}
-
-export function cx(...args: ClassValue[]) {
-  return twMerge(clsx(...args));
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -17,7 +12,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <Component
         ref={forwardedRef}
-        className={cx(
+        className={cn(
           "relative w-full rounded-md border p-5 text-left shadow-xs",
           "bg-white dark:bg-grey-900",
           "border-grey-200 dark:border-grey-950",

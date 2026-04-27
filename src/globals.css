@@ -61,7 +61,7 @@ em {
 }
 
 .inline-link {
-  @apply underline decoration-1 cursor-pointer;
+  @apply underline decoration-1;
 }
 
 .katex-display {

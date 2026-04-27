@@ -8,7 +8,7 @@ export function ExternalLink({ href, text }: { href: string; text: string }) {
       rel="noopener noreferrer"
       className="block sm:inline-block sm:mr-2"
     >
-      <span className="flex items-center justify-center gap-1 my-2 text-grey-500 hover:text-grey-900 dark:text-grey-300 dark:hover:text-grey-100 cursor-pointer">
+      <span className="my-2 flex items-center justify-center gap-1 text-grey-500 hover:text-grey-900 dark:text-grey-300 dark:hover:text-grey-100">
         <Arrow size={20} />
         <span>{text}</span>
       </span>

@@ -2,7 +2,6 @@ import { allPosts, allThoughts } from "content-collections";
 import { formatter } from "@/lib/utils";
 
 import { Link } from "@tanstack/react-router";
-import React from "react";
 
 type PostCategory = "thoughts" | "posts" | "archive";
 type PostListItem = (typeof allPosts)[number] | (typeof allThoughts)[number];
@@ -51,22 +50,23 @@ export const Posts = ({ category }: PostProps) => {
   return (
     <div className="flex flex-col">
       <Link to={section.href} className="flex justify-between">
-        <h2 className="py-2 text-2xl font-medium tracking-tighter dark:text-grey-100">
+        <h2 className="py-2 text-2xl font-medium tracking-tight text-balance dark:text-grey-100">
           {section.title}
         </h2>
       </Link>
 
-      {posts.map((post) => {
-        return (
-          <React.Fragment key={post.slug}>
-            <div className="border-border border-t border-grey-900" />
-            <Link to={post.slug} className="flex w-full justify-between py-2 dark:text-grey-100">
-              <p>{post.title}</p>
-              <p className="mt-0 dark:text-grey-100">{formatter.date(post.date)}</p>
-            </Link>
-          </React.Fragment>
-        );
-      })}
+      <div className="divide-y divide-grey-200 dark:divide-grey-800">
+        {posts.map((post) => (
+          <Link
+            key={post.slug}
+            to={post.slug}
+            className="flex w-full justify-between gap-4 py-3 dark:text-grey-100"
+          >
+            <p className="text-pretty">{post.title}</p>
+            <p className="shrink-0 text-grey-600 dark:text-grey-300">{formatter.date(post.date)}</p>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
