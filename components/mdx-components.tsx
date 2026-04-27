@@ -33,7 +33,7 @@ const components = {
     props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLElement> &
       HTMLAttributes<HTMLElement>,
-  ) => <em {...props} className="italic text-lg" />,
+  ) => <em {...props} className="italic" />,
 
   a: (
     props: React.JSX.IntrinsicAttributes &

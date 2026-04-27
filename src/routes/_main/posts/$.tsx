@@ -53,11 +53,13 @@ function PostPage() {
         <article className="py-6 prose dark:prose-invert">
           <div className="mb-10">
             <div className="flex gap-2">
-              <h1 className="mb-2 text-2xl">{post.title}</h1>
+              <h1 className="mb-2 text-2xl font-medium tracking-tight text-balance">
+                {post.title}
+              </h1>
               {post.reference && (
                 <a
                   href="#references"
-                  className="inline-flex items-center justify-center w-4 h-4 text-sm, font-medium text-grey-600 hover:text-grey-900 dark:text-grey-400 dark:hover:text-grey-200 transition-colors"
+                  className="inline-flex size-4 items-center justify-center text-sm font-medium text-grey-600 hover:text-grey-900 dark:text-grey-400 dark:hover:text-grey-200"
                   title="Go to reference"
                 >
                   [1]

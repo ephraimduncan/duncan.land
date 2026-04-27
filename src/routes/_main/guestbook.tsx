@@ -40,7 +40,9 @@ function GuestbookPage() {
       <FadeIn.Item>
         {authState.user ? (
           <div className="space-y-4">
-            <h1 className="font-medium text-2xl tracking-tighter">Hello, {authState.user.name}!</h1>
+            <h1 className="text-2xl font-medium tracking-tight text-balance">
+              Hello, {authState.user.name}!
+            </h1>
             <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <SignDialog user={authState.user} />
               <SignOutButton />
@@ -48,7 +50,7 @@ function GuestbookPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <h1 className="font-medium text-2xl tracking-tighter">Sign my guestbook</h1>
+            <h1 className="text-2xl font-medium tracking-tight text-balance">Sign my guestbook</h1>
             <div className="flex flex-col gap-2 sm:flex-row">
               <SignInButton redirectTo="/guestbook" />
               <WallButton />

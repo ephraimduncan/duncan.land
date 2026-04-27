@@ -52,37 +52,37 @@ function Home() {
   return (
     <FadeIn.Container>
       <FadeIn.Item>
-        <div className="mb-4">
+        <div className="mb-4 space-y-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl">Ephraim Duncan</h1>
+            <h1 className="text-2xl font-medium tracking-tight text-balance">Ephraim Duncan</h1>
             <div className="hidden sm:block">
               <AppThemeSwitcher />
             </div>
           </div>
-          <h3 className="text-grey-400 text-lg mt-1">
+          <h2 className="text-base text-grey-500 text-balance sm:text-lg dark:text-grey-400">
             Software Engineer at{" "}
             <a
               href="http://documenso.com/?ref=ephraimduncan.com"
-              className="hover:underline cursor-pointer"
+              className="underline decoration-grey-300 underline-offset-2 hover:decoration-grey-500 dark:decoration-grey-700 dark:hover:decoration-grey-500"
             >
               Documenso
             </a>
-          </h3>
-          <div className="mt-3 sm:hidden">
+          </h2>
+          <div className="sm:hidden">
             <AppThemeSwitcher />
           </div>
         </div>
       </FadeIn.Item>
 
       <FadeIn.Item>
-        <p className="mb-2">
+        <p className="mb-2 text-pretty">
           I&apos;m a software engineer and open-source developer building polished web experiences
           with magical, unique, and delightful details. As a full-stack developer, I aim to create
           beautiful and functional software that is both intuitive and enjoyable for users.
         </p>
-        <p>
-          I have a passion for learning, and I am constantly seeking to improve my skills mostly
-          through <span className="inline-link">reading</span> and{" "}
+        <p className="text-pretty">
+          I have a passion for learning, and I am constantly seeking to improve my skills through
+          reading and{" "}
           <Link to="/blog">
             <span className="inline-link">writing</span>
           </Link>
@@ -93,8 +93,8 @@ function Home() {
       </FadeIn.Item>
       <FadeIn.Item>
         <section className="mt-10">
-          <h2 className="text-sm text-grey-400 text-balance">Projects</h2>
-          <ul className="mt-3 flex flex-col gap-3">
+          <h2 className="text-sm text-grey-500 text-balance dark:text-grey-400">Projects</h2>
+          <ul role="list" className="mt-3 flex flex-col gap-3">
             {PROJECTS.map((project) => (
               <li key={project.name}>
                 <a

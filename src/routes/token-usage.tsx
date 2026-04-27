@@ -14,7 +14,7 @@ export const Route = createFileRoute("/token-usage")({
   }),
   component: TokenUsagePage,
   errorComponent: ({ error }) => (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-dvh items-center justify-center">
       <div className="text-center font-mono text-sm">
         <Link to="/" className="text-grey-800 dark:text-grey-100">
           ←
@@ -40,7 +40,7 @@ function TokenUsagePage() {
 
   if (data.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-dvh items-center justify-center">
         <div className="text-center font-mono text-sm">
           <Link to="/" className="text-grey-800 dark:text-grey-100">
             ←
@@ -65,7 +65,7 @@ function TokenUsagePage() {
             >
               ←
             </Link>
-            <div className="font-mono text-xs text-grey-800 dark:text-grey-100">
+            <div className="font-mono text-xs tabular-nums text-grey-800 dark:text-grey-100">
               ${formatCost(totalCost)}
             </div>
           </div>

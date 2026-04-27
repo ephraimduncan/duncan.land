@@ -15,9 +15,9 @@ export const Route = createFileRoute("/_main/login")({
 
 function LoginPage() {
   return (
-    <>
-      <h1>Sign in</h1>
+    <section className="space-y-4 py-6">
+      <h1 className="text-2xl font-medium tracking-tight text-balance">Sign in</h1>
       <SignInButton redirectTo="/" />
-    </>
+    </section>
   );
 }
