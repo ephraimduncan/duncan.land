@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vp dev",
     "build": "vp build",
-    "preview": "vp preview",
+    "preview": "pnpm run build && wrangler dev",
     "start": "vp preview",
     "lint": "vp lint . && tsgo --noEmit",
     "typecheck": "tsgo --noEmit",
-    "migrate": "turso db shell portfolio-local < lib/migrations.sql"
+    "migrate": "turso db shell portfolio-local < lib/migrations.sql",
+    "deploy": "pnpm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@headlessui/react": "^2.0.4",
@@ -50,6 +52,7 @@
     "vite": "npm:@voidzero-dev/vite-plus-core@latest"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.33.2",
     "@content-collections/core": "^0.11.1",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/vite": "^0.2.9",
@@ -59,6 +62,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.3",
     "vite-plus": "latest",
+    "wrangler": "^4.85.0",
     "zod": "^4.1.5"
   },
   "packageManager": "pnpm@10.32.1",

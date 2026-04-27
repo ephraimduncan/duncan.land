@@ -6,6 +6,8 @@ import contentCollections from "@content-collections/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 export default defineConfig({
   fmt: {
     ignorePatterns: ["src/routeTree.gen.ts"],
@@ -125,14 +127,13 @@ export default defineConfig({
     contentCollections(),
     tailwindcss(),
     tanstackStart(),
-    nitro({
-      serverDir: "server",
-      rollupConfig: {
-        external: [/^better-auth/, /^@better-auth/, "better-call"],
-      },
-    }),
     // React's Vite plugin must come after TanStack Start's plugin
     viteReact(),
     babel({ presets: [reactCompilerPreset()] }),
+    cloudflare({
+      viteEnvironment: {
+        name: "ssr"
+      }
+    }),
   ],
 });
