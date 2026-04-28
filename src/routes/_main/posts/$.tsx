@@ -9,7 +9,8 @@ export const Route = createFileRoute("/_main/posts/$")({
     const slug = params["_splat"];
     const post = allPosts.find((p) => p.slugAsParams === slug);
     if (!post) throw notFound();
-    return post;
+    const { mdx: _mdx, content: _content, ...postData } = post;
+    return postData;
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
@@ -46,6 +47,8 @@ export const Route = createFileRoute("/_main/posts/$")({
 
 function PostPage() {
   const post = Route.useLoaderData();
+  const mdx = allPosts.find((p) => p.slugAsParams === post.slugAsParams)?.mdx;
+  if (!mdx) throw notFound();
 
   return (
     <FadeIn.Container>
@@ -82,7 +85,7 @@ function PostPage() {
               </p>
             </div>
           </div>
-          <Mdx code={post.body} />
+          <Mdx content={mdx} />
 
           {post.reference && (
             <div

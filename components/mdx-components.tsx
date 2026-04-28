@@ -1,6 +1,6 @@
 import { Code } from "bright";
-import { MDXContent } from "@content-collections/mdx/react";
 import React, { ClassAttributes, HTMLAttributes } from "react";
+import type { MDXContent } from "mdx/types";
 
 Code.theme = {
   dark: "github-dark",
@@ -55,9 +55,9 @@ const components = {
 };
 
 interface MdxProps {
-  code: string;
+  content: MDXContent;
 }
 
-export function Mdx({ code }: MdxProps) {
-  return <MDXContent code={code} components={components} />;
+export function Mdx({ content: Content }: MdxProps) {
+  return <Content components={components} />;
 }
