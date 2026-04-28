@@ -8,7 +8,8 @@ export const Route = createFileRoute("/_main/$")({
     const slug = params["_splat"];
     const page = allPages.find((p) => p.slugAsParams === slug);
     if (!page) throw notFound();
-    return page;
+    const { mdx: _mdx, content: _content, ...pageData } = page;
+    return pageData;
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
@@ -42,6 +43,8 @@ export const Route = createFileRoute("/_main/$")({
 
 function PagePage() {
   const page = Route.useLoaderData();
+  const mdx = allPages.find((p) => p.slugAsParams === page.slugAsParams)?.mdx;
+  if (!mdx) throw notFound();
 
   return (
     <FadeIn.Container>
@@ -54,7 +57,7 @@ function PagePage() {
         </FadeIn.Item>
 
         <FadeIn.Item>
-          <Mdx code={page.body} />
+          <Mdx content={mdx} />
         </FadeIn.Item>
       </article>
     </FadeIn.Container>

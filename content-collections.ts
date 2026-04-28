@@ -1,7 +1,5 @@
-import { defineCollection, defineConfig } from "@content-collections/core";
-import { compileMDX } from "@content-collections/mdx";
-import rehypeKatex from "rehype-katex";
-import remarkMath from "remark-math";
+import { createDefaultImport, defineCollection, defineConfig } from "@content-collections/core";
+import type { MDXContent } from "mdx/types";
 import { z } from "zod";
 
 // Computed fields helper functions
@@ -24,6 +22,9 @@ const computedFields = {
   },
 };
 
+const createMdxImport = (doc: any, collectionName: string) =>
+  createDefaultImport<MDXContent>(`@/content/${collectionName}/${doc._meta.filePath}`);
+
 // Add compatibility _raw field for migration
 const addCompatibilityFields = (doc: any) => ({
   _raw: {
@@ -43,15 +44,10 @@ export const Page = defineCollection({
     title: z.string(),
     description: z.string().optional(),
   }),
-  transform: async (doc, context) => {
-    const body = await compileMDX(context, doc, {
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    });
-
+  transform: (doc) => {
     return {
       ...doc,
-      body,
+      mdx: createMdxImport(doc, "pages"),
       slug: computedFields.slug(doc, "pages"),
       slugAsParams: computedFields.slugAsParams(doc),
       readTimeMinutes: computedFields.readTimeMinutes(doc),
@@ -73,15 +69,10 @@ export const Post = defineCollection({
     archived: z.boolean().default(false),
     reference: z.string().optional(),
   }),
-  transform: async (doc, context) => {
-    const body = await compileMDX(context, doc, {
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    });
-
+  transform: (doc) => {
     return {
       ...doc,
-      body,
+      mdx: createMdxImport(doc, "posts"),
       slug: computedFields.slug(doc, "posts"),
       slugAsParams: computedFields.slugAsParams(doc),
       readTimeMinutes: computedFields.readTimeMinutes(doc),
@@ -98,15 +89,10 @@ export const Thoughts = defineCollection({
     title: z.string(),
     date: z.string().transform((str) => new Date(str)),
   }),
-  transform: async (doc, context) => {
-    const body = await compileMDX(context, doc, {
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    });
-
+  transform: (doc) => {
     return {
       ...doc,
-      body,
+      mdx: createMdxImport(doc, "thoughts"),
       slug: computedFields.slug(doc, "thoughts"),
       slugAsParams: computedFields.slugAsParams(doc),
       readTimeMinutes: computedFields.readTimeMinutes(doc),

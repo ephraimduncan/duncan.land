@@ -1,8 +1,13 @@
 import { defineConfig } from "vite-plus";
+import mdx from "@mdx-js/rollup";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import contentCollections from "@content-collections/vite";
+import rehypeKatex from "rehype-katex";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+import remarkMath from "remark-math";
 import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 
@@ -127,11 +132,18 @@ export default defineConfig({
     noExternal: ["bright"],
   },
   plugins: [
+    {
+      enforce: "pre",
+      ...mdx({
+        remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+    },
     contentCollections(),
     tailwindcss(),
     tanstackStart(),
     // React's Vite plugin must come after TanStack Start's plugin
-    viteReact(),
+    viteReact({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
     babel({ presets: [reactCompilerPreset()] }),
     cloudflare({
       viteEnvironment: {

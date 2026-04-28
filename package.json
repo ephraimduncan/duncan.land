@@ -54,13 +54,15 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.33.2",
     "@content-collections/core": "^0.11.1",
-    "@content-collections/mdx": "^0.2.2",
     "@content-collections/vite": "^0.2.9",
+    "@mdx-js/rollup": "^3.1.1",
     "@rolldown/plugin-babel": "^0.2.0",
     "@typescript/native-preview": "latest",
     "@vitejs/plugin-react": "^6.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.2.3",
+    "remark-frontmatter": "^5.0.0",
+    "remark-mdx-frontmatter": "^5.2.0",
     "vite-plus": "latest",
     "wrangler": "^4.85.0",
     "zod": "^4.1.5"

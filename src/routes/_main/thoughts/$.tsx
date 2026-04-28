@@ -8,7 +8,8 @@ export const Route = createFileRoute("/_main/thoughts/$")({
     const slug = params["_splat"];
     const thought = allThoughts.find((t) => t.slugAsParams === slug);
     if (!thought) throw notFound();
-    return thought;
+    const { mdx: _mdx, content: _content, ...thoughtData } = thought;
+    return thoughtData;
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
@@ -35,6 +36,8 @@ export const Route = createFileRoute("/_main/thoughts/$")({
 
 function ThoughtPage() {
   const thought = Route.useLoaderData();
+  const mdx = allThoughts.find((t) => t.slugAsParams === thought.slugAsParams)?.mdx;
+  if (!mdx) throw notFound();
 
   return (
     <FadeIn.Container>
@@ -57,7 +60,7 @@ function ThoughtPage() {
             </p>
           </div>
 
-          <Mdx code={thought.body} />
+          <Mdx content={mdx} />
         </article>
       </FadeIn.Item>
     </FadeIn.Container>
