@@ -40,6 +40,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
     isViewportReady,
     onPointerDown,
     onPointerMove,
+    onWheel,
     wasDragging,
     zoomIn,
     zoomOut,
@@ -83,6 +84,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
         style={{ transformOrigin: "0 0" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
+        onWheel={onWheel}
       >
         <div
           className="relative h-screen w-screen will-change-transform"

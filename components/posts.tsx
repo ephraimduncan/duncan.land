@@ -41,7 +41,7 @@ function byDateDescending(a: PostListItem, b: PostListItem) {
 
 export const Posts = ({ category }: PostProps) => {
   const section = POST_SECTIONS[category];
-  const posts = [...section.posts].sort(byDateDescending);
+  const posts = section.posts.toSorted(byDateDescending);
 
   if (posts.length === 0) {
     return null;

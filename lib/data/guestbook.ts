@@ -50,7 +50,7 @@ export async function getGuestbookPosts(cursor: number = 0): Promise<GuestbookPo
   };
 }
 
-export async function getGuestbookCount(): Promise<number> {
+async function getGuestbookCount(): Promise<number> {
   const result = await drizzleDb.select({ count: count() }).from(post);
 
   return result[0]?.count ?? 0;

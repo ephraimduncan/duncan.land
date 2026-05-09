@@ -5,11 +5,13 @@ interface RelativeTimeProps {
 }
 
 export function RelativeTime({ date }: RelativeTimeProps) {
+  const label = formatDistance(new Date(date), new Date(), {
+    addSuffix: true,
+  });
+
   return (
-    <span className="text-sm">
-      {formatDistance(new Date(date), new Date(), {
-        addSuffix: true,
-      })}
+    <span className="text-sm" suppressHydrationWarning>
+      {label}
     </span>
   );
 }

@@ -1,21 +1,17 @@
 import { DataInteractive as HeadlessDataInteractive } from "@headlessui/react";
-import { forwardRef, type ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
 export type LinkProps = {
   children: ReactNode;
   className?: string;
   href: string;
+  ref?: ComponentPropsWithRef<"a">["ref"];
 };
 
-export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
-  { href, ...props },
-  ref,
-) {
+export function Link({ href, ref, ...props }: LinkProps) {
   return (
     <HeadlessDataInteractive>
       <a {...props} href={href} ref={ref} />
     </HeadlessDataInteractive>
   );
-});
-
-Link.displayName = "Link";
+}

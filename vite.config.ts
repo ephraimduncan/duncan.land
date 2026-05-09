@@ -12,6 +12,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 
 import { cloudflare } from "@cloudflare/vite-plugin";
+const isTest = process.env.VITEST === "true";
 
 export default defineConfig({
   fmt: {
@@ -145,10 +146,14 @@ export default defineConfig({
     // React's Vite plugin must come after TanStack Start's plugin
     viteReact({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
     babel({ presets: [reactCompilerPreset()] }),
-    cloudflare({
-      viteEnvironment: {
-        name: "ssr",
-      },
-    }),
+    ...(isTest
+      ? []
+      : [
+          cloudflare({
+            viteEnvironment: {
+              name: "ssr",
+            },
+          }),
+        ]),
   ],
 });

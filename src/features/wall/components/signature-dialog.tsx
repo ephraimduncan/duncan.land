@@ -37,7 +37,7 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
               className="inline-flex items-center gap-1 text-grey-900 hover:underline dark:text-grey-100"
             >
               @{signature.username}
-              <ExternalLink className="h-3 w-3" />
+              <ExternalLink className="size-3" />
             </a>
           </div>
         </div>

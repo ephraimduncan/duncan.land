@@ -9,8 +9,10 @@ export function requiredEnv(name: string, value: string | undefined): string {
 export function requiredEnvList(name: string, value: string | undefined): string[] {
   const items = requiredEnv(name, value)
     .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
+    .flatMap((item) => {
+      const trimmed = item.trim();
+      return trimmed ? [trimmed] : [];
+    });
 
   if (items.length === 0) {
     throw new Error(`Expected ${name} to include at least one value`);

@@ -1,11 +1,6 @@
 import { Button as HeadlessButton } from "@headlessui/react";
 import { clsx } from "clsx";
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ForwardedRef,
-  type ReactNode,
-} from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 import { Link, type LinkProps } from "./link";
 
 const styles = {
@@ -85,29 +80,22 @@ type ButtonOwnProps = {
 
 type ButtonLinkProps = ButtonOwnProps & Omit<LinkProps, "children" | "className">;
 type ButtonActionProps = ButtonOwnProps &
-  Pick<ComponentPropsWithoutRef<"button">, "disabled" | "onClick"> & {
+  Pick<ComponentPropsWithRef<"button">, "disabled" | "onClick" | "ref"> & {
     type: "button" | "submit" | "reset";
   };
 
 export type ButtonProps = ButtonLinkProps | ButtonActionProps;
 
-export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
-  { variant = "solid", className, children, ...props }: ButtonProps,
-  ref: ForwardedRef<HTMLElement>,
-) {
+export function Button({ variant = "solid", className, children, ...props }: ButtonProps) {
   const classes = clsx(className, styles.base, styles[variant]);
 
   return "href" in props ? (
-    <Link {...props} className={classes} ref={ref as ForwardedRef<HTMLAnchorElement>}>
+    <Link {...props} className={classes}>
       {children}
     </Link>
   ) : (
-    <HeadlessButton
-      {...props}
-      className={clsx(classes, "cursor-default")}
-      ref={ref as ForwardedRef<HTMLButtonElement>}
-    >
+    <HeadlessButton {...props} className={clsx(classes, "cursor-default")}>
       {children}
     </HeadlessButton>
   );
-});
+}

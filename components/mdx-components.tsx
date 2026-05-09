@@ -9,25 +9,39 @@ Code.theme = {
 };
 
 const components = {
-  Image: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img loading="lazy" {...props} />,
+  Image: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img loading="lazy" {...props} alt={props.alt ?? ""} />
+  ),
   pre: Code,
   h1: (
     props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>,
-  ) => <h1 {...props} className="text-2xl" />,
+  ) => (
+    <h1 {...props} className="text-2xl">
+      {props.children}
+    </h1>
+  ),
 
   h2: (
     props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>,
-  ) => <h2 {...props} className="text-xl font-normal my-4" />,
+  ) => (
+    <h2 {...props} className="text-xl font-normal my-4">
+      {props.children}
+    </h2>
+  ),
 
   h3: (
     props: React.JSX.IntrinsicAttributes &
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>,
-  ) => <h3 {...props} className="text-lg font-normal my-4" />,
+  ) => (
+    <h3 {...props} className="text-lg font-normal my-4">
+      {props.children}
+    </h3>
+  ),
 
   em: (
     props: React.JSX.IntrinsicAttributes &

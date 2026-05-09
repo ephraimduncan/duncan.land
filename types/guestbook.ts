@@ -1,4 +1,4 @@
-export interface GuestbookAuthor {
+interface GuestbookAuthor {
   username: string;
   name: string | null;
 }
@@ -36,7 +36,7 @@ export interface SignGuestbookResponse {
   message: string;
 }
 
-export type ApiErrorCode =
+type ApiErrorCode =
   | "ALREADY_SIGNED"
   | "INVALID_CURSOR"
   | "INVALID_INPUT"
