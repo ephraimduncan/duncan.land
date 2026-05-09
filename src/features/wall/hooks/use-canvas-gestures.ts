@@ -4,7 +4,7 @@ import {
   useRef,
   type Dispatch,
   type PointerEvent as ReactPointerEvent,
-  type RefObject,
+  type WheelEvent as ReactWheelEvent,
   type SetStateAction,
 } from "react";
 
@@ -44,7 +44,6 @@ interface IdleGestureState {
 type GestureState = IdleGestureState | PanDragState | PinchGestureState;
 
 interface UseCanvasGesturesOptions {
-  canvasRef: RefObject<HTMLDivElement | null>;
   panRef: { current: Point };
   scaleRef: { current: number };
   setPan: Dispatch<SetStateAction<Point>>;
@@ -60,7 +59,6 @@ function assertUnknownGesture(gesture: never): never {
 }
 
 export function useCanvasGestures({
-  canvasRef,
   panRef,
   scaleRef,
   setPan,
@@ -184,12 +182,9 @@ export function useCanvasGestures({
     [scaleRef, startPanGesture],
   );
 
-  useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-      const canvasElement = canvasRef.current;
-
-      if (!canvasElement) return;
-
+  const handleCanvasWheel = useCallback(
+    (event: ReactWheelEvent<HTMLDivElement>) => {
+      const canvasElement = event.currentTarget;
       const bounds = canvasElement.getBoundingClientRect();
 
       const isInsideCanvas =
@@ -216,8 +211,11 @@ export function useCanvasGestures({
           y: panRef.current.y - event.deltaY,
         });
       }
-    };
+    },
+    [panRef, scaleRef, setScaleAtPoint, schedulePanUpdate],
+  );
 
+  useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
       const gesture = gestureRef.current;
 
@@ -281,16 +279,15 @@ export function useCanvasGestures({
       assertUnknownGesture(gesture);
     };
 
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    window.addEventListener("wheel", handleWheel, { passive: false, signal });
-    window.addEventListener("pointermove", handlePointerMove, { signal });
-    window.addEventListener("pointerup", handlePointerUp, { signal });
-    window.addEventListener("pointercancel", handlePointerUp, { signal });
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
 
     return () => {
-      controller.abort();
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+
       if (panRafRef.current !== null) {
         cancelAnimationFrame(panRafRef.current);
         panRafRef.current = null;
@@ -298,7 +295,7 @@ export function useCanvasGestures({
 
       pendingPanRef.current = null;
     };
-  }, [canvasRef, panRef, scaleRef, finishGesture, setScaleAtPoint, schedulePanUpdate]);
+  }, [finishGesture, setScaleAtPoint, schedulePanUpdate]);
 
   const wasDragging = useCallback(() => {
     return Date.now() - lastDragEndRef.current < RECENT_DRAG_WINDOW_MS;
@@ -307,6 +304,7 @@ export function useCanvasGestures({
   return {
     onPointerDown: handleCanvasPointerDown,
     onPointerMove: handleCanvasPointerMove,
+    onWheel: handleCanvasWheel,
     wasDragging,
   };
 }

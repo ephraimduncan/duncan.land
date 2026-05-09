@@ -72,7 +72,7 @@ function PostPage() {
 
             <div className="flex gap-x-2">
               <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
-                {new Date(post.date).toLocaleDateString("en-US", {
+                {post.date.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",

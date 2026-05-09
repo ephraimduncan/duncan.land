@@ -6,7 +6,7 @@ import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
 import { signatureApi, SignatureUploadError } from "@/lib/api/signature";
 import type { User } from "@/lib/auth";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 
@@ -18,7 +18,7 @@ interface SignDialogProps {
 export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [signature, setSignature] = useState<string | null>(null);
+  const signatureRef = useRef<string | null>(null);
   const [showMessageError, setShowMessageError] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
 
@@ -33,7 +33,7 @@ export function SignDialog({ user }: SignDialogProps) {
 
   function resetForm() {
     setMessage("");
-    setSignature(null);
+    signatureRef.current = null;
     setShowMessageError(false);
   }
 
@@ -64,9 +64,9 @@ export function SignDialog({ user }: SignDialogProps) {
     try {
       let signatureUrl: string | null = null;
 
-      if (signature) {
+      if (signatureRef.current) {
         setSubmitState("uploading-signature");
-        signatureUrl = await signatureApi.upload(signature);
+        signatureUrl = await signatureApi.upload(signatureRef.current);
       }
 
       setSubmitState("signing");
@@ -116,7 +116,9 @@ export function SignDialog({ user }: SignDialogProps) {
               <Label>Sign Here</Label>
               <SignaturePad
                 className="aspect-video h-40 mt-2 w-full rounded-lg border border-grey-950/10 bg-transparent shadow-xs dark:border-black/10 dark:bg-black/5 dark:shadow-none"
-                onChange={setSignature}
+                onChange={(value) => {
+                  signatureRef.current = value;
+                }}
               />
             </Field>
           </DialogBody>

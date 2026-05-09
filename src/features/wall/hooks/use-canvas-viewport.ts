@@ -20,8 +20,7 @@ export default function useCanvasViewport() {
       setPan,
     });
 
-  const { onPointerDown, onPointerMove, wasDragging } = useCanvasGestures({
-    canvasRef,
+  const { onPointerDown, onPointerMove, onWheel, wasDragging } = useCanvasGestures({
     panRef,
     scaleRef,
     setPan,
@@ -41,6 +40,7 @@ export default function useCanvasViewport() {
     isViewportReady,
     onPointerDown,
     onPointerMove,
+    onWheel,
     wasDragging,
     zoomIn,
     zoomOut,

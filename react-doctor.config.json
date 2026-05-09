@@ -1,0 +1,5 @@
+{
+  "ignore": {
+    "files": ["content-collections.ts", "server/middleware/honeypot.ts", "**/*.test.ts"]
+  }
+}

@@ -11,7 +11,7 @@ export function PostCard({ post }: PostCardProps) {
   const signedAt = formatter.dateTimeUtc(new Date(post.created_at));
 
   return (
-    <Card className="rounded-lg flex flex-col justify-between space-y-3 h-full">
+    <Card className="rounded-lg flex flex-col justify-between gap-y-3 h-full">
       <p className="leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
 
       <div className="mt-auto flex items-center justify-between">

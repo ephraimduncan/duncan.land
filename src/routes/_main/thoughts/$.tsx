@@ -46,16 +46,16 @@ function ThoughtPage() {
           <h1 className="mb-2 font-medium text-2xl">{thought.title}</h1>
 
           <div className="flex gap-x-2">
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
-              {new Date(thought.date).toLocaleDateString("en-US", {
+            <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
+              {thought.date.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
             </p>
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">•</p>
+            <p className="text-base mt-0 text-grey-700 dark:text-grey-200">•</p>
 
-            <p className="text-base mt-0 text-slate-700 dark:text-slate-200">
+            <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
               {thought.readTimeMinutes}
             </p>
           </div>

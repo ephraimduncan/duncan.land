@@ -89,8 +89,8 @@ export function computeSignatureLayout(signatures: GuestbookSignature[]): Signat
     };
   });
 
-  const revealOrder = [...positions]
-    .sort((a, b) => {
+  const revealOrder = positions
+    .toSorted((a, b) => {
       const distA = a.x * a.x + a.y * a.y;
       const distB = b.x * b.x + b.y * b.y;
       return distA - distB;

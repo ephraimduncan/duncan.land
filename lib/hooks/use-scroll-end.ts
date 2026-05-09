@@ -1,21 +1,27 @@
-import { type DependencyList, type RefObject, useCallback, useEffect } from "react";
+import { type DependencyList, type RefObject, useEffect, useRef } from "react";
 
 export function useScrollEnd(
   callback: () => void,
   target: RefObject<HTMLDivElement | null>,
   deps: DependencyList = [],
 ) {
+  const callbackRef = useRef(callback);
+
   // oxlint-disable-next-line react-hooks/exhaustive-deps
-  const stableCallback = useCallback(callback, deps);
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, deps);
 
   useEffect(() => {
     const el = target.current;
     if (!el) {
       return;
     }
-    el.addEventListener("scrollend", stableCallback);
+
+    const handleScrollEnd = () => callbackRef.current();
+    el.addEventListener("scrollend", handleScrollEnd);
     return () => {
-      el.removeEventListener("scrollend", stableCallback);
+      el.removeEventListener("scrollend", handleScrollEnd);
     };
-  }, [target, stableCallback]);
+  }, [target]);
 }
