@@ -1,4 +1,5 @@
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fephraimduncan%2Fduncan.land)
+[![Deploy to PandaStack](https://dashboard.pandastack.io/deploy-button.svg)](https://dashboard.pandastack.io/deploy?repo=ephraimduncan/duncan.land&type=static&buildCmd=npm+run+build&outputDir=dist)
 
 # duncan.land
 
