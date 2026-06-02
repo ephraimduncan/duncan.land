@@ -487,6 +487,8 @@ function formatCost(cost: number) {
 }
 
 const MODEL_DISPLAY_NAMES: Record<string, string> = {
+  "claude-opus-4-8": "Opus 4.8",
+  "claude-opus-4-7": "Opus 4.7",
   "claude-opus-4-6": "Opus 4.6",
   "claude-opus-4-5": "Opus 4.5",
   "claude-sonnet-4-6": "Sonnet 4.6",
@@ -528,6 +530,7 @@ function getModelIcon(modelId: string): ModelIconComponent | null {
 
 function formatFallbackModelName(modelId: string) {
   return modelId
+    .replace(/(\d)-(\d)/g, "$1.$2")
     .split("-")
     .map((part) => {
       if (part === "gpt" || part === "glm") return part.toUpperCase();
