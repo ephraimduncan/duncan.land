@@ -1,6 +1,14 @@
 import * as React from "react";
 import type { MotionValue } from "motion/react";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
+import {
+  AnimatePresence,
+  LazyMotion,
+  domAnimation,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from "motion/react";
+import * as m from "motion/react-m";
 import clsx from "clsx";
 import * as Icons from "./icons";
 import type { UsageDay } from "./data";
@@ -9,18 +17,18 @@ import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useIsHydrated } from "@/lib/hooks/use-is-hydrated";
 import { sounds } from "@/lib/sounds";
 
-export const CURSOR_SIZE = 44;
-export const CURSOR_CENTER = CURSOR_SIZE / 2;
-export const CURSOR_WIDTH = 2;
-export const CURSOR_LARGE_HEIGHT = 380;
-export const LINE_GAP = 10;
-export const LINE_WIDTH = 1;
-export const LINE_STEP = LINE_GAP + LINE_WIDTH;
-export const POINTER_SPRING = { stiffness: 500, damping: 40 };
+const CURSOR_SIZE = 44;
+const CURSOR_CENTER = CURSOR_SIZE / 2;
+const CURSOR_WIDTH = 2;
+const CURSOR_LARGE_HEIGHT = 380;
+const LINE_GAP = 10;
+const LINE_WIDTH = 1;
+const LINE_STEP = LINE_GAP + LINE_WIDTH;
+const POINTER_SPRING = { stiffness: 500, damping: 40 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export interface GraphContext {
+interface GraphContext {
   morph: boolean;
   idle: boolean;
   activeIndex: number | null;
@@ -35,7 +43,7 @@ export interface GraphContext {
 }
 
 const GraphContext = React.createContext<GraphContext>({} as GraphContext);
-export const useGraph = () => React.useContext(GraphContext);
+const useGraph = () => React.use(GraphContext);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -176,39 +184,45 @@ export default function TokenUsageGraph({ data }: { data: UsageDay[] }) {
   );
 
   return (
-    <Provider
-      ref={rootRef}
-      onPointerMove={onPointerMove}
-      onPointerDown={onPointerDown}
-      onPointerUp={() => setPressed(false)}
-      value={context}
-    >
-      <Lines ref={boundsRef} maxCost={maxCost} />
-      <Cursor>
-        <AnimatePresence mode="sync">
-          <Label key={String(morph) + "date"} position="bottom">
-            {activeDate}
-          </Label>
-          {activeDay && (
-            <motion.div
-              key="meta"
-              {...blur}
-              className="absolute bottom-full left-[50%] mb-4 flex translate-x-[-50%] flex-col"
-            >
-              {activeDay.clients.map((client, index) => (
-                <Meta key={`client-${index}`} modelId={client.modelId} cost={client.cost} />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Cursor>
-    </Provider>
+    <LazyMotion features={domAnimation}>
+      <Provider
+        ref={rootRef}
+        onPointerMove={onPointerMove}
+        onPointerDown={onPointerDown}
+        onPointerUp={() => setPressed(false)}
+        value={context}
+      >
+        <Lines ref={boundsRef} maxCost={maxCost} />
+        <Cursor>
+          <AnimatePresence mode="sync">
+            <Label key={String(morph) + "date"} position="bottom">
+              {activeDate}
+            </Label>
+            {activeDay && (
+              <m.div
+                key="meta"
+                {...blur}
+                className="absolute bottom-full left-[50%] mb-4 flex translate-x-[-50%] flex-col"
+              >
+                {activeDay.clients.map((client) => (
+                  <Meta
+                    key={`${activeDay.date}-${client.modelId}`}
+                    modelId={client.modelId}
+                    cost={client.cost}
+                  />
+                ))}
+              </m.div>
+            )}
+          </AnimatePresence>
+        </Cursor>
+      </Provider>
+    </LazyMotion>
   );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Provider({
+function Provider({
   children,
   ref,
   value,
@@ -242,7 +256,7 @@ export function Provider({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Lines({
+function Lines({
   children,
   className,
   style,
@@ -293,7 +307,7 @@ export function Lines({
     >
       {data.map((day, i) => {
         const isFirstOfMonth = i === 0 || getMonth(day.date) !== getMonth(data[i - 1]!.date);
-        const clients = [...day.clients].sort((a, b) => b.cost - a.cost);
+        const clients = day.clients.toSorted((a, b) => b.cost - a.cost);
         const height = getHeightFromCost(day.cost, maxCost);
 
         return (
@@ -314,9 +328,9 @@ export function Lines({
                 style={{ height }}
               />
             ) : (
-              clients.map((client, index) => (
+              clients.map((client) => (
                 <div
-                  key={`${day.date}-${client.modelId}-${index}`}
+                  key={`${day.date}-${client.modelId}`}
                   data-highlight={isFirstOfMonth}
                   className="bg-grey-950 dark:bg-grey-100 w-full rounded-none"
                   style={{ height: getHeightFromCost(client.cost, maxCost) }}
@@ -339,7 +353,7 @@ export function Lines({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Cursor({
+function Cursor({
   children,
   className,
   style,
@@ -352,7 +366,7 @@ export function Cursor({
   const { x, y, morph, isTouch } = useGraph();
   if (!isHydrated) return null;
   return (
-    <motion.div
+    <m.div
       initial={false}
       className={clsx(
         "bg-grey-400 dark:bg-grey-500 pointer-events-none fixed rounded-full [--label-offset:-36px]",
@@ -370,13 +384,13 @@ export function Cursor({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Label({
+function Label({
   children,
   position,
   ...props
@@ -385,7 +399,7 @@ export function Label({
   position: "top" | "bottom";
 }) {
   return (
-    <motion.div
+    <m.div
       className={clsx(
         "text-grey-500 dark:text-grey-400 pointer-events-none absolute left-[50%] w-fit -translate-x-1/2 font-mono text-[13px] whitespace-nowrap select-none",
         {
@@ -397,13 +411,13 @@ export function Label({
       {...props}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function Meta({ modelId, cost }: { modelId: string; cost: number }) {
+function Meta({ modelId, cost }: { modelId: string; cost: number }) {
   const Icon = getModelIcon(modelId);
 
   return (
@@ -416,13 +430,13 @@ export function Meta({ modelId, cost }: { modelId: string; cost: number }) {
       <div className="font-mono text-sm whitespace-nowrap select-none">
         {getModelDisplayName(modelId)}
       </div>
-      <div aria-hidden className="bg-grey-300 dark:bg-grey-600 h-1 w-1 shrink-0 rounded-full" />
+      <div aria-hidden className="bg-grey-300 dark:bg-grey-600 size-1 shrink-0 rounded-full" />
       <div className="font-mono text-sm whitespace-nowrap select-none">{formatCost(cost)}</div>
     </div>
   );
 }
 
-export const blur = {
+const blur = {
   initial: {
     opacity: 0,
     filter: "blur(4px)",

@@ -38,7 +38,7 @@ const defaultOptions: DefaultOptions = {
   },
 };
 
-export function createQueryClient(): QueryClient {
+function createQueryClient(): QueryClient {
   return new QueryClient({ defaultOptions });
 }
 

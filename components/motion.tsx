@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+import { LazyMotion, domAnimation } from "motion/react";
+import * as m from "motion/react-m";
 
 const container = {
   hidden: {},
@@ -37,14 +38,16 @@ interface ContainerProps {
 
 function Container({ children, className }: ContainerProps) {
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className={className}>
-      {children}
-    </motion.div>
+    <LazyMotion features={domAnimation}>
+      <m.div variants={container} initial="hidden" animate="show" className={className}>
+        {children}
+      </m.div>
+    </LazyMotion>
   );
 }
 
 function Item({ children }: { children: React.ReactNode }) {
-  return <motion.div variants={item}>{children}</motion.div>;
+  return <m.div variants={item}>{children}</m.div>;
 }
 
 export { Container, Item };

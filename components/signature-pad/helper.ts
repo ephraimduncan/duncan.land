@@ -1,4 +1,4 @@
-export const average = (a: number, b: number) => (a + b) / 2;
+const average = (a: number, b: number) => (a + b) / 2;
 
 export const getSvgPathFromStroke = (points: number[][]) => {
   const len = points.length;

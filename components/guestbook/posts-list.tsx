@@ -31,7 +31,7 @@ export function PostsList({ initialPosts }: PostsListProps) {
   if (guestbookPosts.status === "pending") {
     return (
       <div className="flex justify-center py-8">
-        <Loader className="h-6 w-6 animate-spin" />
+        <Loader className="size-6 animate-spin" />
       </div>
     );
   }
@@ -69,8 +69,8 @@ export function PostsList({ initialPosts }: PostsListProps) {
           <Button disabled={isFetchingNextPage} type="button">
             {isFetchingNextPage ? (
               <>
-                <Loader className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
+                <Loader className="mr-2 size-4 animate-spin" />
+                Loading…
               </>
             ) : (
               "Load More"

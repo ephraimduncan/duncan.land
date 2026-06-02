@@ -1,4 +1,4 @@
-export interface UsageClient {
+interface UsageClient {
   client: string;
   modelId: string;
   providerId: string;
