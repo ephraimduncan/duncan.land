@@ -16,7 +16,7 @@ const isTest = process.env.VITEST === "true";
 
 export default defineConfig({
   fmt: {
-    ignorePatterns: ["src/routeTree.gen.ts"],
+    ignorePatterns: ["src/routeTree.gen.ts", "worker-configuration.d.ts"],
   },
   test: {
     passWithNoTests: true,

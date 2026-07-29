@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { put } from "@vercel/blob";
+import { env } from "cloudflare:workers";
 import { auth as betterAuth } from "@/lib/auth";
 
 const pngDataUrlPrefix = "data:image/png;base64,";
@@ -51,11 +51,11 @@ export const Route = createFileRoute("/api/signature/upload")({
 
         try {
           const buffer = Buffer.from(base64Data, "base64");
-          const blob = await put(`signatures/${session.user.id}-${Date.now()}.png`, buffer, {
-            access: "public",
-            contentType: "image/png",
+          const key = `${session.user.id}-${Date.now()}.png`;
+          await env.SIGNATURES.put(key, buffer, {
+            httpMetadata: { contentType: "image/png" },
           });
-          return Response.json({ url: blob.url });
+          return Response.json({ url: `https://signatures.duncan.land/${key}` });
         } catch (error) {
           console.error("[SIGNATURE_UPLOAD]", error);
           return Response.json(

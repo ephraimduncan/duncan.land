@@ -11,6 +11,12 @@
   "limits": {
     "cpu_ms": 30000,
   },
+  "r2_buckets": [
+    {
+      "binding": "SIGNATURES",
+      "bucket_name": "duncan-land-signatures",
+    },
+  ],
   "routes": [
     {
       "pattern": "ephraimduncan.com",
