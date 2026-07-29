@@ -19,7 +19,7 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
       <DialogTitle>{displayName}</DialogTitle>
       <DialogBody>
         <div className="space-y-4">
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-grey-200 bg-grey-50 dark:border-grey-800 dark:bg-grey-900">
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-separator bg-grey-50 dark:bg-grey-900">
             <img
               src={signature.signature}
               alt={`Signature by ${displayName}`}
@@ -28,7 +28,7 @@ export function SignatureDialog({ signature, onClose }: SignatureDialogProps) {
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm text-grey-600 dark:text-grey-400">
+          <div className="flex items-center justify-between text-sm text-foreground-muted">
             <span>Signed {formattedDate}</span>
             <a
               href={githubUrl}

@@ -1,14 +1,8 @@
 .wall-root {
   position: fixed;
   inset: 0;
-  background: var(--grey4);
+  background: var(--surface);
   overflow: hidden;
-}
-
-#__next:has(.wall-root) {
-  --fade-opacity: 0;
-  --fade-backdrop-filter: none;
-  --fade-mask: none;
 }
 
 .signature-element {

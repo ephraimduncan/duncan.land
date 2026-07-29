@@ -16,7 +16,6 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
 import { Route as ApiGuestbookRouteImport } from './routes/api/guestbook'
-import { Route as MainTalksRouteImport } from './routes/_main/talks'
 import { Route as MainLoginRouteImport } from './routes/_main/login'
 import { Route as MainGuestbookRouteImport } from './routes/_main/guestbook'
 import { Route as MainBlogRouteImport } from './routes/_main/blog'
@@ -62,11 +61,6 @@ const ApiGuestbookRoute = ApiGuestbookRouteImport.update({
   id: '/api/guestbook',
   path: '/api/guestbook',
   getParentRoute: () => rootRouteImport,
-} as any)
-const MainTalksRoute = MainTalksRouteImport.update({
-  id: '/talks',
-  path: '/talks',
-  getParentRoute: () => MainRoute,
 } as any)
 const MainLoginRoute = MainLoginRouteImport.update({
   id: '/login',
@@ -135,7 +129,6 @@ export interface FileRoutesByFullPath {
   '/blog': typeof MainBlogRoute
   '/guestbook': typeof MainGuestbookRoute
   '/login': typeof MainLoginRoute
-  '/talks': typeof MainTalksRoute
   '/api/guestbook': typeof ApiGuestbookRouteWithChildren
   '/posts/$': typeof MainPostsSplatRoute
   '/thoughts/$': typeof MainThoughtsSplatRoute
@@ -154,7 +147,6 @@ export interface FileRoutesByTo {
   '/blog': typeof MainBlogRoute
   '/guestbook': typeof MainGuestbookRoute
   '/login': typeof MainLoginRoute
-  '/talks': typeof MainTalksRoute
   '/api/guestbook': typeof ApiGuestbookRouteWithChildren
   '/': typeof MainIndexRoute
   '/posts/$': typeof MainPostsSplatRoute
@@ -176,7 +168,6 @@ export interface FileRoutesById {
   '/_main/blog': typeof MainBlogRoute
   '/_main/guestbook': typeof MainGuestbookRoute
   '/_main/login': typeof MainLoginRoute
-  '/_main/talks': typeof MainTalksRoute
   '/api/guestbook': typeof ApiGuestbookRouteWithChildren
   '/_main/': typeof MainIndexRoute
   '/_main/posts/$': typeof MainPostsSplatRoute
@@ -199,7 +190,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/guestbook'
     | '/login'
-    | '/talks'
     | '/api/guestbook'
     | '/posts/$'
     | '/thoughts/$'
@@ -218,7 +208,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/guestbook'
     | '/login'
-    | '/talks'
     | '/api/guestbook'
     | '/'
     | '/posts/$'
@@ -239,7 +228,6 @@ export interface FileRouteTypes {
     | '/_main/blog'
     | '/_main/guestbook'
     | '/_main/login'
-    | '/_main/talks'
     | '/api/guestbook'
     | '/_main/'
     | '/_main/posts/$'
@@ -311,13 +299,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/guestbook'
       preLoaderRoute: typeof ApiGuestbookRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_main/talks': {
-      id: '/_main/talks'
-      path: '/talks'
-      fullPath: '/talks'
-      preLoaderRoute: typeof MainTalksRouteImport
-      parentRoute: typeof MainRoute
     }
     '/_main/login': {
       id: '/_main/login'
@@ -405,7 +386,6 @@ interface MainRouteChildren {
   MainBlogRoute: typeof MainBlogRoute
   MainGuestbookRoute: typeof MainGuestbookRoute
   MainLoginRoute: typeof MainLoginRoute
-  MainTalksRoute: typeof MainTalksRoute
   MainIndexRoute: typeof MainIndexRoute
   MainPostsSplatRoute: typeof MainPostsSplatRoute
   MainThoughtsSplatRoute: typeof MainThoughtsSplatRoute
@@ -418,7 +398,6 @@ const MainRouteChildren: MainRouteChildren = {
   MainBlogRoute: MainBlogRoute,
   MainGuestbookRoute: MainGuestbookRoute,
   MainLoginRoute: MainLoginRoute,
-  MainTalksRoute: MainTalksRoute,
   MainIndexRoute: MainIndexRoute,
   MainPostsSplatRoute: MainPostsSplatRoute,
   MainThoughtsSplatRoute: MainThoughtsSplatRoute,

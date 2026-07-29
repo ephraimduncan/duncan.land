@@ -244,7 +244,7 @@ function Provider({
         }
       }}
       className={clsx(
-        "mx-auto flex min-h-dvh items-center justify-center overflow-y-hidden px-48",
+        "mx-auto flex min-h-dvh items-center justify-center overflow-y-hidden px-6 sm:px-12 lg:px-48",
         className,
       )}
       {...props}
@@ -401,7 +401,7 @@ function Label({
   return (
     <m.div
       className={clsx(
-        "text-grey-500 dark:text-grey-400 pointer-events-none absolute left-[50%] w-fit -translate-x-1/2 font-mono text-[13px] whitespace-nowrap select-none",
+        "text-foreground-subtle pointer-events-none absolute left-[50%] w-fit -translate-x-1/2 font-mono text-[13px] whitespace-nowrap select-none",
         {
           "top-[--label-offset]": position === "top",
           "top-full mt-3": position === "bottom",

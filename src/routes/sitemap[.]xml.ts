@@ -13,7 +13,6 @@ function buildSitemapXml(): string {
     { loc: `${BASE_URL}/blog`, lastmod: now, changefreq: "weekly", priority: 0.8 },
     { loc: `${BASE_URL}/archive`, lastmod: now, changefreq: "monthly", priority: 0.5 },
     { loc: `${BASE_URL}/thoughts`, lastmod: now, changefreq: "weekly", priority: 0.8 },
-    { loc: `${BASE_URL}/talks`, lastmod: now, changefreq: "monthly", priority: 0.6 },
     { loc: `${BASE_URL}/guestbook`, lastmod: now, changefreq: "daily", priority: 0.7 },
     { loc: `${BASE_URL}/wall`, lastmod: now, changefreq: "daily", priority: 0.6 },
   );

@@ -18,7 +18,7 @@ const components = {
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>,
   ) => (
-    <h1 {...props} className="text-2xl">
+    <h1 {...props} className="text-xl font-semibold mt-10 mb-3">
       {props.children}
     </h1>
   ),
@@ -28,7 +28,7 @@ const components = {
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>,
   ) => (
-    <h2 {...props} className="text-xl font-normal my-4">
+    <h2 {...props} className="text-lg font-semibold mt-8 mb-2">
       {props.children}
     </h2>
   ),
@@ -38,9 +38,39 @@ const components = {
       ClassAttributes<HTMLHeadingElement> &
       HTMLAttributes<HTMLHeadingElement>,
   ) => (
-    <h3 {...props} className="text-lg font-normal my-4">
+    <h3 {...props} className="text-base font-semibold mt-6 mb-2">
       {props.children}
     </h3>
+  ),
+
+  h4: (
+    props: React.JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLHeadingElement> &
+      HTMLAttributes<HTMLHeadingElement>,
+  ) => (
+    <h4 {...props} className="text-base font-medium mt-6 mb-2">
+      {props.children}
+    </h4>
+  ),
+
+  h5: (
+    props: React.JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLHeadingElement> &
+      HTMLAttributes<HTMLHeadingElement>,
+  ) => (
+    <h5 {...props} className="text-sm font-medium mt-6 mb-2">
+      {props.children}
+    </h5>
+  ),
+
+  h6: (
+    props: React.JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLHeadingElement> &
+      HTMLAttributes<HTMLHeadingElement>,
+  ) => (
+    <h6 {...props} className="text-sm font-medium mt-6 mb-2">
+      {props.children}
+    </h6>
   ),
 
   em: (

@@ -12,6 +12,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  scrollbar-gutter: stable;
+}
+
 :root {
   --font-kaisei: "Kaisei Tokumin", serif;
   --font-newsreader: "Newsreader", serif;
@@ -36,6 +40,41 @@
   --color-grey-800: #3c3633;
   --color-grey-900: #342f2d;
   --color-grey-950: #1c1917;
+}
+
+:root {
+  --surface: #f7f6f6; /* grey-50 */
+  --surface-raised: #ffffff;
+  --separator: #cdc5c2; /* grey-200 */
+  --foreground: #3c3633; /* grey-800 */
+  --foreground-secondary: #48423d; /* grey-700 */
+  --foreground-muted: #584e49; /* grey-600 */
+  --foreground-subtle: #70615c; /* grey-500 */
+  --accent: #3b82f6; /* blue-500 */
+  --danger: #ef4444; /* red-500 */
+}
+
+.dark {
+  --surface: #1c1917; /* grey-950 */
+  --surface-raised: #342f2d; /* grey-900 */
+  --separator: #3c3633; /* grey-800 */
+  --foreground: #e6e2e1; /* grey-100 */
+  --foreground-secondary: #cdc5c2; /* grey-200 */
+  --foreground-muted: #aca19c; /* grey-300 */
+  --foreground-subtle: #aca19c; /* grey-300 */
+  --danger: #dc2626; /* red-600 */
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-separator: var(--separator);
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
 }
 
 /*

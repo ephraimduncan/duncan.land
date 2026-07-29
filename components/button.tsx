@@ -12,10 +12,13 @@ const styles = {
     "px-[calc(--spacing(3.5)-1px)] py-[calc(--spacing(2.5)-1px)] sm:px-[calc(--spacing(3)-1px)] sm:py-[calc(--spacing(1.5)-1px)] sm:text-sm/6",
 
     // Focus
-    "focus:outline-hidden data-focus:outline-solid data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-blue-500",
+    "focus:outline-hidden data-focus:outline-solid data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-accent",
 
     // Disabled
     "data-disabled:opacity-50",
+
+    // Press feedback
+    "transition-[scale] duration-150 ease-out data-active:scale-[0.97]",
 
     // Icon
     "*:data-[slot=icon]:-mx-0.5 *:data-[slot=icon]:my-0.5 *:data-[slot=icon]:size-5 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-(--btn-icon) sm:*:data-[slot=icon]:my-1 sm:*:data-[slot=icon]:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:data-hover:[--btn-icon:ButtonText]",
@@ -57,18 +60,18 @@ const styles = {
     // Default color
     "text-grey-950 [--btn-bg:white] [--btn-border:var(--color-grey-950)]/10 [--btn-hover-overlay:var(--color-grey-950)]/2.5 data-active:[--btn-border:var(--color-grey-950)]/15 data-hover:[--btn-border:var(--color-grey-950)]/15",
     "dark:text-white dark:[--btn-hover-overlay:var(--color-white)]/5 dark:[--btn-bg:var(--color-grey-800)]",
-    "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-500)] dark:data-active:[--btn-icon:var(--color-grey-400)] dark:data-hover:[--btn-icon:var(--color-grey-400)]",
+    "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-300)] dark:data-active:[--btn-icon:var(--color-grey-200)] dark:data-hover:[--btn-icon:var(--color-grey-200)]",
   ],
 
   plain: [
     // Base
-    "border-transparent text-zinc-950 data-active:bg-zinc-950/5 data-hover:bg-zinc-950/5",
+    "border-transparent text-grey-950 data-active:bg-grey-950/5 data-hover:bg-grey-950/5",
 
     // Dark mode
     "dark:text-white dark:data-active:bg-white/10 dark:data-hover:bg-white/10",
 
     // Icon
-    "[--btn-icon:var(--color-zinc-500)] data-active:[--btn-icon:var(--color-zinc-700)] data-hover:[--btn-icon:var(--color-zinc-700)] dark:[--btn-icon:var(--color-zinc-500)] dark:data-active:[--btn-icon:var(--color-zinc-400)] dark:data-hover:[--btn-icon:var(--color-zinc-400)]",
+    "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-300)] dark:data-active:[--btn-icon:var(--color-grey-200)] dark:data-hover:[--btn-icon:var(--color-grey-200)]",
   ],
 };
 
@@ -94,7 +97,7 @@ export function Button({ variant = "solid", className, children, ...props }: But
       {children}
     </Link>
   ) : (
-    <HeadlessButton {...props} className={clsx(classes, "cursor-default")}>
+    <HeadlessButton {...props} className={classes}>
       {children}
     </HeadlessButton>
   );

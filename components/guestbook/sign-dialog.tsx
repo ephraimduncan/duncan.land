@@ -1,6 +1,6 @@
 import { Button } from "@/components/button";
 import { Dialog, DialogActions, DialogBody, DialogTitle } from "@/components/dialog";
-import { Field, Label } from "@/components/fieldset";
+import { ErrorMessage, Field, Label } from "@/components/fieldset";
 import { SignaturePad } from "@/components/signature-pad";
 import { Textarea } from "@/components/textarea";
 import { useSignGuestbook } from "@/lib/hooks/use-guestbook";
@@ -19,6 +19,7 @@ export function SignDialog({ user }: SignDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const signatureRef = useRef<string | null>(null);
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
   const [showMessageError, setShowMessageError] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
 
@@ -26,10 +27,10 @@ export function SignDialog({ user }: SignDialogProps) {
   const isSubmitting = submitState !== "idle";
   const submitLabel =
     submitState === "uploading-signature"
-      ? "Uploading signature..."
+      ? "Uploading signature…"
       : submitState === "signing"
-        ? "Signing..."
-        : "Sign";
+        ? "Signing guestbook…"
+        : "Sign guestbook";
 
   function resetForm() {
     setMessage("");
@@ -57,7 +58,7 @@ export function SignDialog({ user }: SignDialogProps) {
 
     if (!trimmedMessage) {
       setShowMessageError(true);
-      toast.error("Please enter a message");
+      messageRef.current?.focus();
       return;
     }
 
@@ -93,34 +94,40 @@ export function SignDialog({ user }: SignDialogProps) {
   return (
     <>
       <Button type="button" onClick={() => setIsOpen(true)}>
-        Sign guestbook
+        Sign the guestbook
       </Button>
 
       <Dialog open={isOpen} onClose={isSubmitting ? () => {} : closeDialog} size="lg">
         <form onSubmit={handleSubmit}>
-          <DialogTitle>Sign my guestbook</DialogTitle>
+          <DialogTitle>Sign the guestbook</DialogTitle>
 
           <DialogBody className="space-y-4">
             <Field>
               <Label>Leave a message</Label>
               <Textarea
+                ref={messageRef}
                 invalid={showMessageError}
                 rows={3}
                 value={message}
                 onChange={(e) => handleMessageChange(e.target.value)}
                 maxLength={500}
               />
+              {showMessageError ? (
+                <ErrorMessage>Enter a message before signing.</ErrorMessage>
+              ) : null}
             </Field>
 
-            <Field>
-              <Label>Sign Here</Label>
+            <div>
+              <p className="select-none text-base/6 font-medium text-grey-950 sm:text-sm/6 dark:text-white">
+                Draw your signature
+              </p>
               <SignaturePad
                 className="aspect-video h-40 mt-2 w-full rounded-lg border border-grey-950/10 bg-transparent shadow-xs dark:border-black/10 dark:bg-black/5 dark:shadow-none"
                 onChange={(value) => {
                   signatureRef.current = value;
                 }}
               />
-            </Field>
+            </div>
           </DialogBody>
 
           <DialogActions>

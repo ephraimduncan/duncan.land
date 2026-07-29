@@ -5,6 +5,7 @@ export const GithubIcon = (props: {
   color?: string;
 }) => (
   <svg
+    data-slot="icon"
     width={20}
     height={20}
     viewBox="0 0 24 24"

@@ -4,13 +4,13 @@ const FOOTER_LINKS = [{ href: "/token-usage" as const, label: "/token-usage" }];
 
 export function SiteFooter() {
   return (
-    <footer className="fixed bottom-0 z-50 w-full border-t border-grey-100 bg-grey-50 py-2 dark:border-grey-700 dark:bg-grey-950">
-      <div className="mx-auto flex max-w-[712px] justify-between px-4 md:px-0">
+    <footer className="fixed bottom-0 z-50 w-full border-t border-separator bg-surface pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+      <div className="mx-auto flex max-w-[712px] justify-between px-4">
         <div className="flex items-center gap-8">
           <a
             href="https://twitter.com/ephraimduncan"
             aria-label="Twitter"
-            className="text-grey-700 hover:text-grey-900 dark:text-grey-300 dark:hover:text-grey-100"
+            className="text-foreground-secondary hover:text-foreground"
           >
             <TwitterIcon />
           </a>
@@ -19,14 +19,14 @@ export function SiteFooter() {
             <Link
               key={href}
               to={href as string}
-              className="text-sm text-grey-700 hover:text-grey-900 dark:text-grey-300 dark:hover:text-grey-100"
+              className="text-sm text-foreground-secondary hover:text-foreground"
             >
               {label}
             </Link>
           ))}
         </div>
 
-        <div className="text-sm text-grey-600 font-nwr dark:text-grey-400">MMXXV</div>
+        <div className="text-sm text-foreground-muted font-nwr">MMXXVI</div>
       </div>
     </footer>
   );

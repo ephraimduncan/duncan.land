@@ -24,9 +24,15 @@ export const Route = createFileRoute("/_main/guestbook")({
   head: () => ({
     meta: [
       { title: "Guestbook | Ephraim Duncan" },
-      { name: "description", content: "Sign the guestbook and leave your mark!" },
-      { property: "og:title", content: "Sign Duncan's Guestbook" },
-      { property: "og:description", content: "Leave your mark in the guestbook" },
+      {
+        name: "description",
+        content: "Sign Ephraim Duncan's guestbook and leave a message.",
+      },
+      { property: "og:title", content: "Guestbook | Ephraim Duncan" },
+      {
+        property: "og:description",
+        content: "Sign Ephraim Duncan's guestbook and leave a message.",
+      },
     ],
   }),
   component: GuestbookPage,
@@ -50,7 +56,7 @@ function GuestbookPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <h1 className="text-2xl font-medium tracking-tight text-balance">Sign my guestbook</h1>
+            <h1 className="text-2xl font-medium tracking-tight text-balance">Sign the guestbook</h1>
             <div className="flex flex-col gap-2 sm:flex-row">
               <SignInButton redirectTo="/guestbook" />
               <WallButton />
