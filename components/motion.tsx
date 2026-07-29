@@ -1,4 +1,4 @@
-import { LazyMotion, domAnimation } from "motion/react";
+import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
 import * as m from "motion/react-m";
 
 const container = {
@@ -6,7 +6,7 @@ const container = {
   show: {
     transition: {
       staggerChildren: 0.05,
-      delayChildren: 0.2,
+      delayChildren: 0.05,
     },
   },
 };
@@ -19,14 +19,12 @@ const item = {
   },
   show: {
     opacity: 1,
-    scale: 1,
     y: 0,
     filter: "blur(0px)",
     transition: {
       type: "spring",
-      stiffness: 150,
-      damping: 19,
-      mass: 1.2,
+      duration: 0.3,
+      bounce: 0,
     },
   },
 };
@@ -39,9 +37,11 @@ interface ContainerProps {
 function Container({ children, className }: ContainerProps) {
   return (
     <LazyMotion features={domAnimation}>
-      <m.div variants={container} initial="hidden" animate="show" className={className}>
-        {children}
-      </m.div>
+      <MotionConfig reducedMotion="user">
+        <m.div variants={container} initial="hidden" animate="show" className={className}>
+          {children}
+        </m.div>
+      </MotionConfig>
     </LazyMotion>
   );
 }

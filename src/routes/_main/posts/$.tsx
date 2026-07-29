@@ -62,7 +62,7 @@ function PostPage() {
               {post.reference && (
                 <a
                   href="#references"
-                  className="inline-flex size-4 items-center justify-center text-sm font-medium text-grey-600 hover:text-grey-900 dark:text-grey-400 dark:hover:text-grey-200"
+                  className="inline-flex size-4 items-center justify-center text-sm font-medium text-foreground-muted hover:text-grey-900 dark:hover:text-grey-200"
                   title="Go to reference"
                 >
                   [1]
@@ -71,27 +71,22 @@ function PostPage() {
             </div>
 
             <div className="flex gap-x-2">
-              <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
+              <p className="text-base mt-0 text-foreground-secondary">
                 {post.date.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
                 })}
               </p>
-              <p className="text-base mt-0 text-grey-700 dark:text-grey-200">•</p>
+              <p className="text-base mt-0 text-foreground-secondary">•</p>
 
-              <p className="text-base mt-0 text-grey-700 dark:text-grey-200">
-                {post.readTimeMinutes}
-              </p>
+              <p className="text-base mt-0 text-foreground-secondary">{post.readTimeMinutes}</p>
             </div>
           </div>
           <Mdx content={mdx} />
 
           {post.reference && (
-            <div
-              id="references"
-              className="mt-16 pt-4 border-t border-grey-200 dark:border-grey-800"
-            >
+            <div id="references" className="mt-16 pt-4 border-t border-separator">
               <ReferenceLink reference={post.reference} />
             </div>
           )}

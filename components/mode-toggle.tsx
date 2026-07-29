@@ -20,11 +20,17 @@ export function AppThemeSwitcher() {
   const activeTheme = theme ?? "system";
 
   return (
-    <span className="flex w-fit items-center gap-0.5 overflow-hidden rounded-[6px] bg-grey-100 p-[2px] dark:bg-grey-900">
+    <span
+      role="group"
+      aria-label="Theme"
+      className="flex w-fit items-center gap-0.5 overflow-hidden rounded-[6px] bg-grey-100 p-[2px] dark:bg-grey-900"
+    >
       {THEMES.map(({ label, icon: Icon }) => (
         <button
           type="button"
           key={label}
+          aria-label={`Use ${label} theme`}
+          aria-pressed={activeTheme === label}
           onClick={() => setTheme(label)}
           className={cn(
             "flex size-6 items-center justify-center rounded-[4px] text-grey-600 transition-opacity hover:opacity-50 dark:text-grey-300",
@@ -34,7 +40,7 @@ export function AppThemeSwitcher() {
             },
           )}
         >
-          <Icon width={13} />
+          <Icon size={13} aria-hidden="true" />
         </button>
       ))}
     </span>

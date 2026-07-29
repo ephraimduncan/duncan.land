@@ -15,6 +15,7 @@ interface WallCanvasProps {
 const BASE_DELAY_MS = 0;
 const STAGGER_MS = 30;
 const RING_SIZE = 5;
+const KEYBOARD_PAN_STEP = 80;
 
 function getRevealDelay(revealIndexById: Map<string, number>, id: string) {
   const revealIndex = revealIndexById.get(id);
@@ -35,6 +36,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
   const {
     canvasRef,
     pan,
+    setPan,
     scale,
     zoomPercent,
     isViewportReady,
@@ -74,17 +76,50 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
     setSelectedSignature(null);
   }, []);
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.target !== event.currentTarget) return;
+
+      let dx = 0;
+      let dy = 0;
+      switch (event.key) {
+        case "ArrowLeft":
+          dx = KEYBOARD_PAN_STEP;
+          break;
+        case "ArrowRight":
+          dx = -KEYBOARD_PAN_STEP;
+          break;
+        case "ArrowUp":
+          dy = KEYBOARD_PAN_STEP;
+          break;
+        case "ArrowDown":
+          dy = -KEYBOARD_PAN_STEP;
+          break;
+        default:
+          return;
+      }
+
+      event.preventDefault();
+      setPan((previous) => ({ x: previous.x + dx, y: previous.y + dy }));
+    },
+    [setPan],
+  );
+
   return (
     <>
       <GuestbookCTA />
 
       <div
         ref={canvasRef}
-        className="absolute inset-0 touch-none select-none will-change-transform"
+        role="application"
+        aria-label="Signature wall canvas. Use the arrow keys to pan."
+        tabIndex={0}
+        className="absolute inset-0 touch-none select-none will-change-transform focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-grey-400"
         style={{ transformOrigin: "0 0" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onWheel={onWheel}
+        onKeyDown={handleKeyDown}
       >
         <div
           className="relative h-screen w-screen will-change-transform"

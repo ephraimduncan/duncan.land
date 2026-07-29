@@ -30,16 +30,20 @@ export function PostsList({ initialPosts }: PostsListProps) {
 
   if (guestbookPosts.status === "pending") {
     return (
-      <div className="flex justify-center py-8">
-        <Loader className="size-6 animate-spin" />
+      <div role="status" className="flex justify-center py-8">
+        <Loader className="size-6 animate-spin" aria-hidden="true" />
+        <span className="sr-only">Loading posts…</span>
       </div>
     );
   }
 
   if (guestbookPosts.status === "error") {
     return (
-      <div className="text-center py-8 text-grey-600 dark:text-grey-400">
-        Failed to load posts. Please try again later.
+      <div role="alert" className="text-center py-8 text-foreground-muted">
+        <p>Unable to load posts.</p>
+        <Button type="button" className="mt-4" onClick={() => guestbookPosts.refetch()}>
+          Try again
+        </Button>
       </div>
     );
   }
@@ -48,7 +52,7 @@ export function PostsList({ initialPosts }: PostsListProps) {
 
   if (posts.length === 0) {
     return (
-      <div className="text-center py-8 text-grey-600 dark:text-grey-400">
+      <div className="text-center py-8 text-foreground-muted">
         No posts yet. Be the first to sign!
       </div>
     );
@@ -66,18 +70,21 @@ export function PostsList({ initialPosts }: PostsListProps) {
 
       {hasNextPage && (
         <div ref={ref} className="flex justify-center mt-4">
-          <Button disabled={isFetchingNextPage} type="button">
+          <Button disabled={isFetchingNextPage} type="button" onClick={() => fetchNextPage()}>
             {isFetchingNextPage ? (
               <>
-                <Loader className="mr-2 size-4 animate-spin" />
+                <Loader className="mr-2 size-4 animate-spin" aria-hidden="true" />
                 Loading…
               </>
             ) : (
-              "Load More"
+              "Load more"
             )}
           </Button>
         </div>
       )}
+      <span role="status" className="sr-only">
+        {isFetchingNextPage ? "Loading more posts" : ""}
+      </span>
     </>
   );
 }

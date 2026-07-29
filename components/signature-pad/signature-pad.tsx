@@ -198,6 +198,8 @@ export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
     <div className="relative block">
       <canvas
         ref={canvasRef}
+        role="img"
+        aria-label="Signature drawing area"
         className={cn("relative block dark:invert", className)}
         style={{ touchAction: "none" }}
         onPointerMove={onPointerMove}
@@ -210,10 +212,10 @@ export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
       <div className="absolute bottom-4 right-4 flex gap-2">
         <button
           type="button"
-          className="focus-visible:ring-ring ring-offset-background text-muted-foreground/60 hover:text-muted-foreground rounded-full p-0 text-xs focus-visible:outline-hidden focus-visible:ring-2"
+          className="rounded-full px-2 py-1 text-xs text-foreground-subtle transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           onClick={() => onClearClick()}
         >
-          Clear Signature
+          Clear signature
         </button>
       </div>
 
@@ -221,12 +223,10 @@ export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
         <div className="absolute bottom-4 left-4 flex gap-2">
           <button
             type="button"
-            title="undo"
-            className="focus-visible:ring-ring ring-offset-background text-muted-foreground/60 hover:text-muted-foreground rounded-full p-0 text-xs focus-visible:outline-hidden focus-visible:ring-2"
+            className="rounded-full px-2 py-1 text-xs text-foreground-subtle transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             onClick={() => onUndoClick()}
           >
             Undo
-            <span className="sr-only">Undo</span>
           </button>
         </div>
       )}

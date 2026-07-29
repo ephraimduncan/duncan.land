@@ -35,6 +35,7 @@ export default function useCanvasViewport() {
   return {
     canvasRef,
     pan,
+    setPan,
     scale,
     zoomPercent,
     isViewportReady,

@@ -9,13 +9,14 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   return (
-    <nav className="-mx-2 mb-12 mt-10 overflow-x-auto lg:sticky lg:top-20" id="nav">
+    <nav className="-mx-2 mb-12 mt-10 overflow-x-auto" id="nav">
       <div className="flex min-w-max pr-10">
         {NAV_ITEMS.map(({ href, label }) => (
           <Link
             key={href}
             to={href}
-            className="relative flex items-center px-2 py-1 text-grey-700 hover:text-grey-900 dark:text-grey-300 dark:hover:text-grey-100"
+            activeOptions={{ exact: href === "/" }}
+            className="relative flex items-center px-2 py-1 text-foreground-secondary hover:text-foreground aria-[current=page]:text-foreground aria-[current=page]:underline aria-[current=page]:underline-offset-4"
           >
             {label}
           </Link>

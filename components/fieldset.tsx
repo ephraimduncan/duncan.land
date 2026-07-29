@@ -1,4 +1,8 @@
-import { Field as HeadlessField, Label as HeadlessLabel } from "@headlessui/react";
+import {
+  Description as HeadlessDescription,
+  Field as HeadlessField,
+  Label as HeadlessLabel,
+} from "@headlessui/react";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 
@@ -41,5 +45,19 @@ export function Label({ className, children }: LabelProps) {
     >
       {children}
     </HeadlessLabel>
+  );
+}
+
+export function ErrorMessage({ className, children }: LabelProps) {
+  return (
+    <HeadlessDescription
+      data-slot="error"
+      className={clsx(
+        className,
+        "text-base/6 text-red-600 data-disabled:opacity-50 sm:text-sm/6 dark:text-red-400",
+      )}
+    >
+      {children}
+    </HeadlessDescription>
   );
 }

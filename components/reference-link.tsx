@@ -13,7 +13,7 @@ export function ReferenceLink({ reference }: ReferenceLinkProps) {
     .replace(/\bhttps?:\/\/\S+/g, ""); // Remove raw URLs
 
   return (
-    <div className="text-grey-700 dark:text-grey-200">
+    <div className="text-foreground-secondary">
       <span className="mr-2">[1]</span> {textWithoutMarkdown}{" "}
       {url && (
         <a href={url} className="underline font-normal" target="_blank" rel="noopener noreferrer">

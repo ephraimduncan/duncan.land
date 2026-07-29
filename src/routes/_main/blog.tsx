@@ -20,9 +20,9 @@ function BlogPage() {
         <Link
           to="/archive"
           viewTransition
-          className="text-sm text-grey-600 hover:underline hover:decoration-1 dark:text-grey-300"
+          className="text-sm text-foreground-muted hover:underline hover:decoration-1"
         >
-          Archived Posts
+          Archived posts
         </Link>
       </FadeIn.Item>
     </FadeIn.Container>

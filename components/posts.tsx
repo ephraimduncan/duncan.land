@@ -55,7 +55,7 @@ export const Posts = ({ category }: PostProps) => {
         </h2>
       </Link>
 
-      <div className="divide-y divide-grey-200 dark:divide-grey-800">
+      <div className="divide-y divide-separator">
         {posts.map((post) => (
           <Link
             key={post.slug}
@@ -63,7 +63,7 @@ export const Posts = ({ category }: PostProps) => {
             className="flex w-full justify-between gap-4 py-3 dark:text-grey-100"
           >
             <p className="text-pretty">{post.title}</p>
-            <p className="shrink-0 text-grey-600 dark:text-grey-300">{formatter.date(post.date)}</p>
+            <p className="shrink-0 text-foreground-muted">{formatter.date(post.date)}</p>
           </Link>
         ))}
       </div>

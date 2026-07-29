@@ -55,7 +55,9 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", media: "(prefers-color-scheme: light)", content: "#f7f6f6" },
+      { name: "theme-color", media: "(prefers-color-scheme: dark)", content: "#1c1917" },
       { title: SITE_TITLE },
       { name: "description", content: SITE_DESCRIPTION },
       {
@@ -121,7 +123,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </head>
-      <body className="antialiased bg-grey-50 dark:bg-grey-950 text-grey-800 dark:text-grey-100">
+      <body className="antialiased bg-surface text-foreground">
         <RootProviders>{children}</RootProviders>
         {import.meta.env.PROD && (
           <script
