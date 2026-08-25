@@ -1,7 +1,10 @@
-import { allPosts, allThoughts } from "content-collections";
-import { formatter } from "@/lib/utils";
-
+import * as stylex from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
+import { allPosts, allThoughts } from "content-collections";
+
+import { formatter } from "@/lib/utils";
+import { colors } from "../src/styles/tokens.stylex";
+import "./site-theme.css";
 
 type PostCategory = "thoughts" | "posts" | "archive";
 type PostListItem = (typeof allPosts)[number] | (typeof allThoughts)[number];
@@ -35,38 +38,69 @@ interface PostProps {
   category: PostCategory;
 }
 
-function byDateDescending(a: PostListItem, b: PostListItem) {
-  return b.date.getTime() - a.date.getTime();
-}
-
 export const Posts = ({ category }: PostProps) => {
   const section = POST_SECTIONS[category];
-  const posts = section.posts.toSorted(byDateDescending);
+  const posts = section.posts.toSorted((a, b) => b.date.getTime() - a.date.getTime());
 
   if (posts.length === 0) {
     return null;
   }
 
   return (
-    <div className="flex flex-col">
-      <Link to={section.href} className="flex justify-between">
-        <h2 className="py-2 text-2xl font-medium tracking-tight text-balance dark:text-grey-100">
-          {section.title}
-        </h2>
+    <div {...stylex.props(styles.root)}>
+      <Link to={section.href} {...stylex.props(styles.headingLink)}>
+        <h2 {...stylex.props(styles.heading)}>{section.title}</h2>
       </Link>
 
-      <div className="divide-y divide-separator">
+      <div>
         {posts.map((post) => (
-          <Link
-            key={post.slug}
-            to={post.slug}
-            className="flex w-full justify-between gap-4 py-3 dark:text-grey-100"
-          >
-            <p className="text-pretty">{post.title}</p>
-            <p className="shrink-0 text-foreground-muted">{formatter.date(post.date)}</p>
+          <Link key={post.slug} to={post.slug} {...stylex.props(styles.item)}>
+            <p {...stylex.props(styles.title)}>{post.title}</p>
+            <p {...stylex.props(styles.date)}>{formatter.date(post.date)}</p>
           </Link>
         ))}
       </div>
     </div>
   );
 };
+
+const styles = stylex.create({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  headingLink: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  heading: {
+    paddingBlock: "0.5rem",
+    color: "var(--post-list-text)",
+    fontSize: "1.5rem",
+    fontWeight: 500,
+    letterSpacing: "-0.025em",
+    lineHeight: "2rem",
+    textWrap: "balance",
+  },
+  item: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+    gap: "1rem",
+    borderTopWidth: {
+      default: "1px",
+      ":first-child": 0,
+    },
+    borderStyle: "solid",
+    borderColor: colors.separator,
+    paddingBlock: "0.75rem",
+    color: "var(--post-list-text)",
+  },
+  title: {
+    textWrap: "pretty",
+  },
+  date: {
+    flexShrink: 0,
+    color: colors.foregroundMuted,
+  },
+});

@@ -1,0 +1,57 @@
+:root {
+  --prose-body: oklch(0.373 0.034 259.733);
+  --prose-heading: oklch(0.21 0.034 264.665);
+  --prose-link: oklch(0.21 0.034 264.665);
+  --prose-inline-code: oklch(0.21 0.034 264.665);
+  --prose-quote-text: oklch(0.21 0.034 264.665);
+  --prose-quote-border: oklch(0.928 0.006 264.531);
+  --prose-rule: oklch(0.928 0.006 264.531);
+  --prose-caption: oklch(0.551 0.027 264.364);
+  --prose-table-head-border: oklch(0.872 0.01 258.338);
+  --prose-table-row-border: oklch(0.928 0.006 264.531);
+}
+
+.dark {
+  --prose-body: oklch(0.872 0.01 258.338);
+  --prose-heading: rgb(255, 255, 255);
+  --prose-link: rgb(255, 255, 255);
+  --prose-inline-code: rgb(255, 255, 255);
+  --prose-quote-text: oklch(0.967 0.003 264.542);
+  --prose-quote-border: oklch(0.373 0.034 259.733);
+  --prose-rule: oklch(0.373 0.034 259.733);
+  --prose-caption: oklch(0.707 0.022 261.325);
+  --prose-table-head-border: oklch(0.446 0.03 256.802);
+  --prose-table-row-border: oklch(0.373 0.034 259.733);
+}
+
+/* bright renders fenced code as a bare <pre> descendant that per-element MDX
+   mappings cannot reach; typography sized it via .prose pre. */
+.prose-article pre {
+  font-size: 0.875em;
+  line-height: 1.7142857;
+}
+
+/* Typography zeroes the top margin of whatever directly follows a heading or rule.
+   StyleX cannot express type-based adjacency, and its :not(#\#) specificity chains
+   outrank any plain selector, so !important is required to win here. */
+.prose-article :is(h2, h3, h4, hr) + * {
+  margin-top: 0 !important;
+}
+
+/* Raw JSX <img> in MDX bypasses the component map; typography reached every
+   descendant image, with figures zeroed. */
+.prose-article img {
+  margin-block: 2em !important;
+}
+
+.prose-article figure > img {
+  margin-block: 0 !important;
+}
+
+.prose-article blockquote p:first-of-type::before {
+  content: open-quote;
+}
+
+.prose-article blockquote p:last-of-type::after {
+  content: close-quote;
+}

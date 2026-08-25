@@ -1,0 +1,140 @@
+:root {
+  --form-strong-text: #1c1917;
+  --button-solid-background: #ffffff;
+  --button-solid-border: color-mix(in oklab, #1c1917 10%, transparent);
+  --button-solid-border-hover: color-mix(in oklab, #1c1917 15%, transparent);
+  --button-solid-border-color: transparent;
+  --button-solid-hover-overlay: color-mix(in oklab, #1c1917 2.5%, transparent);
+  --button-solid-layer-display: block;
+  --button-solid-overlay-inset: 0;
+  --button-solid-overlay-radius: calc(0.5rem - 1px);
+  --button-icon: #70615c;
+  --button-icon-hover: #48423d;
+  --button-plain-hover-background: color-mix(in oklab, #1c1917 5%, transparent);
+  --dialog-backdrop: color-mix(in oklab, #1c1917 25%, transparent);
+  --dialog-panel-background: #ffffff;
+  --dialog-panel-ring: color-mix(in oklab, #1c1917 10%, transparent);
+  --field-error: oklch(57.7% 0.245 27.325);
+  --textarea-fill-display: block;
+  --textarea-border: color-mix(in oklab, #1c1917 10%, transparent);
+  --textarea-border-hover: color-mix(in oklab, #1c1917 20%, transparent);
+  --textarea-background: transparent;
+}
+
+.dark {
+  --form-strong-text: #ffffff;
+  --button-solid-background: #3c3633;
+  --button-solid-border: #3c3633;
+  --button-solid-border-hover: #3c3633;
+  --button-solid-border-color: color-mix(in oklab, #ffffff 5%, transparent);
+  --button-solid-hover-overlay: color-mix(in oklab, #ffffff 5%, transparent);
+  --button-solid-layer-display: none;
+  --button-solid-overlay-inset: -1px;
+  --button-solid-overlay-radius: 0.5rem;
+  --button-icon: #aca19c;
+  --button-icon-hover: #cdc5c2;
+  --button-plain-hover-background: color-mix(in oklab, #ffffff 10%, transparent);
+  --dialog-backdrop: color-mix(in oklab, #1c1917 80%, transparent);
+  --dialog-panel-background: #1c1917;
+  --dialog-panel-ring: color-mix(in oklab, #ffffff 10%, transparent);
+  --field-error: oklch(70.4% 0.191 22.216);
+  --textarea-fill-display: none;
+  --textarea-border: color-mix(in oklab, #ffffff 10%, transparent);
+  --textarea-border-hover: color-mix(in oklab, #ffffff 20%, transparent);
+  --textarea-background: color-mix(in oklab, #ffffff 5%, transparent);
+}
+
+/* StyleX cannot target arbitrary component children. */
+.btn > [data-slot="icon"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  margin-block: 0.125rem;
+  margin-inline: -0.125rem;
+  color: var(--btn-icon);
+}
+
+.field-layout > [data-slot="label"] + [data-slot="control"] {
+  margin-top: 0.75rem;
+}
+
+.field-layout > [data-slot="label"] + [data-slot="description"] {
+  margin-top: 0.25rem;
+}
+
+.field-layout > [data-slot="description"] + [data-slot="control"],
+.field-layout > [data-slot="control"] + [data-slot="description"],
+.field-layout > [data-slot="control"] + [data-slot="error"] {
+  margin-top: 0.75rem;
+}
+
+.field-layout [data-slot="label"][data-disabled],
+.field-layout [data-slot="error"][data-disabled] {
+  opacity: 0.5;
+}
+
+.dialog-backdrop-enter,
+.dialog-panel-enter {
+  transition-duration: 100ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dialog-backdrop-leave,
+.dialog-panel-leave {
+  transition-duration: 100ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.dialog-backdrop-enter-from,
+.dialog-backdrop-leave-to,
+.dialog-panel-enter-from,
+.dialog-panel-leave-to {
+  opacity: 0;
+}
+
+.dialog-backdrop-enter-to,
+.dialog-backdrop-leave-from,
+.dialog-panel-enter-to,
+.dialog-panel-leave-from {
+  opacity: 1;
+}
+
+.dialog-panel-enter-from,
+.dialog-panel-leave-to {
+  translate: 0 3rem;
+}
+
+.dialog-panel-enter-to,
+.dialog-panel-leave-from {
+  translate: 0 0;
+}
+
+/* StyleX cannot style caller-owned child controls. */
+.dialog-actions > * {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .btn > [data-slot="icon"] {
+    width: 1rem;
+    height: 1rem;
+    margin-block: 0.25rem;
+  }
+
+  .dialog-panel-enter-from {
+    scale: 95%;
+    translate: 0 0;
+  }
+
+  .dialog-panel-enter-to {
+    scale: 100%;
+  }
+
+  .dialog-panel-leave-to {
+    translate: 0 0;
+  }
+
+  .dialog-actions > * {
+    width: auto;
+  }
+}

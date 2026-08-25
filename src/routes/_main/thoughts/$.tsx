@@ -1,7 +1,9 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import * as stylex from "@stylexjs/stylex";
 import * as FadeIn from "@/components/motion";
-import { Mdx } from "@/components/mdx-components";
+import { Mdx, prose, proseArticle } from "../../../../components/mdx-components";
 import { allThoughts } from "content-collections";
+import { colors } from "../../../styles/tokens.stylex";
 
 export const Route = createFileRoute("/_main/thoughts/$")({
   loader: ({ params }) => {
@@ -42,20 +44,20 @@ function ThoughtPage() {
   return (
     <FadeIn.Container>
       <FadeIn.Item>
-        <article className="prose dark:prose-invert leading-8">
-          <h1 className="mb-2 font-medium text-2xl">{thought.title}</h1>
+        <article {...proseArticle(stylex.props(prose.article, styles.article))}>
+          <h1 {...stylex.props(styles.title)}>{thought.title}</h1>
 
-          <div className="flex gap-x-2">
-            <p className="text-base mt-0 text-foreground-secondary">
+          <div {...stylex.props(styles.metaRow)}>
+            <p {...stylex.props(styles.meta)}>
               {thought.date.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
             </p>
-            <p className="text-base mt-0 text-foreground-secondary">•</p>
+            <p {...stylex.props(styles.meta)}>•</p>
 
-            <p className="text-base mt-0 text-foreground-secondary">{thought.readTimeMinutes}</p>
+            <p {...stylex.props(styles.meta)}>{thought.readTimeMinutes}</p>
           </div>
 
           <Mdx content={mdx} />
@@ -64,3 +66,27 @@ function ThoughtPage() {
     </FadeIn.Container>
   );
 }
+
+const styles = stylex.create({
+  article: {
+    lineHeight: "2rem",
+  },
+  title: {
+    marginBottom: "0.5rem",
+    color: "var(--prose-heading)",
+    fontSize: "1.5rem",
+    lineHeight: "2rem",
+    fontWeight: 500,
+  },
+  metaRow: {
+    display: "flex",
+    columnGap: "0.5rem",
+  },
+  meta: {
+    marginTop: 0,
+    marginBottom: "1.25rem",
+    color: colors.foregroundSecondary,
+    fontSize: "1rem",
+    lineHeight: "1.5rem",
+  },
+});

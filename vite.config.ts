@@ -8,8 +8,8 @@ import rehypeKatex from "rehype-katex";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import remarkMath from "remark-math";
-import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
+import babelConfig from "./babel.config.js";
 
 import { cloudflare } from "@cloudflare/vite-plugin";
 const isTest = process.env.VITEST === "true";
@@ -141,11 +141,10 @@ export default defineConfig({
       }),
     },
     contentCollections(),
-    tailwindcss(),
     tanstackStart(),
     // React's Vite plugin must come after TanStack Start's plugin
     viteReact({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
-    babel({ presets: [reactCompilerPreset()] }),
+    babel({ presets: [reactCompilerPreset()], plugins: babelConfig.plugins }),
     ...(isTest
       ? []
       : [

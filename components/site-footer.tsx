@@ -1,32 +1,31 @@
+import * as stylex from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
 
-const FOOTER_LINKS = [{ href: "/token-usage" as const, label: "/token-usage" }];
+import { colors, fonts } from "../src/styles/tokens.stylex";
+
+const FOOTER_LINKS = [{ href: "/token-usage", label: "/token-usage" }] as const;
 
 export function SiteFooter() {
   return (
-    <footer className="fixed bottom-0 z-50 w-full border-t border-separator bg-surface pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
-      <div className="mx-auto flex max-w-[712px] justify-between px-4">
-        <div className="flex items-center gap-8">
+    <footer {...stylex.props(styles.footer)}>
+      <div {...stylex.props(styles.inner)}>
+        <div {...stylex.props(styles.links)}>
           <a
             href="https://twitter.com/ephraimduncan"
             aria-label="Twitter"
-            className="text-foreground-secondary hover:text-foreground"
+            {...stylex.props(styles.link)}
           >
             <TwitterIcon />
           </a>
 
           {FOOTER_LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              to={href as string}
-              className="text-sm text-foreground-secondary hover:text-foreground"
-            >
+            <Link key={href} to={href} {...stylex.props(styles.link, styles.footerLink)}>
               {label}
             </Link>
           ))}
         </div>
 
-        <div className="text-sm text-foreground-muted font-nwr">MMXXVI</div>
+        <div {...stylex.props(styles.year)}>MMXXVI</div>
       </div>
     </footer>
   );
@@ -52,3 +51,46 @@ function TwitterIcon() {
     </svg>
   );
 }
+
+const styles = stylex.create({
+  footer: {
+    position: "fixed",
+    bottom: 0,
+    zIndex: 50,
+    width: "100%",
+    borderTopWidth: "1px",
+    borderTopStyle: "solid",
+    borderTopColor: colors.separator,
+    backgroundColor: colors.surface,
+    paddingTop: "0.5rem",
+    paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom))",
+  },
+  inner: {
+    display: "flex",
+    maxWidth: "712px",
+    marginInline: "auto",
+    justifyContent: "space-between",
+    paddingInline: "1rem",
+  },
+  links: {
+    display: "flex",
+    alignItems: "center",
+    gap: "2rem",
+  },
+  link: {
+    color: {
+      default: colors.foregroundSecondary,
+      ":hover": colors.foreground,
+    },
+  },
+  footerLink: {
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
+  },
+  year: {
+    color: colors.foregroundMuted,
+    fontFamily: fonts.nwr,
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
+  },
+});

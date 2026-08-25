@@ -1,3 +1,4 @@
+import * as stylex from "@stylexjs/stylex";
 import { Button } from "@/components/button";
 import { GithubIcon } from "@/components/ui/GithubIcon";
 import { signIn } from "@/lib/auth-client";
@@ -13,10 +14,19 @@ export function SignInButton({ redirectTo }: SignInButtonProps) {
     <Button
       type="button"
       onClick={() => signIn.social({ provider: "github", callbackURL: redirectTo })}
-      className="justify-start sm:justify-center"
+      style={styles.button}
     >
       <GithubIcon />
       Sign in with GitHub
     </Button>
   );
 }
+
+const styles = stylex.create({
+  button: {
+    justifyContent: {
+      default: "flex-start",
+      "@media (min-width: 640px)": "center",
+    },
+  },
+});

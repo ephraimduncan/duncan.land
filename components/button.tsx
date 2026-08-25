@@ -1,87 +1,126 @@
 import { Button as HeadlessButton } from "@headlessui/react";
-import { clsx } from "clsx";
+import * as stylex from "@stylexjs/stylex";
+import type { StyleXStyles } from "@stylexjs/stylex";
+import clsx from "clsx";
 import type { ComponentPropsWithRef, ReactNode } from "react";
+
+import "./form-theme.css";
 import { Link, type LinkProps } from "./link";
 
-const styles = {
-  base: [
-    // Base
-    "relative isolate inline-flex items-center justify-center gap-x-2 rounded-lg border text-base/6 font-semibold",
-
-    // Sizing
-    "px-[calc(--spacing(3.5)-1px)] py-[calc(--spacing(2.5)-1px)] sm:px-[calc(--spacing(3)-1px)] sm:py-[calc(--spacing(1.5)-1px)] sm:text-sm/6",
-
-    // Focus
-    "focus:outline-hidden data-focus:outline-solid data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-accent",
-
-    // Disabled
-    "data-disabled:opacity-50",
-
-    // Press feedback
-    "transition-[scale] duration-150 ease-out data-active:scale-[0.97]",
-
-    // Icon
-    "*:data-[slot=icon]:-mx-0.5 *:data-[slot=icon]:my-0.5 *:data-[slot=icon]:size-5 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-(--btn-icon) sm:*:data-[slot=icon]:my-1 sm:*:data-[slot=icon]:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:data-hover:[--btn-icon:ButtonText]",
-  ],
-  solid: [
-    // Optical border, implemented as the button background to avoid corner artifacts
-    "border-transparent bg-(--btn-border)",
-
-    // Dark mode: border is rendered on `after` so background is set to button background
-    "dark:bg-(--btn-bg)",
-
-    // Button background, implemented as foreground layer to stack on top of pseudo-border layer
-    "before:absolute before:inset-0 before:-z-10 before:rounded-[calc(var(--radius-lg)-1px)] before:bg-(--btn-bg)",
-
-    // Drop shadow, applied to the inset `before` layer so it blends with the border
-    "before:shadow-sm",
-
-    // Background color is moved to control and shadow is removed in dark mode so hide `before` pseudo
-    "dark:before:hidden",
-
-    // Dark mode: Subtle white outline is applied using a border
-    "dark:border-white/5",
-
-    // Shim/overlay, inset to match button foreground and used for hover state + highlight shadow
-    "after:absolute after:inset-0 after:-z-10 after:rounded-[calc(var(--radius-lg)-1px)]",
-
-    // Inner highlight shadow
-    "after:shadow-[inset_0_1px_--theme(--color-white/15%)]",
-
-    // White overlay on hover
-    "data-active:after:bg-(--btn-hover-overlay) data-hover:after:bg-(--btn-hover-overlay)",
-
-    // Dark mode: `after` layer expands to cover entire button
-    "dark:after:-inset-px dark:after:rounded-lg",
-
-    // Disabled
-    "data-disabled:before:shadow-none data-disabled:after:shadow-none",
-
-    // Default color
-    "text-grey-950 [--btn-bg:white] [--btn-border:var(--color-grey-950)]/10 [--btn-hover-overlay:var(--color-grey-950)]/2.5 data-active:[--btn-border:var(--color-grey-950)]/15 data-hover:[--btn-border:var(--color-grey-950)]/15",
-    "dark:text-white dark:[--btn-hover-overlay:var(--color-white)]/5 dark:[--btn-bg:var(--color-grey-800)]",
-    "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-300)] dark:data-active:[--btn-icon:var(--color-grey-200)] dark:data-hover:[--btn-icon:var(--color-grey-200)]",
-  ],
-
-  plain: [
-    // Base
-    "border-transparent text-grey-950 data-active:bg-grey-950/5 data-hover:bg-grey-950/5",
-
-    // Dark mode
-    "dark:text-white dark:data-active:bg-white/10 dark:data-hover:bg-white/10",
-
-    // Icon
-    "[--btn-icon:var(--color-grey-500)] data-active:[--btn-icon:var(--color-grey-700)] data-hover:[--btn-icon:var(--color-grey-700)] dark:[--btn-icon:var(--color-grey-300)] dark:data-active:[--btn-icon:var(--color-grey-200)] dark:data-hover:[--btn-icon:var(--color-grey-200)]",
-  ],
-};
+const styles = stylex.create({
+  base: {
+    "--btn-icon": {
+      default: "var(--button-icon)",
+      ":hover": {
+        default: "var(--button-icon-hover)",
+        "@media (forced-colors: active)": "ButtonText",
+      },
+      ":active": "var(--button-icon-hover)",
+      "@media (forced-colors: active)": "ButtonText",
+    },
+    alignItems: "center",
+    borderRadius: "0.5rem",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    color: "var(--form-strong-text)",
+    columnGap: "0.5rem",
+    display: "inline-flex",
+    fontSize: {
+      default: "1rem",
+      "@media (min-width: 640px)": "0.875rem",
+    },
+    fontWeight: 600,
+    isolation: "isolate",
+    justifyContent: "center",
+    lineHeight: "1.5rem",
+    opacity: {
+      default: 1,
+      ":disabled": 0.5,
+    },
+    outline: {
+      default: null,
+      ":focus": "2px solid transparent",
+      ":focus-visible": "2px solid var(--accent)",
+    },
+    outlineOffset: {
+      default: null,
+      ":focus": "2px",
+      ":focus-visible": "2px",
+    },
+    paddingBlock: {
+      default: "calc(0.625rem - 1px)",
+      "@media (min-width: 640px)": "calc(0.375rem - 1px)",
+    },
+    paddingInline: {
+      default: "calc(0.875rem - 1px)",
+      "@media (min-width: 640px)": "calc(0.75rem - 1px)",
+    },
+    position: "relative",
+    scale: {
+      default: 1,
+      ":active": 0.97,
+    },
+    transitionDuration: "150ms",
+    transitionProperty: "scale",
+    transitionTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
+  },
+  solid: {
+    "--btn-bg": "var(--button-solid-background)",
+    "--btn-border": {
+      default: "var(--button-solid-border)",
+      ":hover": "var(--button-solid-border-hover)",
+      ":active": "var(--button-solid-border-hover)",
+    },
+    "--btn-hover-overlay": "var(--button-solid-hover-overlay)",
+    backgroundColor: "var(--btn-border)",
+    borderColor: "var(--button-solid-border-color)",
+    "::before": {
+      backgroundColor: "var(--btn-bg)",
+      borderRadius: "calc(0.5rem - 1px)",
+      boxShadow: {
+        default: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        ":disabled": "none",
+      },
+      content: '""',
+      display: "var(--button-solid-layer-display)",
+      inset: 0,
+      position: "absolute",
+      zIndex: -10,
+    },
+    "::after": {
+      backgroundColor: {
+        default: "transparent",
+        ":hover": "var(--btn-hover-overlay)",
+        ":active": "var(--btn-hover-overlay)",
+      },
+      borderRadius: "var(--button-solid-overlay-radius)",
+      boxShadow: {
+        default: "inset 0 1px color-mix(in oklab, #ffffff 15%, transparent)",
+        ":disabled": "none",
+      },
+      content: '""',
+      inset: "var(--button-solid-overlay-inset)",
+      position: "absolute",
+      zIndex: -10,
+    },
+  },
+  plain: {
+    backgroundColor: {
+      default: "transparent",
+      ":hover": "var(--button-plain-hover-background)",
+      ":active": "var(--button-plain-hover-background)",
+    },
+    borderColor: "transparent",
+  },
+});
 
 type ButtonOwnProps = {
   children: ReactNode;
-  className?: string;
+  style?: StyleXStyles;
   variant?: "plain" | "solid";
 };
 
-type ButtonLinkProps = ButtonOwnProps & Omit<LinkProps, "children" | "className">;
+type ButtonLinkProps = ButtonOwnProps & Omit<LinkProps, "children" | "className" | "style">;
 type ButtonActionProps = ButtonOwnProps &
   Pick<ComponentPropsWithRef<"button">, "disabled" | "onClick" | "ref"> & {
     type: "button" | "submit" | "reset";
@@ -89,15 +128,19 @@ type ButtonActionProps = ButtonOwnProps &
 
 export type ButtonProps = ButtonLinkProps | ButtonActionProps;
 
-export function Button({ variant = "solid", className, children, ...props }: ButtonProps) {
-  const classes = clsx(className, styles.base, styles[variant]);
+export function Button({ variant = "solid", style, children, ...props }: ButtonProps) {
+  if ("href" in props) {
+    return (
+      <Link {...props} className="btn" style={[styles.base, styles[variant], style]}>
+        {children}
+      </Link>
+    );
+  }
 
-  return "href" in props ? (
-    <Link {...props} className={classes}>
-      {children}
-    </Link>
-  ) : (
-    <HeadlessButton {...props} className={classes}>
+  const sx = stylex.props(styles.base, styles[variant], style);
+
+  return (
+    <HeadlessButton {...props} className={clsx("btn", sx.className)} style={sx.style}>
       {children}
     </HeadlessButton>
   );

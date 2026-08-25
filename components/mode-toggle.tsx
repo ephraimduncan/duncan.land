@@ -1,9 +1,10 @@
+import * as stylex from "@stylexjs/stylex";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { ThemeProvider, useTheme } from "next-themes";
 import type React from "react";
 
 import { useIsHydrated } from "@/lib/hooks/use-is-hydrated";
-import { cn } from "@/lib/utils";
-import { Monitor, Moon, Sun } from "lucide-react";
-import { ThemeProvider, useTheme } from "next-themes";
+import "./site-theme.css";
 
 const THEMES = [
   { label: "system", icon: Monitor },
@@ -20,11 +21,7 @@ export function AppThemeSwitcher() {
   const activeTheme = theme ?? "system";
 
   return (
-    <span
-      role="group"
-      aria-label="Theme"
-      className="flex w-fit items-center gap-0.5 overflow-hidden rounded-[6px] bg-grey-100 p-[2px] dark:bg-grey-900"
-    >
+    <span role="group" aria-label="Theme" {...stylex.props(styles.track)}>
       {THEMES.map(({ label, icon: Icon }) => (
         <button
           type="button"
@@ -32,13 +29,7 @@ export function AppThemeSwitcher() {
           aria-label={`Use ${label} theme`}
           aria-pressed={activeTheme === label}
           onClick={() => setTheme(label)}
-          className={cn(
-            "flex size-6 items-center justify-center rounded-[4px] text-grey-600 transition-opacity hover:opacity-50 dark:text-grey-300",
-            {
-              "bg-grey-200 dark:bg-grey-600 text-grey-800 dark:text-grey-100":
-                activeTheme === label,
-            },
-          )}
+          {...stylex.props(styles.button, activeTheme === label && styles.active)}
         >
           <Icon size={13} aria-hidden="true" />
         </button>
@@ -54,3 +45,36 @@ export function AppThemeProvider({ children }: React.PropsWithChildren) {
     </ThemeProvider>
   );
 }
+
+const styles = stylex.create({
+  track: {
+    display: "flex",
+    width: "fit-content",
+    alignItems: "center",
+    gap: "0.125rem",
+    overflow: "hidden",
+    borderRadius: "6px",
+    backgroundColor: "var(--theme-switcher-track)",
+    padding: "2px",
+  },
+  button: {
+    display: "flex",
+    width: "1.5rem",
+    height: "1.5rem",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "4px",
+    color: "var(--theme-switcher-icon)",
+    opacity: {
+      default: 1,
+      ":hover": 0.5,
+    },
+    transitionProperty: "opacity",
+    transitionDuration: "150ms",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+  },
+  active: {
+    backgroundColor: "var(--theme-switcher-active-track)",
+    color: "var(--theme-switcher-active-icon)",
+  },
+});

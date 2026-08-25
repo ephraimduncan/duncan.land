@@ -1,25 +1,41 @@
+import * as stylex from "@stylexjs/stylex";
+
+import { colors } from "../src/styles/tokens.stylex";
+
 interface ReferenceLinkProps {
   reference: string;
 }
 
 export function ReferenceLink({ reference }: ReferenceLinkProps) {
-  // Parse the reference string to extract URL
   const urlMatch = reference.match(/\[([^\]]+)\]\(([^)]+)\)/);
   const urlDirectMatch = reference.match(/https?:\/\/[^\s)]+/);
 
   const url = urlMatch ? urlMatch[2] : urlDirectMatch ? urlDirectMatch[0] : "";
   const textWithoutMarkdown = reference
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1") // Replace markdown links with just text
-    .replace(/\bhttps?:\/\/\S+/g, ""); // Remove raw URLs
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+    .replace(/\bhttps?:\/\/\S+/g, "");
 
   return (
-    <div className="text-foreground-secondary">
-      <span className="mr-2">[1]</span> {textWithoutMarkdown}{" "}
+    <div {...stylex.props(styles.root)}>
+      <span {...stylex.props(styles.index)}>[1]</span> {textWithoutMarkdown}{" "}
       {url && (
-        <a href={url} className="underline font-normal" target="_blank" rel="noopener noreferrer">
+        <a href={url} target="_blank" rel="noopener noreferrer" {...stylex.props(styles.link)}>
           {url}
         </a>
       )}
     </div>
   );
 }
+
+const styles = stylex.create({
+  root: {
+    color: colors.foregroundSecondary,
+  },
+  index: {
+    marginRight: "0.5rem",
+  },
+  link: {
+    fontWeight: 400,
+    textDecorationLine: "underline",
+  },
+});

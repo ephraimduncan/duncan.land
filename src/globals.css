@@ -1,6 +1,4 @@
-@import "tailwindcss";
-
-@plugin '@tailwindcss/typography';
+@import "./preflight.css";
 
 @font-face {
   font-family: "Kaisei Tokumin";
@@ -9,8 +7,6 @@
   font-display: swap;
   src: url("/fonts/kaisei-tokumin-latin-700-normal.woff2") format("woff2");
 }
-
-@custom-variant dark (&:is(.dark *));
 
 html {
   scrollbar-gutter: stable;
@@ -22,26 +18,6 @@ html {
   --font-newsreader-regular: "Newsreader", serif;
 }
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-kaisei);
-  --font-emp: var(--font-newsreader);
-  --font-nwr: var(--font-newsreader-regular);
-
-  --color-grey-50: #f7f6f6;
-  --color-grey-100: #e6e2e1;
-  --color-grey-200: #cdc5c2;
-  --color-grey-300: #aca19c;
-  --color-grey-400: #8a7d77;
-  --color-grey-500: #70615c;
-  --color-grey-600: #584e49;
-  --color-grey-700: #48423d;
-  --color-grey-800: #3c3633;
-  --color-grey-900: #342f2d;
-  --color-grey-950: #1c1917;
-}
-
 :root {
   --surface: #f7f6f6; /* grey-50 */
   --surface-raised: #ffffff;
@@ -51,6 +27,9 @@ html {
   --foreground-muted: #584e49; /* grey-600 */
   --foreground-subtle: #70615c; /* grey-500 */
   --accent: #3b82f6; /* blue-500 */
+  --decoration-muted: #aca19c; /* grey-300 */
+  --decoration-muted-hover: #584e49; /* grey-600 */
+  --signature-filter: none;
   --danger: #ef4444; /* red-500 */
 }
 
@@ -62,45 +41,20 @@ html {
   --foreground-secondary: #cdc5c2; /* grey-200 */
   --foreground-muted: #aca19c; /* grey-300 */
   --foreground-subtle: #aca19c; /* grey-300 */
+  --decoration-muted: #584e49; /* grey-600 */
+  --decoration-muted-hover: #aca19c; /* grey-300 */
+  --signature-filter: invert(1);
   --danger: #dc2626; /* red-600 */
 }
 
-@theme inline {
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-separator: var(--separator);
-  --color-foreground: var(--foreground);
-  --color-foreground-secondary: var(--foreground-secondary);
-  --color-foreground-muted: var(--foreground-muted);
-  --color-foreground-subtle: var(--foreground-subtle);
-  --color-accent: var(--accent);
-  --color-danger: var(--danger);
-}
-
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-}
-
 em {
-  @apply font-emp italic;
+  font-family: var(--font-newsreader);
+  font-style: italic;
 }
 
 .inline-link {
-  @apply underline decoration-1;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
 }
 
 .katex-display {

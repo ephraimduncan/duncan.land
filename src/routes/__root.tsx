@@ -1,4 +1,5 @@
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
 import { AppThemeProvider } from "@/components/mode-toggle";
@@ -7,8 +8,11 @@ import { Agentation } from "agentation";
 import { Toaster } from "sonner";
 
 import globalsCss from "@/src/globals.css?url";
+import stylexCss from "@/src/stylex.css?url";
+
 import geistMonoCss from "geist/font/mono?url";
 import geistSansCss from "geist/font/sans?url";
+import { colors } from "../styles/tokens.stylex";
 
 const SITE_URL = "https://ephraimduncan.com";
 const SITE_NAME = "Ephraim Duncan";
@@ -86,6 +90,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: globalsCss },
+      { rel: "stylesheet", href: stylexCss },
       { rel: "stylesheet", href: geistSansCss },
       { rel: "stylesheet", href: geistMonoCss },
       {
@@ -123,7 +128,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </head>
-      <body className="antialiased bg-surface text-foreground">
+      <body {...stylex.props(styles.body)}>
         <RootProviders>{children}</RootProviders>
         {import.meta.env.PROD && (
           <script
@@ -151,3 +156,12 @@ function RootProviders({ children }: { children: ReactNode }) {
     </>
   );
 }
+
+const styles = stylex.create({
+  body: {
+    WebkitFontSmoothing: "antialiased",
+    MozOsxFontSmoothing: "grayscale",
+    backgroundColor: colors.surface,
+    color: colors.foreground,
+  },
+});

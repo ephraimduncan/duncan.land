@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import * as stylex from "@stylexjs/stylex";
 import * as FadeIn from "@/components/motion";
-import { Mdx } from "@/components/mdx-components";
+import { Mdx, prose, proseArticle } from "../../../components/mdx-components";
 import { allPages } from "content-collections";
 
 export const Route = createFileRoute("/_main/$")({
@@ -48,11 +49,11 @@ function PagePage() {
 
   return (
     <FadeIn.Container>
-      <article className=" prose dark:prose-invert">
+      <article {...proseArticle(stylex.props(prose.article))}>
         <FadeIn.Item>
           <div>
-            <h1 className="text-2xl font-normal">{page.title}</h1>
-            {page.description && <p className="text-xl my-0">{page.description}</p>}
+            <h1 {...stylex.props(styles.title)}>{page.title}</h1>
+            {page.description && <p {...stylex.props(styles.description)}>{page.description}</p>}
           </div>
         </FadeIn.Item>
 
@@ -63,3 +64,18 @@ function PagePage() {
     </FadeIn.Container>
   );
 }
+
+const styles = stylex.create({
+  title: {
+    color: "var(--prose-heading)",
+    fontSize: "1.5rem",
+    lineHeight: "2rem",
+    fontWeight: 400,
+  },
+  description: {
+    marginTop: 0,
+    marginBottom: 0,
+    fontSize: "1.25rem",
+    lineHeight: "1.75rem",
+  },
+});

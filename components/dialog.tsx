@@ -5,14 +5,131 @@ import {
   Transition as HeadlessTransition,
   TransitionChild as HeadlessTransitionChild,
 } from "@headlessui/react";
+import * as stylex from "@stylexjs/stylex";
+import type { StyleXStyles } from "@stylexjs/stylex";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 import { Fragment } from "react";
 
-const panelSizes = {
-  lg: "sm:max-w-lg",
-  sm: "sm:max-w-sm",
-} as const;
+import "./form-theme.css";
+
+const panelSizes = stylex.create({
+  lg: {
+    maxWidth: {
+      default: null,
+      "@media (min-width: 640px)": "32rem",
+    },
+  },
+  sm: {
+    maxWidth: {
+      default: null,
+      "@media (min-width: 640px)": "24rem",
+    },
+  },
+});
+
+const styles = stylex.create({
+  backdrop: {
+    backgroundColor: "var(--dialog-backdrop)",
+    display: "flex",
+    inset: 0,
+    justifyContent: "center",
+    outline: {
+      default: null,
+      ":focus": "0",
+    },
+    overflowY: "auto",
+    paddingBlock: {
+      default: "0.5rem",
+      "@media (min-width: 640px)": "2rem",
+      "@media (min-width: 1024px)": "4rem",
+    },
+    paddingInline: {
+      default: "0.5rem",
+      "@media (min-width: 640px)": "1.5rem",
+      "@media (min-width: 1024px)": "2rem",
+    },
+    position: "fixed",
+    width: "100vw",
+  },
+  viewport: {
+    inset: 0,
+    overflowY: "auto",
+    paddingTop: {
+      default: "1.5rem",
+      "@media (min-width: 640px)": 0,
+    },
+    position: "fixed",
+    width: "100vw",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateRows: {
+      default: "1fr auto",
+      "@media (min-width: 640px)": "1fr auto 3fr",
+    },
+    justifyItems: "center",
+    minHeight: "100%",
+    padding: {
+      default: 0,
+      "@media (min-width: 640px)": "1rem",
+    },
+  },
+  panel: {
+    backgroundColor: "var(--dialog-panel-background)",
+    borderBottomLeftRadius: {
+      default: 0,
+      "@media (min-width: 640px)": "1rem",
+    },
+    borderBottomRightRadius: {
+      default: 0,
+      "@media (min-width: 640px)": "1rem",
+    },
+    borderTopLeftRadius: {
+      default: "1.5rem",
+      "@media (min-width: 640px)": "1rem",
+    },
+    borderTopRightRadius: {
+      default: "1.5rem",
+      "@media (min-width: 640px)": "1rem",
+    },
+    boxShadow:
+      "0 0 0 1px var(--dialog-panel-ring), 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    gridRowStart: 2,
+    marginBottom: {
+      default: 0,
+      "@media (min-width: 640px)": "auto",
+    },
+    minWidth: 0,
+    outlineStyle: {
+      default: null,
+      "@media (forced-colors: active)": "solid",
+    },
+    padding: "2rem",
+    width: "100%",
+  },
+  title: {
+    color: "var(--form-strong-text)",
+    fontSize: {
+      default: "1.125rem",
+      "@media (min-width: 640px)": "1rem",
+    },
+    fontWeight: 600,
+    lineHeight: "1.5rem",
+    textWrap: "balance",
+  },
+  body: {
+    marginTop: "1.5rem",
+  },
+  actions: {
+    alignItems: "center",
+    gap: "0.75rem",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: "2rem",
+  },
+});
 
 type DialogSize = keyof typeof panelSizes;
 
@@ -25,7 +142,7 @@ type DialogProps = {
 
 type DialogSectionProps = {
   children: ReactNode;
-  className?: string;
+  style?: StyleXStyles;
 };
 
 export function Dialog({ open, onClose, size, children }: DialogProps) {
@@ -34,33 +151,28 @@ export function Dialog({ open, onClose, size, children }: DialogProps) {
       <HeadlessDialog onClose={onClose}>
         <HeadlessTransitionChild
           as={Fragment}
-          enter="ease-out duration-100"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter="dialog-backdrop-enter"
+          enterFrom="dialog-backdrop-enter-from"
+          enterTo="dialog-backdrop-enter-to"
+          leave="dialog-backdrop-leave"
+          leaveFrom="dialog-backdrop-leave-from"
+          leaveTo="dialog-backdrop-leave-to"
         >
-          <div className="fixed inset-0 flex w-screen justify-center overflow-y-auto bg-grey-950/25 px-2 py-2 focus:outline-0 sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-grey-950/80" />
+          <div {...stylex.props(styles.backdrop)} />
         </HeadlessTransitionChild>
 
-        <div className="fixed inset-0 w-screen overflow-y-auto pt-6 sm:pt-0">
-          <div className="grid min-h-full grid-rows-[1fr_auto] justify-items-center sm:grid-rows-[1fr_auto_3fr] sm:p-4">
+        <div {...stylex.props(styles.viewport)}>
+          <div {...stylex.props(styles.grid)}>
             <HeadlessTransitionChild
               as={Fragment}
-              enter="ease-out duration-100"
-              enterFrom="opacity-0 translate-y-12 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-100"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-12 sm:translate-y-0"
+              enter="dialog-panel-enter"
+              enterFrom="dialog-panel-enter-from"
+              enterTo="dialog-panel-enter-to"
+              leave="dialog-panel-leave"
+              leaveFrom="dialog-panel-leave-from"
+              leaveTo="dialog-panel-leave-to"
             >
-              <HeadlessDialogPanel
-                className={clsx(
-                  panelSizes[size],
-                  "row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-(--gutter) shadow-lg ring-1 ring-grey-950/10 [--gutter:--spacing(8)] sm:mb-auto sm:rounded-2xl dark:bg-grey-950 dark:ring-white/10 forced-colors:outline-solid",
-                )}
-              >
+              <HeadlessDialogPanel {...stylex.props(styles.panel, panelSizes[size])}>
                 {children}
               </HeadlessDialogPanel>
             </HeadlessTransitionChild>
@@ -71,31 +183,21 @@ export function Dialog({ open, onClose, size, children }: DialogProps) {
   );
 }
 
-export function DialogTitle({ children, className }: DialogSectionProps) {
+export function DialogTitle({ children, style }: DialogSectionProps) {
   return (
-    <HeadlessDialogTitle
-      className={clsx(
-        className,
-        "text-balance text-lg/6 font-semibold text-grey-950 sm:text-base/6 dark:text-white",
-      )}
-    >
-      {children}
-    </HeadlessDialogTitle>
+    <HeadlessDialogTitle {...stylex.props(styles.title, style)}>{children}</HeadlessDialogTitle>
   );
 }
 
-export function DialogBody({ children, className }: DialogSectionProps) {
-  return <div className={clsx(className, "mt-6")}>{children}</div>;
+export function DialogBody({ children, style }: DialogSectionProps) {
+  return <div {...stylex.props(styles.body, style)}>{children}</div>;
 }
 
-export function DialogActions({ children, className }: DialogSectionProps) {
+export function DialogActions({ children, style }: DialogSectionProps) {
+  const sx = stylex.props(styles.actions, style);
+
   return (
-    <div
-      className={clsx(
-        className,
-        "mt-8 flex flex-row items-center justify-end gap-3 *:w-full  sm:*:w-auto",
-      )}
-    >
+    <div className={clsx("dialog-actions", sx.className)} style={sx.style}>
       {children}
     </div>
   );
