@@ -1,0 +1,9 @@
+:root {
+  --home-project-name: #342f2d;
+  --post-reference-hover: #342f2d;
+}
+
+.dark {
+  --home-project-name: #e6e2e1;
+  --post-reference-hover: #cdc5c2;
+}

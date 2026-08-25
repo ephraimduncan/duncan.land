@@ -1,6 +1,8 @@
+import * as stylex from "@stylexjs/stylex";
 import { Card } from "@/components/card";
 import type { GuestbookPost } from "@/types/guestbook";
 import { formatter } from "@/lib/utils";
+import "./guestbook-theme.css";
 
 interface PostCardProps {
   post: GuestbookPost;
@@ -11,17 +13,17 @@ export function PostCard({ post }: PostCardProps) {
   const signedAt = formatter.dateTimeUtc(new Date(post.created_at));
 
   return (
-    <Card className="rounded-lg flex flex-col justify-between gap-y-3 h-full">
-      <p className="leading-6 text-grey-900 dark:text-grey-50">{post.message}</p>
+    <Card style={styles.card}>
+      <p {...stylex.props(styles.message)}>{post.message}</p>
 
-      <div className="mt-auto flex items-center justify-between">
-        <div className="flex flex-col justify-end h-full text-sm">
-          <p className="font-medium">{authorName}</p>
+      <div {...stylex.props(styles.footer)}>
+        <div {...stylex.props(styles.details)}>
+          <p {...stylex.props(styles.author)}>{authorName}</p>
           <p>{signedAt}</p>
         </div>
 
         {post.signature && (
-          <div className="dark:invert -mb-4 -mr-4">
+          <div {...stylex.props(styles.signature)}>
             <img alt="signature" src={post.signature} width={150} height={150} loading="lazy" />
           </div>
         )}
@@ -29,3 +31,40 @@ export function PostCard({ post }: PostCardProps) {
     </Card>
   );
 }
+
+const styles = stylex.create({
+  card: {
+    display: "flex",
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    rowGap: "0.75rem",
+    borderRadius: "0.5rem",
+  },
+  message: {
+    color: "var(--guestbook-message-foreground)",
+    lineHeight: "1.5rem",
+  },
+  footer: {
+    display: "flex",
+    marginTop: "auto",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  details: {
+    display: "flex",
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
+  },
+  author: {
+    fontWeight: 500,
+  },
+  signature: {
+    marginRight: "-1rem",
+    marginBottom: "-1rem",
+    filter: "var(--signature-filter)",
+  },
+});

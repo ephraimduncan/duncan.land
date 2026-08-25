@@ -1,0 +1,19 @@
+:root {
+  --wall-control-bg: #e6e2e1;
+  --wall-control-text: #48423d;
+  --wall-control-hover: #cdc5c2;
+  --wall-cta-hover: #f7f6f6;
+  --wall-preview-bg: #f7f6f6;
+  --wall-link-text: #342f2d;
+  --signature-opacity: 0.8;
+}
+
+.dark {
+  --wall-control-bg: #3c3633;
+  --wall-control-text: #aca19c;
+  --wall-control-hover: #48423d;
+  --wall-cta-hover: #3c3633;
+  --wall-preview-bg: #342f2d;
+  --wall-link-text: #e6e2e1;
+  --signature-opacity: 0.9;
+}

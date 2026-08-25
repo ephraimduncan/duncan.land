@@ -1,9 +1,14 @@
-export const GithubIcon = (props: {
-  className?: string;
+import * as stylex from "@stylexjs/stylex";
+import type { StyleXStyles } from "@stylexjs/stylex";
+
+interface GithubIconProps {
+  style?: StyleXStyles;
   width?: number;
   height?: number;
   color?: string;
-}) => (
+}
+
+export const GithubIcon = ({ style, ...props }: GithubIconProps) => (
   <svg
     data-slot="icon"
     width={20}
@@ -12,6 +17,7 @@ export const GithubIcon = (props: {
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    {...stylex.props(style)}
   >
     <g clipPath="url(#container)">
       <path

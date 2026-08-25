@@ -35,7 +35,7 @@
 }
 
 .signature-hit:focus-visible {
-  outline: 2px solid var(--color-grey-400);
+  outline: 2px solid #8a7d77; /* grey-400 */
   outline-offset: 4px;
 }
 

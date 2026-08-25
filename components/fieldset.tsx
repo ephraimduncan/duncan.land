@@ -3,60 +3,65 @@ import {
   Field as HeadlessField,
   Label as HeadlessLabel,
 } from "@headlessui/react";
+import * as stylex from "@stylexjs/stylex";
+import type { StyleXStyles } from "@stylexjs/stylex";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 
+import "./form-theme.css";
+
+const styles = stylex.create({
+  label: {
+    color: "var(--form-strong-text)",
+    fontSize: {
+      default: "1rem",
+      "@media (min-width: 640px)": "0.875rem",
+    },
+    fontWeight: 500,
+    lineHeight: "1.5rem",
+    userSelect: "none",
+  },
+  error: {
+    color: "var(--field-error)",
+    fontSize: {
+      default: "1rem",
+      "@media (min-width: 640px)": "0.875rem",
+    },
+    lineHeight: "1.5rem",
+  },
+});
+
 type FieldProps = {
   children: ReactNode;
-  className?: string;
+  style?: StyleXStyles;
 };
 
 type LabelProps = {
   children: ReactNode;
-  className?: string;
+  style?: StyleXStyles;
 };
 
-export function Field({ className, children }: FieldProps) {
+export function Field({ style, children }: FieldProps) {
+  const sx = stylex.props(style);
+
   return (
-    <HeadlessField
-      className={clsx(
-        className,
-        "[&>[data-slot=label]+[data-slot=control]]:mt-3",
-        "[&>[data-slot=label]+[data-slot=description]]:mt-1",
-        "[&>[data-slot=description]+[data-slot=control]]:mt-3",
-        "[&>[data-slot=control]+[data-slot=description]]:mt-3",
-        "[&>[data-slot=control]+[data-slot=error]]:mt-3",
-        "*:data-[slot=label]:font-medium",
-      )}
-    >
+    <HeadlessField className={clsx("field-layout", sx.className)} style={sx.style}>
       {children}
     </HeadlessField>
   );
 }
 
-export function Label({ className, children }: LabelProps) {
+export function Label({ style, children }: LabelProps) {
   return (
-    <HeadlessLabel
-      data-slot="label"
-      className={clsx(
-        className,
-        "select-none text-base/6 text-grey-950 data-disabled:opacity-50 sm:text-sm/6 dark:text-white",
-      )}
-    >
+    <HeadlessLabel data-slot="label" {...stylex.props(styles.label, style)}>
       {children}
     </HeadlessLabel>
   );
 }
 
-export function ErrorMessage({ className, children }: LabelProps) {
+export function ErrorMessage({ style, children }: LabelProps) {
   return (
-    <HeadlessDescription
-      data-slot="error"
-      className={clsx(
-        className,
-        "text-base/6 text-red-600 data-disabled:opacity-50 sm:text-sm/6 dark:text-red-400",
-      )}
-    >
+    <HeadlessDescription data-slot="error" {...stylex.props(styles.error, style)}>
       {children}
     </HeadlessDescription>
   );

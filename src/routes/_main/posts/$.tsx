@@ -1,8 +1,11 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import * as stylex from "@stylexjs/stylex";
 import * as FadeIn from "@/components/motion";
-import { Mdx } from "@/components/mdx-components";
+import { Mdx, prose, proseArticle } from "../../../../components/mdx-components";
 import { ReferenceLink } from "@/components/reference-link";
 import { allPosts } from "content-collections";
+import { colors } from "../../../styles/tokens.stylex";
+import "../routes-theme.css";
 
 export const Route = createFileRoute("/_main/posts/$")({
   loader: ({ params }) => {
@@ -53,16 +56,14 @@ function PostPage() {
   return (
     <FadeIn.Container>
       <FadeIn.Item>
-        <article className="py-6 prose dark:prose-invert">
-          <div className="mb-10">
-            <div className="flex gap-2">
-              <h1 className="mb-2 text-2xl font-medium tracking-tight text-balance">
-                {post.title}
-              </h1>
+        <article {...proseArticle(stylex.props(prose.article, styles.article))}>
+          <div {...stylex.props(styles.header)}>
+            <div {...stylex.props(styles.titleRow)}>
+              <h1 {...stylex.props(styles.title)}>{post.title}</h1>
               {post.reference && (
                 <a
                   href="#references"
-                  className="inline-flex size-4 items-center justify-center text-sm font-medium text-foreground-muted hover:text-grey-900 dark:hover:text-grey-200"
+                  {...stylex.props(styles.referenceLink)}
                   title="Go to reference"
                 >
                   [1]
@@ -70,23 +71,23 @@ function PostPage() {
               )}
             </div>
 
-            <div className="flex gap-x-2">
-              <p className="text-base mt-0 text-foreground-secondary">
+            <div {...stylex.props(styles.metaRow)}>
+              <p {...stylex.props(styles.meta)}>
                 {post.date.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
                 })}
               </p>
-              <p className="text-base mt-0 text-foreground-secondary">•</p>
+              <p {...stylex.props(styles.meta)}>•</p>
 
-              <p className="text-base mt-0 text-foreground-secondary">{post.readTimeMinutes}</p>
+              <p {...stylex.props(styles.meta)}>{post.readTimeMinutes}</p>
             </div>
           </div>
           <Mdx content={mdx} />
 
           {post.reference && (
-            <div id="references" className="mt-16 pt-4 border-t border-separator">
+            <div id="references" {...stylex.props(styles.references)}>
               <ReferenceLink reference={post.reference} />
             </div>
           )}
@@ -95,3 +96,59 @@ function PostPage() {
     </FadeIn.Container>
   );
 }
+
+const styles = stylex.create({
+  article: {
+    // Longhands: prose.article zeroes padding with longhands, which outrank shorthands.
+    paddingTop: "1.5rem",
+    paddingBottom: "1.5rem",
+  },
+  header: {
+    marginBottom: "2.5rem",
+  },
+  titleRow: {
+    display: "flex",
+    gap: "0.5rem",
+  },
+  title: {
+    marginBottom: "0.5rem",
+    color: "var(--prose-heading)",
+    fontSize: "1.5rem",
+    lineHeight: "2rem",
+    fontWeight: 500,
+    letterSpacing: "-0.025em",
+    textWrap: "balance",
+  },
+  referenceLink: {
+    display: "inline-flex",
+    width: "1rem",
+    height: "1rem",
+    alignItems: "center",
+    justifyContent: "center",
+    color: {
+      default: colors.foregroundMuted,
+      ":hover": "var(--post-reference-hover)",
+    },
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
+    fontWeight: 500,
+  },
+  metaRow: {
+    display: "flex",
+    columnGap: "0.5rem",
+  },
+  meta: {
+    marginTop: 0,
+    marginBottom: "1.25rem",
+    color: colors.foregroundSecondary,
+    fontSize: "1rem",
+    lineHeight: "1.5rem",
+  },
+  references: {
+    marginTop: "4rem",
+    borderTopWidth: "1px",
+    borderTopStyle: "solid",
+    borderTopColor: colors.separator,
+    paddingTop: "1rem",
+  },
+});

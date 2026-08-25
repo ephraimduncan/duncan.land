@@ -1,0 +1,17 @@
+:root {
+  --usage-graph-bar: #1c1917;
+  --usage-graph-line: #aca19c;
+  --usage-graph-highlight: #584e49;
+  --usage-graph-cursor: #8a7d77;
+  --usage-graph-meta-text: #1c1917;
+  --usage-graph-dot: #aca19c;
+}
+
+.dark {
+  --usage-graph-bar: #e6e2e1;
+  --usage-graph-line: #584e49;
+  --usage-graph-highlight: #aca19c;
+  --usage-graph-cursor: #70615c;
+  --usage-graph-meta-text: #e6e2e1;
+  --usage-graph-dot: #584e49;
+}

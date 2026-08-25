@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as stylex from "@stylexjs/stylex";
+import type { StyleXStyles } from "@stylexjs/stylex";
 import type { MotionValue } from "motion/react";
 import {
   AnimatePresence,
@@ -9,9 +11,10 @@ import {
   useSpring,
 } from "motion/react";
 import * as m from "motion/react-m";
-import clsx from "clsx";
 import * as Icons from "./icons";
 import type { UsageDay } from "./data";
+import { colors, fonts } from "../../src/styles/tokens.stylex";
+import "./graph-theme.css";
 import { useScrollEnd } from "@/lib/hooks/use-scroll-end";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useIsHydrated } from "@/lib/hooks/use-is-hydrated";
@@ -199,11 +202,7 @@ export default function TokenUsageGraph({ data }: { data: UsageDay[] }) {
               {activeDate}
             </Label>
             {activeDay && (
-              <m.div
-                key="meta"
-                {...blur}
-                className="absolute bottom-full left-[50%] mb-4 flex translate-x-[-50%] flex-col"
-              >
+              <m.div key="meta" {...blur} {...stylex.props(styles.metaList)}>
                 {activeDay.clients.map((client) => (
                   <Meta
                     key={`${activeDay.date}-${client.modelId}`}
@@ -226,13 +225,13 @@ function Provider({
   children,
   ref,
   value,
-  className,
+  style,
   ...props
-}: Omit<React.HTMLProps<HTMLDivElement>, "value"> & {
+}: Omit<React.HTMLProps<HTMLDivElement>, "className" | "style" | "value"> & {
   children: React.ReactNode;
   ref?: React.RefObject<HTMLDivElement | null>;
   value: GraphContext;
-  className?: string;
+  style?: StyleXStyles;
   onPointerDown?: () => void;
 }) {
   return (
@@ -243,10 +242,7 @@ function Provider({
           value.setIdle(true);
         }
       }}
-      className={clsx(
-        "mx-auto flex min-h-dvh items-center justify-center overflow-y-hidden px-6 sm:px-12 lg:px-48",
-        className,
-      )}
+      {...stylex.props(styles.provider, style)}
       {...props}
     >
       <GraphContext.Provider value={value}>{children}</GraphContext.Provider>
@@ -258,7 +254,6 @@ function Provider({
 
 function Lines({
   children,
-  className,
   style,
   ref,
   maxCost,
@@ -267,7 +262,8 @@ function Lines({
   children?: React.ReactNode;
   ref: React.RefObject<HTMLDivElement | null>;
   maxCost: number;
-} & React.HTMLProps<HTMLDivElement>) {
+  style?: StyleXStyles;
+} & Omit<React.HTMLProps<HTMLDivElement>, "className" | "style">) {
   const isTouch = useMediaQuery("(hover: none)");
   const { setActiveIndex, setMorph, y, data } = useGraph();
 
@@ -299,8 +295,7 @@ function Lines({
   return (
     <div
       ref={ref}
-      className={clsx("relative flex items-end", className)}
-      style={{ gap: LINE_GAP, ...style }}
+      {...stylex.props(styles.lines, style)}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       {...props}
@@ -311,41 +306,34 @@ function Lines({
         const height = getHeightFromCost(day.cost, maxCost);
 
         return (
-          <div
-            key={day.date}
-            className="relative flex flex-col gap-0.5 select-none [&>*[data-highlight=true]]:bg-grey-600 dark:[&>*[data-highlight=true]]:bg-grey-300"
-            style={{ width: LINE_WIDTH }}
-          >
+          <div key={day.date} {...stylex.props(styles.day)}>
             {day.cost === 0 ? (
-              <div
-                data-highlight={isFirstOfMonth}
-                className="bg-grey-300 dark:bg-grey-600 h-1 w-full rounded-none"
-              />
+              <div {...stylex.props(styles.line, isFirstOfMonth && styles.highlighted)} />
             ) : clients.length === 0 ? (
               <div
-                data-highlight={isFirstOfMonth}
-                className="bg-grey-950 dark:bg-grey-100 w-full rounded-none"
-                style={{ height }}
+                {...stylex.props(
+                  styles.bar,
+                  styles.barHeight(height),
+                  isFirstOfMonth && styles.highlighted,
+                )}
               />
             ) : (
               clients.map((client) => (
                 <div
                   key={`${day.date}-${client.modelId}`}
-                  data-highlight={isFirstOfMonth}
-                  className="bg-grey-950 dark:bg-grey-100 w-full rounded-none"
-                  style={{ height: getHeightFromCost(client.cost, maxCost) }}
+                  {...stylex.props(
+                    styles.bar,
+                    styles.barHeight(getHeightFromCost(client.cost, maxCost)),
+                    isFirstOfMonth && styles.highlighted,
+                  )}
                 />
               ))
             )}
           </div>
         );
       })}
-      <div
-        aria-hidden
-        className="absolute top-0 left-full"
-        style={{ width: LINE_GAP, height: "100%" }}
-      />
-      <div aria-hidden className="absolute top-full left-0" style={{ width: "100%", height: 25 }} />
+      <div aria-hidden {...stylex.props(styles.rightHitArea)} />
+      <div aria-hidden {...stylex.props(styles.bottomHitArea)} />
       {children}
     </div>
   );
@@ -353,26 +341,16 @@ function Lines({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function Cursor({
-  children,
-  className,
-  style,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
+function Cursor({ children, style }: { children?: React.ReactNode; style?: StyleXStyles }) {
   const isHydrated = useIsHydrated();
   const { x, y, morph, isTouch } = useGraph();
+  const sx = stylex.props(styles.cursor, style);
   if (!isHydrated) return null;
   return (
     <m.div
       initial={false}
-      className={clsx(
-        "bg-grey-400 dark:bg-grey-500 pointer-events-none fixed rounded-full [--label-offset:-36px]",
-        className,
-      )}
-      style={{ x, y, ...style }}
+      className={sx.className}
+      style={{ x, y, ...sx.style }}
       animate={{
         opacity: morph ? 1 : 0,
         width: CURSOR_WIDTH,
@@ -390,25 +368,11 @@ function Cursor({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function Label({
-  children,
-  position,
-  ...props
-}: {
-  children: React.ReactNode;
-  position: "top" | "bottom";
-}) {
+function Label({ children, position }: { children: React.ReactNode; position: "top" | "bottom" }) {
   return (
     <m.div
-      className={clsx(
-        "text-foreground-subtle pointer-events-none absolute left-[50%] w-fit -translate-x-1/2 font-mono text-[13px] whitespace-nowrap select-none",
-        {
-          "top-[--label-offset]": position === "top",
-          "top-full mt-3": position === "bottom",
-        },
-      )}
       {...blur}
-      {...props}
+      {...stylex.props(styles.label, position === "top" ? styles.labelTop : styles.labelBottom)}
     >
       {children}
     </m.div>
@@ -421,17 +385,15 @@ function Meta({ modelId, cost }: { modelId: string; cost: number }) {
   const Icon = getModelIcon(modelId);
 
   return (
-    <div className="text-grey-950 dark:text-grey-100 flex items-center justify-center gap-2">
+    <div {...stylex.props(styles.meta)}>
       {Icon && (
-        <div className="flex size-3 shrink-0 items-center justify-center">
+        <div {...stylex.props(styles.metaIcon)}>
           <Icon size={12} />
         </div>
       )}
-      <div className="font-mono text-sm whitespace-nowrap select-none">
-        {getModelDisplayName(modelId)}
-      </div>
-      <div aria-hidden className="bg-grey-300 dark:bg-grey-600 size-1 shrink-0 rounded-full" />
-      <div className="font-mono text-sm whitespace-nowrap select-none">{formatCost(cost)}</div>
+      <div {...stylex.props(styles.metaValue)}>{getModelDisplayName(modelId)}</div>
+      <div aria-hidden {...stylex.props(styles.metaDot)} />
+      <div {...stylex.props(styles.metaValue)}>{formatCost(cost)}</div>
     </div>
   );
 }
@@ -555,3 +517,128 @@ function formatFallbackModelName(modelId: string) {
     })
     .join(" ");
 }
+
+const styles = stylex.create({
+  provider: {
+    marginInline: "auto",
+    display: "flex",
+    minHeight: "100dvh",
+    alignItems: "center",
+    justifyContent: "center",
+    overflowY: "hidden",
+    paddingInline: {
+      default: "1.5rem",
+      "@media (min-width: 640px)": "3rem",
+      "@media (min-width: 1024px)": "12rem",
+    },
+  },
+  metaList: {
+    position: "absolute",
+    bottom: "100%",
+    left: "50%",
+    marginBottom: "1rem",
+    display: "flex",
+    transform: "translateX(-50%)",
+    flexDirection: "column",
+  },
+  lines: {
+    position: "relative",
+    display: "flex",
+    alignItems: "flex-end",
+    gap: LINE_GAP,
+  },
+  day: {
+    position: "relative",
+    display: "flex",
+    width: LINE_WIDTH,
+    flexDirection: "column",
+    gap: "0.125rem",
+    userSelect: "none",
+  },
+  line: {
+    width: "100%",
+    height: "0.25rem",
+    borderRadius: 0,
+    backgroundColor: "var(--usage-graph-line)",
+  },
+  bar: {
+    width: "100%",
+    borderRadius: 0,
+    backgroundColor: "var(--usage-graph-bar)",
+  },
+  barHeight: (height: number) => ({
+    height,
+  }),
+  highlighted: {
+    backgroundColor: "var(--usage-graph-highlight)",
+  },
+  rightHitArea: {
+    position: "absolute",
+    top: 0,
+    left: "100%",
+    width: LINE_GAP,
+    height: "100%",
+  },
+  bottomHitArea: {
+    position: "absolute",
+    top: "100%",
+    left: 0,
+    width: "100%",
+    height: 25,
+  },
+  cursor: {
+    "--label-offset": "-36px",
+    position: "fixed",
+    borderRadius: "calc(infinity * 1px)",
+    backgroundColor: "var(--usage-graph-cursor)",
+    pointerEvents: "none",
+  },
+  label: {
+    position: "absolute",
+    left: "50%",
+    width: "fit-content",
+    transform: "translateX(-50%)",
+    color: colors.foregroundSubtle,
+    fontFamily: fonts.mono,
+    fontSize: "13px",
+    whiteSpace: "nowrap",
+    userSelect: "none",
+    pointerEvents: "none",
+  },
+  labelTop: {
+    top: "var(--label-offset)",
+  },
+  labelBottom: {
+    top: "100%",
+    marginTop: "0.75rem",
+  },
+  meta: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.5rem",
+    color: "var(--usage-graph-meta-text)",
+  },
+  metaIcon: {
+    display: "flex",
+    width: "0.75rem",
+    height: "0.75rem",
+    flexShrink: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  metaValue: {
+    fontFamily: fonts.mono,
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem",
+    whiteSpace: "nowrap",
+    userSelect: "none",
+  },
+  metaDot: {
+    width: "0.25rem",
+    height: "0.25rem",
+    flexShrink: 0,
+    borderRadius: "calc(infinity * 1px)",
+    backgroundColor: "var(--usage-graph-dot)",
+  },
+});

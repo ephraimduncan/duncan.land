@@ -1,4 +1,6 @@
+import * as stylex from "@stylexjs/stylex";
 import { useCallback, useMemo, useState } from "react";
+import { grey } from "../../../styles/tokens.stylex";
 import useCanvasViewport from "../hooks/use-canvas-viewport";
 import { useViewportCulling } from "../hooks/use-viewport-culling";
 import type { SignaturePosition } from "../lib/signature-layout";
@@ -114,7 +116,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
         role="application"
         aria-label="Signature wall canvas. Use the arrow keys to pan."
         tabIndex={0}
-        className="absolute inset-0 touch-none select-none will-change-transform focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-grey-400"
+        {...stylex.props(styles.canvas)}
         style={{ transformOrigin: "0 0" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -122,7 +124,7 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
         onKeyDown={handleKeyDown}
       >
         <div
-          className="relative h-screen w-screen will-change-transform"
+          {...stylex.props(styles.viewport)}
           style={{
             transformOrigin: "0 0",
             transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${scale})`,
@@ -155,3 +157,35 @@ export function WallCanvas({ positions, revealOrder }: WallCanvasProps) {
     </>
   );
 }
+
+const styles = stylex.create({
+  canvas: {
+    position: "absolute",
+    inset: 0,
+    touchAction: "none",
+    userSelect: "none",
+    willChange: "transform",
+    outlineWidth: {
+      default: null,
+      ":focus-visible": "2px",
+    },
+    outlineStyle: {
+      default: null,
+      ":focus-visible": "solid",
+    },
+    outlineColor: {
+      default: null,
+      ":focus-visible": grey.g400,
+    },
+    outlineOffset: {
+      default: null,
+      ":focus-visible": "-2px",
+    },
+  },
+  viewport: {
+    position: "relative",
+    width: "100vw",
+    height: "100vh",
+    willChange: "transform",
+  },
+});

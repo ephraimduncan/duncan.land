@@ -1,3 +1,5 @@
+import * as stylex from "@stylexjs/stylex";
+import clsx from "clsx";
 import { memo } from "react";
 import { ELEMENT_HEIGHT, ELEMENT_WIDTH, type SignaturePosition } from "../lib/signature-layout";
 
@@ -14,11 +16,13 @@ export const SignatureElement = memo(function SignatureElement({
 }: SignatureElementProps) {
   const { signature, x, y } = position;
   const displayName = signature.name ?? signature.username;
+  const sx = stylex.props(styles.element);
 
   return (
     <div
-      className="signature-element absolute left-0 top-0"
+      className={clsx("signature-element", sx.className)}
       style={{
+        ...sx.style,
         width: `${ELEMENT_WIDTH}px`,
         height: `${ELEMENT_HEIGHT}px`,
         transform: `translate3d(${x}px, ${y}px, 0px)`,
@@ -26,11 +30,11 @@ export const SignatureElement = memo(function SignatureElement({
         contain: "layout style paint",
       }}
     >
-      <div className="relative h-full w-full pointer-events-none">
+      <div {...stylex.props(styles.frame)}>
         <img
           src={signature.signature}
           alt={`Signature by ${displayName}`}
-          className="absolute inset-0 w-full h-full object-contain opacity-80 dark:opacity-90 [.dark_&]:invert"
+          {...stylex.props(styles.image)}
           loading="lazy"
         />
       </div>
@@ -43,4 +47,27 @@ export const SignatureElement = memo(function SignatureElement({
       />
     </div>
   );
+});
+
+const styles = stylex.create({
+  element: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+  },
+  frame: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none",
+  },
+  image: {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    opacity: "var(--signature-opacity)",
+    filter: "var(--signature-filter)",
+  },
 });

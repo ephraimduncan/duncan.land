@@ -1,3 +1,4 @@
+import * as stylex from "@stylexjs/stylex";
 import { Button } from "@/components/button";
 
 function SignatureIcon() {
@@ -20,9 +21,18 @@ function SignatureIcon() {
 
 export function WallButton() {
   return (
-    <Button href="/wall" className="justify-start sm:justify-center">
+    <Button href="/wall" style={styles.button}>
       <SignatureIcon />
       See the signature wall
     </Button>
   );
 }
+
+const styles = stylex.create({
+  button: {
+    justifyContent: {
+      default: "flex-start",
+      "@media (min-width: 640px)": "center",
+    },
+  },
+});

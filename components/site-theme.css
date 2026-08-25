@@ -1,0 +1,19 @@
+:root {
+  --post-list-text: #3c3633;
+  --theme-switcher-track: #e6e2e1;
+  --theme-switcher-icon: #584e49;
+  --theme-switcher-active-track: #cdc5c2;
+  --theme-switcher-active-icon: #3c3633;
+  --external-link-text: #70615c;
+  --external-link-text-hover: #342f2d;
+}
+
+.dark {
+  --post-list-text: #e6e2e1;
+  --theme-switcher-track: #342f2d;
+  --theme-switcher-icon: #aca19c;
+  --theme-switcher-active-track: #584e49;
+  --theme-switcher-active-icon: #e6e2e1;
+  --external-link-text: #aca19c;
+  --external-link-text-hover: #e6e2e1;
+}

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import * as stylex from "@stylexjs/stylex";
 import * as FadeIn from "@/components/motion";
 import { getSession } from "@/lib/auth-server";
 import { getGuestbookPosts } from "@/lib/data/guestbook";
@@ -45,19 +46,17 @@ function GuestbookPage() {
     <FadeIn.Container>
       <FadeIn.Item>
         {authState.user ? (
-          <div className="space-y-4">
-            <h1 className="text-2xl font-medium tracking-tight text-balance">
-              Hello, {authState.user.name}!
-            </h1>
-            <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div {...stylex.props(styles.stack)}>
+            <h1 {...stylex.props(styles.title)}>Hello, {authState.user.name}!</h1>
+            <div {...stylex.props(styles.actions, styles.fullActions)}>
               <SignDialog user={authState.user} />
               <SignOutButton />
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
-            <h1 className="text-2xl font-medium tracking-tight text-balance">Sign the guestbook</h1>
-            <div className="flex flex-col gap-2 sm:flex-row">
+          <div {...stylex.props(styles.stack)}>
+            <h1 {...stylex.props(styles.title)}>Sign the guestbook</h1>
+            <div {...stylex.props(styles.actions)}>
               <SignInButton redirectTo="/guestbook" />
               <WallButton />
             </div>
@@ -65,10 +64,44 @@ function GuestbookPage() {
         )}
       </FadeIn.Item>
       <FadeIn.Item>
-        <div className="space-y-4">
+        <div>
           <PostsList initialPosts={initialPosts} />
         </div>
       </FadeIn.Item>
     </FadeIn.Container>
   );
 }
+
+const styles = stylex.create({
+  stack: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+  title: {
+    fontSize: "1.5rem",
+    lineHeight: "2rem",
+    fontWeight: 500,
+    letterSpacing: "-0.025em",
+    textWrap: "balance",
+  },
+  actions: {
+    display: "flex",
+    flexDirection: {
+      default: "column",
+      "@media (min-width: 640px)": "row",
+    },
+    gap: "0.5rem",
+  },
+  fullActions: {
+    width: "100%",
+    alignItems: {
+      default: "normal",
+      "@media (min-width: 640px)": "center",
+    },
+    justifyContent: {
+      default: "normal",
+      "@media (min-width: 640px)": "space-between",
+    },
+  },
+});

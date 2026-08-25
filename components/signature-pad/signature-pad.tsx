@@ -1,4 +1,6 @@
-import { cn } from "@/lib/utils";
+import * as stylex from "@stylexjs/stylex";
+import type { StyleXStyles } from "@stylexjs/stylex";
+import { colors } from "../../src/styles/tokens.stylex";
 import type { StrokeOptions } from "perfect-freehand";
 import { getStroke } from "perfect-freehand";
 import type { PointerEvent } from "react";
@@ -45,11 +47,11 @@ const drawLine = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, 
 };
 
 export interface SignaturePadProps {
-  className?: string;
+  style?: StyleXStyles;
   onChange: (_signatureDataUrl: string | null) => void;
 }
 
-export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
+export const SignaturePad = ({ style, onChange }: SignaturePadProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const linesRef = useRef<Line[]>([]);
   const currentLineRef = useRef<Line>([]);
@@ -195,13 +197,12 @@ export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
   }, []);
 
   return (
-    <div className="relative block">
+    <div {...stylex.props(styles.root)}>
       <canvas
         ref={canvasRef}
         role="img"
         aria-label="Signature drawing area"
-        className={cn("relative block dark:invert", className)}
-        style={{ touchAction: "none" }}
+        {...stylex.props(styles.canvas, style)}
         onPointerMove={onPointerMove}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
@@ -209,23 +210,15 @@ export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
         onPointerEnter={onPointerEnter}
       />
 
-      <div className="absolute bottom-4 right-4 flex gap-2">
-        <button
-          type="button"
-          className="rounded-full px-2 py-1 text-xs text-foreground-subtle transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => onClearClick()}
-        >
+      <div {...stylex.props(styles.actions, styles.clearActions)}>
+        <button type="button" {...stylex.props(styles.button)} onClick={() => onClearClick()}>
           Clear signature
         </button>
       </div>
 
       {lineCount > 0 && (
-        <div className="absolute bottom-4 left-4 flex gap-2">
-          <button
-            type="button"
-            className="rounded-full px-2 py-1 text-xs text-foreground-subtle transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            onClick={() => onUndoClick()}
-          >
+        <div {...stylex.props(styles.actions, styles.undoActions)}>
+          <button type="button" {...stylex.props(styles.button)} onClick={() => onUndoClick()}>
             Undo
           </button>
         </div>
@@ -233,3 +226,55 @@ export const SignaturePad = ({ className, onChange }: SignaturePadProps) => {
     </div>
   );
 };
+
+const styles = stylex.create({
+  root: {
+    position: "relative",
+    display: "block",
+  },
+  canvas: {
+    position: "relative",
+    display: "block",
+    filter: "var(--signature-filter)",
+    touchAction: "none",
+  },
+  actions: {
+    position: "absolute",
+    bottom: "1rem",
+    display: "flex",
+    gap: "0.5rem",
+  },
+  clearActions: {
+    right: "1rem",
+  },
+  undoActions: {
+    left: "1rem",
+  },
+  button: {
+    paddingBlock: "0.25rem",
+    paddingInline: "0.5rem",
+    borderRadius: "calc(infinity * 1px)",
+    color: {
+      default: colors.foregroundSubtle,
+      ":hover": colors.foreground,
+    },
+    fontSize: "0.75rem",
+    lineHeight: "1rem",
+    transitionProperty:
+      "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to",
+    transitionDuration: "150ms",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    outlineWidth: {
+      ":focus-visible": "2px",
+    },
+    outlineStyle: {
+      ":focus-visible": "solid",
+    },
+    outlineOffset: {
+      ":focus-visible": "2px",
+    },
+    outlineColor: {
+      ":focus-visible": colors.accent,
+    },
+  },
+});

@@ -1,5 +1,9 @@
+import * as stylex from "@stylexjs/stylex";
 import { Minus, Plus, Maximize, Minimize, RotateCcw } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
+import { colors } from "../../../styles/tokens.stylex";
+import { shared } from "../../../styles/shared";
+import "./wall-theme.css";
 
 interface CanvasControlsProps {
   zoomPercent: number;
@@ -39,11 +43,7 @@ export function CanvasControls({
   const fullscreenLabel = isFullscreen ? "Exit fullscreen" : "Enter fullscreen";
 
   return (
-    <div
-      className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-1/2 z-50 flex -translate-x-1/2 items-center gap-1 rounded-2xl border border-separator bg-surface-raised p-1 shadow-lg"
-      role="group"
-      aria-label="Canvas controls"
-    >
+    <div {...stylex.props(styles.controls)} role="group" aria-label="Canvas controls">
       <ControlButton onClick={toggleFullscreen} label={fullscreenLabel} title={fullscreenLabel}>
         {isFullscreen ? <Minimize size={15} /> : <Maximize size={15} />}
       </ControlButton>
@@ -53,7 +53,7 @@ export function CanvasControls({
       <ControlButton onClick={onZoomIn} label="Zoom in" title="Zoom in">
         <Plus size={15} />
       </ControlButton>
-      <span className="sr-only" aria-live="polite">
+      <span {...stylex.props(shared.srOnly)} aria-live="polite">
         {zoomPercent}%
       </span>
       <ControlButton onClick={onZoomOut} label="Zoom out" title="Zoom out">
@@ -73,9 +73,9 @@ interface ControlButtonProps {
 function ControlButton({ children, label, onClick, title }: ControlButtonProps) {
   return (
     <button
+      {...stylex.props(styles.button)}
       type="button"
       aria-label={label}
-      className="rounded-xl bg-grey-100 p-1.5 text-grey-700 transition-[background-color,color,scale] duration-100 hover:bg-grey-200 active:scale-[0.96] dark:bg-grey-800 dark:text-grey-300 dark:hover:bg-grey-700"
       onClick={onClick}
       title={title}
     >
@@ -83,3 +83,39 @@ function ControlButton({ children, label, onClick, title }: ControlButtonProps) 
     </button>
   );
 }
+
+const styles = stylex.create({
+  controls: {
+    position: "fixed",
+    bottom: "calc(1rem + env(safe-area-inset-bottom))",
+    left: "50%",
+    zIndex: 50,
+    display: "flex",
+    transform: "translateX(-50%)",
+    alignItems: "center",
+    gap: "0.25rem",
+    borderRadius: "1rem",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: colors.separator,
+    backgroundColor: colors.surfaceRaised,
+    padding: "0.25rem",
+    boxShadow: "0 10px 15px -3px rgb(0 0 0/0.1), 0 4px 6px -4px rgb(0 0 0/0.1)",
+  },
+  button: {
+    borderRadius: "0.75rem",
+    backgroundColor: {
+      default: "var(--wall-control-bg)",
+      ":hover": "var(--wall-control-hover)",
+    },
+    padding: "0.375rem",
+    color: "var(--wall-control-text)",
+    transitionProperty: "background-color, color, scale",
+    transitionDuration: "100ms",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    scale: {
+      default: null,
+      ":active": 0.96,
+    },
+  },
+});

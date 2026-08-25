@@ -2,7 +2,86 @@ import {
   Textarea as HeadlessTextarea,
   type TextareaProps as HeadlessTextareaProps,
 } from "@headlessui/react";
+import * as stylex from "@stylexjs/stylex";
 import type { ChangeEventHandler, ComponentPropsWithRef } from "react";
+
+import { colors, grey } from "../src/styles/tokens.stylex";
+import "./form-theme.css";
+
+const styles = stylex.create({
+  control: {
+    display: "block",
+    position: "relative",
+    width: "100%",
+    "::before": {
+      backgroundColor: "#ffffff",
+      borderRadius: "calc(0.5rem - 1px)",
+      boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+      content: '""',
+      display: "var(--textarea-fill-display)",
+      inset: "1px",
+      position: "absolute",
+    },
+    "::after": {
+      borderRadius: "0.5rem",
+      boxShadow: {
+        default: "inset 0 0 0 0 transparent",
+        ":focus-within": "inset 0 0 0 2px var(--accent)",
+      },
+      content: '""',
+      inset: 0,
+      pointerEvents: "none",
+      position: "absolute",
+    },
+  },
+  input: {
+    appearance: "none",
+    backgroundColor: "var(--textarea-background)",
+    borderColor: {
+      default: "var(--textarea-border)",
+      ":hover": "var(--textarea-border-hover)",
+    },
+    borderRadius: "0.5rem",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    color: "var(--form-strong-text)",
+    display: "block",
+    fontSize: {
+      default: "1rem",
+      "@media (min-width: 640px)": "0.875rem",
+    },
+    height: "100%",
+    lineHeight: "1.5rem",
+    outline: {
+      default: null,
+      ":focus": "2px solid transparent",
+    },
+    outlineOffset: {
+      default: null,
+      ":focus": "2px",
+    },
+    paddingBlock: {
+      default: "calc(0.625rem - 1px)",
+      "@media (min-width: 640px)": "calc(0.375rem - 1px)",
+    },
+    paddingInline: {
+      default: "calc(0.875rem - 1px)",
+      "@media (min-width: 640px)": "calc(0.75rem - 1px)",
+    },
+    position: "relative",
+    resize: "vertical",
+    width: "100%",
+    "::placeholder": {
+      color: grey.g500,
+    },
+  },
+  invalid: {
+    borderColor: {
+      default: colors.danger,
+      ":hover": colors.danger,
+    },
+  },
+});
 
 type TextareaProps = Pick<HeadlessTextareaProps, "maxLength" | "rows"> & {
   invalid: boolean;
@@ -11,16 +90,14 @@ type TextareaProps = Pick<HeadlessTextareaProps, "maxLength" | "rows"> & {
   ref?: ComponentPropsWithRef<"textarea">["ref"];
 };
 
-export function Textarea({ ref, ...props }: TextareaProps) {
+export function Textarea({ invalid, ref, ...props }: TextareaProps) {
   return (
-    <span
-      data-slot="control"
-      className="relative block w-full before:absolute before:inset-px before:rounded-[calc(var(--radius-lg)-1px)] before:bg-white before:shadow-sm dark:before:hidden after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent focus-within:after:ring-2 focus-within:after:ring-accent"
-    >
+    <span data-slot="control" {...stylex.props(styles.control)}>
       <HeadlessTextarea
-        ref={ref}
-        className="relative block h-full w-full appearance-none rounded-lg border border-grey-950/10 bg-transparent px-[calc(--spacing(3.5)-1px)] py-[calc(--spacing(2.5)-1px)] text-base/6 text-grey-950 placeholder:text-grey-500 focus:outline-hidden data-hover:border-grey-950/20 data-invalid:border-danger data-invalid:data-hover:border-danger resize-y sm:px-[calc(--spacing(3)-1px)] sm:py-[calc(--spacing(1.5)-1px)] sm:text-sm/6 dark:border-white/10 dark:bg-white/5 dark:text-white dark:data-hover:border-white/20"
         {...props}
+        {...stylex.props(styles.input, invalid && styles.invalid)}
+        invalid={invalid}
+        ref={ref}
       />
     </span>
   );
