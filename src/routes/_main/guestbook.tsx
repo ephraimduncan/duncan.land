@@ -16,7 +16,7 @@ const getInitialPosts = createServerFn({ method: "GET" }).handler(() => {
 export const Route = createFileRoute("/_main/guestbook")({
   loader: async () => {
     const [authState, initialPosts] = await Promise.all([
-      getSession(),
+      getSession().catch(() => ({ user: null, session: null })),
       getInitialPosts().catch(() => null),
     ]);
     return { authState, initialPosts };
