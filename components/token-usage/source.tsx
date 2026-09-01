@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { MotionValue } from "motion/react";
+import type { MotionStyle, MotionValue } from "motion/react";
 import {
   AnimatePresence,
   LazyMotion,
@@ -360,7 +360,7 @@ function Cursor({
 }: {
   children?: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
+  style?: MotionStyle;
 }) {
   const isHydrated = useIsHydrated();
   const { x, y, morph, isTouch } = useGraph();
@@ -372,7 +372,7 @@ function Cursor({
         "bg-grey-400 dark:bg-grey-500 pointer-events-none fixed rounded-full [--label-offset:-36px]",
         className,
       )}
-      style={{ x, y, ...style }}
+      style={{ x, y, ...style } as React.ComponentProps<typeof m.div>["style"]}
       animate={{
         opacity: morph ? 1 : 0,
         width: CURSOR_WIDTH,
