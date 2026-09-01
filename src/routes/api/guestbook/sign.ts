@@ -25,7 +25,7 @@ export const Route = createFileRoute("/api/guestbook/sign")({
           );
         }
 
-        const { message, signature } = body;
+        const { message, signature } = body as Record<string, unknown>;
 
         if (typeof message !== "string") {
           return Response.json(

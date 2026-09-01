@@ -27,7 +27,7 @@ export const Route = createFileRoute("/api/signature/upload")({
           );
         }
 
-        const { signature } = body;
+        const { signature } = body as Record<string, unknown>;
 
         if (typeof signature !== "string" || !signature.startsWith(pngDataUrlPrefix)) {
           return Response.json(
