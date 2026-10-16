@@ -73,7 +73,7 @@ export default defineHandler(async (event) => {
   if (!SCANNER.test(path)) return; // pass through to app
 
   const payload = await getBomb();
-  return new Response(payload, {
+  return new Response(new Uint8Array(payload), {
     status: 200,
     headers: {
       "Content-Type": "text/html",
