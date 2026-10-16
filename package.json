@@ -55,6 +55,7 @@
     "@content-collections/vite": "^0.2.9",
     "@mdx-js/rollup": "^3.1.1",
     "@rolldown/plugin-babel": "^0.2.0",
+    "@types/mdx": "^2.0.14",
     "@typescript/native-preview": "latest",
     "@vitejs/plugin-react": "^6.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
