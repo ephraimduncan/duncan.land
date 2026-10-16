@@ -120,9 +120,6 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
     alias: {
-      // @vercel/blob imports undici, but the Worker runtime already provides fetch.
-      undici: new URL("./node_modules/@vercel/blob/dist/undici-browser.js", import.meta.url)
-        .pathname,
       // bright (code highlighter) imports server-only which throws outside RSC.
       // Alias to empty module since TanStack Start has no RSC boundary.
       "server-only": new URL("./src/shims/server-only.ts", import.meta.url).pathname,
